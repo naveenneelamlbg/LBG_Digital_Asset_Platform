@@ -1,0 +1,45 @@
+module TokenTest where
+
+import Daml.Script
+import Token
+
+testToken : Script ()
+testToken = script do
+  -- Create parties
+  issuer <- allocateParty "Issuer"
+  owner <- allocateParty "Owner"
+  newOwner <- allocateParty "NewOwner"
+
+  -- Create a token
+  token <- submit issuer do
+    createCmd Token with
+      issuer = issuer
+      owner = owner
+      tokenName = "TestToken"
+      symbol = "TT"
+      tokenValue = 1.0
+      amount = 100
+
+  -- Transfer tokens
+  tokenTransfer <- submit owner do
+    exerciseCmd token TransferToken with
+      newOwner = newOwner
+      transferAmount = 50
+
+  -- Redeem tokens
+  tokenRedeem <- submit newOwner do
+    exerciseCmd tokenTransfer RedeemToken with
+      redeemAmount = 25
+
+  -- Update token value
+  tokenValueUpdate <- submit issuer do
+    createCmd TokenValueUpdate with
+      issuer = issuer
+      tokenId = token
+      newTokenValue = 2.0
+
+  -- Exercise token value update
+  submit issuer do
+    exerciseCmd tokenValueUpdate UpdateTokenValue
+
+  return ()

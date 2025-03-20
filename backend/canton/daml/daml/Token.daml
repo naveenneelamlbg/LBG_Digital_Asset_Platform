@@ -1,0 +1,94 @@
+module Token where
+
+import DA.Next.Set (Set)
+import DA.Next.Map (Map)
+import DA.Next.List (List)
+import DA.Next.Time (Time)
+import DA.Next.Numeric (Numeric)
+
+import Daml.Script
+
+template Token
+  with
+    issuer : Party
+    owner : Party
+    tokenName : Text
+    symbol : Text
+    tokenValue : Numeric 10
+    amount : Int
+  where
+    signatory issuer, owner
+    observer owner
+
+    choice TransferToken : ContractId Token
+      with
+        newOwner : Party
+        transferAmount : Int
+      controller owner
+      do
+        assertMsg "Insufficient tokens" (amount >= transferAmount)
+        create this with owner = newOwner, amount = transferAmount
+        create this with amount = amount - transferAmount
+
+    choice RedeemToken : ()
+      with
+        redeemAmount : Int
+      controller owner
+      do
+        assertMsg "Insufficient tokens" (amount >= redeemAmount)
+        create this with amount = amount - redeemAmount
+
+template TokenValueUpdate
+  with
+    issuer : Party
+    tokenId : ContractId Token
+    newTokenValue : Numeric 10
+  where
+    signatory issuer
+
+    choice UpdateTokenValue : ContractId Token
+      controller issuer
+      do
+        token <- fetch tokenId
+        create token with tokenValue = newTokenValue
+
+testToken : Script ()
+testToken = script do
+  -- Create parties
+  issuer <- allocateParty "Issuer"
+  owner <- allocateParty "Owner"
+  newOwner <- allocateParty "NewOwner"
+
+  -- Create a token
+  token <- submit issuer do
+    createCmd Token with
+      issuer = issuer
+      owner = owner
+      tokenName = "TestToken"
+      symbol = "TT"
+      tokenValue = 1.0
+      amount = 100
+
+  -- Transfer tokens
+  tokenTransfer <- submit owner do
+    exerciseCmd token TransferToken with
+      newOwner = newOwner
+      transferAmount = 50
+
+  -- Redeem tokens
+  tokenRedeem <- submit newOwner do
+    exerciseCmd tokenTransfer RedeemToken with
+      redeemAmount = 25
+
+  -- Update token value
+  tokenValueUpdate <- submit issuer do
+    createCmd TokenValueUpdate with
+      issuer = issuer
+      tokenId = token
+      newTokenValue = 2.0
+
+  -- Exercise token value update
+  submit issuer do
+    exerciseCmd tokenValueUpdate UpdateTokenValue
+
+  return ()
