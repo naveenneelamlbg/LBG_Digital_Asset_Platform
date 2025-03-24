@@ -1,0 +1,18 @@
+meta {
+  name: fetch
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://127.0.0.1:7575/v1/fetch
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "templateId": "77087bbe690150e37e069cfffc77c9e4ad5f43f007b6ceaaf51cda87385a54e6:User:User",
+    "key": "party-15fcd23b-ef14-4b2c-88cd-c1c190339ed3::122038f486615e8af795d2e8c6133851e11b3b938d75280419577170cf881a317579"
+  }
+}

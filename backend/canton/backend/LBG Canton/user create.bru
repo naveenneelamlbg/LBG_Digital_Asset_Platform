@@ -1,0 +1,22 @@
+meta {
+  name: user create
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://127.0.0.1:7575/v1/create
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "templateId": "77087bbe690150e37e069cfffc77c9e4ad5f43f007b6ceaaf51cda87385a54e6:User:User",
+    
+    "payload": {
+      "username": "naveen",
+      "following": []
+    }
+  }
+}
