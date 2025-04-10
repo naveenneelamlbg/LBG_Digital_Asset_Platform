@@ -83,13 +83,13 @@ contract DefaultCompliance is BasicCompliance {
      *  @dev See {ICompliance-destroyed}.
      */
     // solhint-disable-next-line no-empty-blocks
-    function destroyed(address _from, uint256 _value) external override {
+    function destroyed(address _from, uint256 _value) external override pure {
     }
 
     /**
      *  @dev See {ICompliance-canTransfer}.
      */
-    function canTransfer(address /*_from*/, address /*_to*/, uint256 /*_value*/) external view override returns (bool) {
+    function canTransfer(address /*_from*/, address /*_to*/, uint256 /*_value*/) external override pure returns (bool) {
         return true;
     }
 }
