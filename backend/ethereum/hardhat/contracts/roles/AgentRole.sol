@@ -61,13 +61,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-pragma solidity 0.8.17;
+pragma solidity 0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 import "./Roles.sol";
 
-contract AgentRole is Ownable {
+contract AgentRole is Ownable(msg.sender) {
     using Roles for Roles.Role;
 
     Roles.Role private _agents;

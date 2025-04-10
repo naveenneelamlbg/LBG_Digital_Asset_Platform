@@ -60,7 +60,7 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-pragma solidity 0.8.17;
+pragma solidity 0.8.20;
 
 import "@onchain-id/solidity/contracts/interface/IClaimIssuer.sol";
 import "@onchain-id/solidity/contracts/interface/IIdentity.sol";
@@ -68,12 +68,12 @@ import "@onchain-id/solidity/contracts/interface/IIdentity.sol";
 import "../interface/IClaimTopicsRegistry.sol";
 import "../interface/ITrustedIssuersRegistry.sol";
 import "../interface/IIdentityRegistry.sol";
-import "../../roles/AgentRoleUpgradeable.sol";
+import "../../roles/AgentRole.sol";
 import "../interface/IIdentityRegistryStorage.sol";
 import "../storage/IRStorage.sol";
 
 
-contract IdentityRegistry is IIdentityRegistry, AgentRoleUpgradeable, IRStorage {
+contract IdentityRegistry is IIdentityRegistry, AgentRole, IRStorage {
 
     /**
      *  @dev the constructor initiates the Identity Registry smart contract
