@@ -10,7 +10,7 @@ describe('TREXGateway', () => {
       it('should revert', async () => {
         const context = await loadFixture(deployFullSuiteFixture);
 
-        const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+        const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
         await context.factories.trexFactory.transferOwnership(gateway.address);
 
         await expect(gateway.connect(context.accounts.anotherWallet).setFactory(context.factories.trexFactory.address)).to.be.revertedWith(
@@ -23,19 +23,19 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
-          await expect(gateway.setFactory(ethers.constants.AddressZero)).to.be.revertedWithCustomError(gateway, 'ZeroAddress');
+          await expect(gateway.setFactory(ethers.ZeroAddress)).to.be.revertedWithCustomError(gateway, 'ZeroAddress');
         });
       });
       describe('if called with valid address', () => {
         it('should set Factory', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
-          expect(await gateway.getFactory()).to.equal(ethers.constants.AddressZero);
+          expect(await gateway.getFactory()).to.equal(ethers.ZeroAddress);
 
           const tx = await gateway.setFactory(context.factories.trexFactory.address);
           expect(tx).to.emit(gateway, 'FactorySet');
@@ -49,7 +49,7 @@ describe('TREXGateway', () => {
       it('should revert', async () => {
         const context = await loadFixture(deployFullSuiteFixture);
 
-        const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+        const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
         await context.factories.trexFactory.transferOwnership(gateway.address);
 
         await expect(gateway.connect(context.accounts.anotherWallet).setPublicDeploymentStatus(true)).to.be.revertedWith(
@@ -62,7 +62,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await expect(gateway.setPublicDeploymentStatus(false)).to.be.revertedWithCustomError(gateway, 'PublicDeploymentAlreadyDisabled');
@@ -74,7 +74,7 @@ describe('TREXGateway', () => {
         it('should set new status', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           expect(await gateway.getPublicDeploymentStatus()).to.equal(false);
@@ -128,7 +128,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await expect(gateway.enableDeploymentFee(false)).to.be.revertedWithCustomError(gateway, 'DeploymentFeesAlreadyDisabled');
@@ -140,7 +140,7 @@ describe('TREXGateway', () => {
         it('should set new status', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           expect(await gateway.isDeploymentFeeEnabled()).to.equal(false);
@@ -169,14 +169,14 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
-          await expect(gateway.setDeploymentFee(100, ethers.constants.AddressZero, context.accounts.deployer.address)).to.be.revertedWithCustomError(
+          await expect(gateway.setDeploymentFee(100, ethers.ZeroAddress, context.accounts.deployer.address)).to.be.revertedWithCustomError(
             gateway,
             'ZeroAddress',
           );
-          await expect(gateway.setDeploymentFee(100, context.suite.token.address, ethers.constants.AddressZero)).to.be.revertedWithCustomError(
+          await expect(gateway.setDeploymentFee(100, context.suite.token.address, ethers.ZeroAddress)).to.be.revertedWithCustomError(
             gateway,
             'ZeroAddress',
           );
@@ -186,7 +186,7 @@ describe('TREXGateway', () => {
         it('should set new fees structure', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           const tx = await gateway.setDeploymentFee(100, context.suite.token.address, context.accounts.deployer.address);
@@ -217,7 +217,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await gateway.addDeployer(context.accounts.tokenAgent.address);
@@ -228,7 +228,7 @@ describe('TREXGateway', () => {
         it('should add new deployer', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           expect(await gateway.isDeployer(context.accounts.tokenAgent.address)).to.equal(false);
@@ -243,7 +243,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await gateway.addAgent(context.accounts.tokenAgent.address);
@@ -258,7 +258,7 @@ describe('TREXGateway', () => {
         it('should add new deployer', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           expect(await gateway.isDeployer(context.accounts.tokenAgent.address)).to.equal(false);
@@ -288,7 +288,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await gateway.addDeployer(context.accounts.tokenAgent.address);
@@ -302,7 +302,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           const duplicateAddress = ethers.Wallet.createRandom().address;
@@ -314,7 +314,7 @@ describe('TREXGateway', () => {
         it('should add 1 new deployer', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           expect(await gateway.isDeployer(context.accounts.tokenAgent.address)).to.equal(false);
@@ -324,7 +324,7 @@ describe('TREXGateway', () => {
         });
         it('should add 10 new deployers', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
           const newDeployers = Array.from({ length: 10 }, () => ethers.Wallet.createRandom().address);
           for (let i = 0; i < newDeployers.length; i += 1) {
@@ -345,7 +345,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await gateway.addAgent(context.accounts.anotherWallet.address);
@@ -363,7 +363,7 @@ describe('TREXGateway', () => {
         it('should add 1 new deployer', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await gateway.addAgent(context.accounts.anotherWallet.address);
@@ -374,7 +374,7 @@ describe('TREXGateway', () => {
         });
         it('should add 10 new deployers', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
           const newDeployers = Array.from({ length: 10 }, () => ethers.Wallet.createRandom().address);
           for (let i = 0; i < newDeployers.length; i += 1) {
@@ -410,7 +410,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await expect(gateway.removeDeployer(context.accounts.tokenAgent.address)).to.be.revertedWithCustomError(gateway, 'DeployerDoesNotExist');
@@ -420,7 +420,7 @@ describe('TREXGateway', () => {
         it('should remove deployer', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await gateway.addDeployer(context.accounts.tokenAgent.address);
@@ -450,7 +450,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await expect(gateway.batchRemoveDeployer([context.accounts.tokenAgent.address])).to.be.revertedWithCustomError(
@@ -463,7 +463,7 @@ describe('TREXGateway', () => {
         it('should remove deployer', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await gateway.addDeployer(context.accounts.tokenAgent.address);
@@ -477,7 +477,7 @@ describe('TREXGateway', () => {
             it('should revert', async () => {
               const context = await loadFixture(deployFullSuiteFixture);
 
-              const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+              const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
               await context.factories.trexFactory.transferOwnership(gateway.address);
 
               const deployers = Array.from({ length: 9 }, () => ethers.Wallet.createRandom().address);
@@ -494,7 +494,7 @@ describe('TREXGateway', () => {
             it('should revert', async () => {
               const context = await loadFixture(deployFullSuiteFixture);
 
-              const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+              const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
               await context.factories.trexFactory.transferOwnership(gateway.address);
 
               const duplicateAddress = ethers.Wallet.createRandom().address;
@@ -510,7 +510,7 @@ describe('TREXGateway', () => {
             it('should remove deployers', async () => {
               const context = await loadFixture(deployFullSuiteFixture);
 
-              const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+              const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
               await context.factories.trexFactory.transferOwnership(gateway.address);
 
               const deployers = Array.from({ length: 10 }, () => ethers.Wallet.createRandom().address);
@@ -546,7 +546,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await expect(gateway.applyFeeDiscount(context.accounts.anotherWallet.address, 12000)).to.be.revertedWithCustomError(
@@ -559,7 +559,7 @@ describe('TREXGateway', () => {
         it('should apply discount', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await gateway.setDeploymentFee(20000, context.suite.token.address, context.accounts.deployer.address);
@@ -589,7 +589,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await expect(gateway.batchApplyFeeDiscount([context.accounts.anotherWallet.address], [12000])).to.be.revertedWithCustomError(
@@ -602,7 +602,7 @@ describe('TREXGateway', () => {
         it('should revert', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           const duplicateAddress = ethers.Wallet.createRandom().address;
@@ -616,7 +616,7 @@ describe('TREXGateway', () => {
         it('should apply discount', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           await gateway.setDeploymentFee(20000, context.suite.token.address, context.accounts.deployer.address);
@@ -632,7 +632,7 @@ describe('TREXGateway', () => {
         it('should revert the whole batch', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
           const deployers = Array.from({ length: 10 }, () => ethers.Wallet.createRandom().address);
           const discounts = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10000));
@@ -649,7 +649,7 @@ describe('TREXGateway', () => {
         it('should apply discounts to all deployers', async () => {
           const context = await loadFixture(deployFullSuiteFixture);
 
-          const gateway = await ethers.deployContract('TREXGateway', [ethers.constants.AddressZero, false], context.accounts.deployer);
+          const gateway = await ethers.deployContract('TREXGateway', [ethers.ZeroAddress, false], context.accounts.deployer);
           await context.factories.trexFactory.transferOwnership(gateway.address);
 
           const deploymentFee = 20000;
@@ -689,8 +689,8 @@ describe('TREXGateway', () => {
                 name: 'Token name',
                 symbol: 'SYM',
                 decimals: 8,
-                irs: ethers.constants.AddressZero,
-                ONCHAINID: ethers.constants.AddressZero,
+                irs: ethers.ZeroAddress,
+                ONCHAINID: ethers.ZeroAddress,
                 irAgents: [],
                 tokenAgents: [],
                 complianceModules: [],
@@ -720,8 +720,8 @@ describe('TREXGateway', () => {
                   name: 'Token name',
                   symbol: 'SYM',
                   decimals: 8,
-                  irs: ethers.constants.AddressZero,
-                  ONCHAINID: ethers.constants.AddressZero,
+                  irs: ethers.ZeroAddress,
+                  ONCHAINID: ethers.ZeroAddress,
                   irAgents: [],
                   tokenAgents: [],
                   complianceModules: [],
@@ -749,8 +749,8 @@ describe('TREXGateway', () => {
                 name: 'Token name',
                 symbol: 'SYM',
                 decimals: 8,
-                irs: ethers.constants.AddressZero,
-                ONCHAINID: ethers.constants.AddressZero,
+                irs: ethers.ZeroAddress,
+                ONCHAINID: ethers.ZeroAddress,
                 irAgents: [],
                 tokenAgents: [],
                 complianceModules: [],
@@ -785,8 +785,8 @@ describe('TREXGateway', () => {
                   name: 'Token name',
                   symbol: 'SYM',
                   decimals: 8,
-                  irs: ethers.constants.AddressZero,
-                  ONCHAINID: ethers.constants.AddressZero,
+                  irs: ethers.ZeroAddress,
+                  ONCHAINID: ethers.ZeroAddress,
                   irAgents: [],
                   tokenAgents: [],
                   complianceModules: [],
@@ -823,8 +823,8 @@ describe('TREXGateway', () => {
                   name: 'Token name',
                   symbol: 'SYM',
                   decimals: 8,
-                  irs: ethers.constants.AddressZero,
-                  ONCHAINID: ethers.constants.AddressZero,
+                  irs: ethers.ZeroAddress,
+                  ONCHAINID: ethers.ZeroAddress,
                   irAgents: [],
                   tokenAgents: [],
                   complianceModules: [],
@@ -860,8 +860,8 @@ describe('TREXGateway', () => {
               name: 'Token name',
               symbol: 'SYM',
               decimals: 8,
-              irs: ethers.constants.AddressZero,
-              ONCHAINID: ethers.constants.AddressZero,
+              irs: ethers.ZeroAddress,
+              ONCHAINID: ethers.ZeroAddress,
               irAgents: [],
               tokenAgents: [],
               complianceModules: [],
@@ -892,8 +892,8 @@ describe('TREXGateway', () => {
               name: 'Token name',
               symbol: 'SYM',
               decimals: 8,
-              irs: ethers.constants.AddressZero,
-              ONCHAINID: ethers.constants.AddressZero,
+              irs: ethers.ZeroAddress,
+              ONCHAINID: ethers.ZeroAddress,
               irAgents: [],
               tokenAgents: [],
               complianceModules: [],
@@ -929,8 +929,8 @@ describe('TREXGateway', () => {
                 name: 'Token name',
                 symbol: 'SYM',
                 decimals: 8,
-                irs: ethers.constants.AddressZero,
-                ONCHAINID: ethers.constants.AddressZero,
+                irs: ethers.ZeroAddress,
+                ONCHAINID: ethers.ZeroAddress,
                 irAgents: [],
                 tokenAgents: [],
                 complianceModules: [],
@@ -968,8 +968,8 @@ describe('TREXGateway', () => {
                 name: 'Token name',
                 symbol: 'SYM',
                 decimals: 8,
-                irs: ethers.constants.AddressZero,
-                ONCHAINID: ethers.constants.AddressZero,
+                irs: ethers.ZeroAddress,
+                ONCHAINID: ethers.ZeroAddress,
                 irAgents: [],
                 tokenAgents: [],
                 complianceModules: [],
@@ -1007,8 +1007,8 @@ describe('TREXGateway', () => {
                 name: 'Token name',
                 symbol: 'SYM',
                 decimals: 8,
-                irs: ethers.constants.AddressZero,
-                ONCHAINID: ethers.constants.AddressZero,
+                irs: ethers.ZeroAddress,
+                ONCHAINID: ethers.ZeroAddress,
                 irAgents: [],
                 tokenAgents: [],
                 complianceModules: [],
@@ -1046,8 +1046,8 @@ describe('TREXGateway', () => {
               name: `Token name ${i}`,
               symbol: `SYM${i}`,
               decimals: 8,
-              irs: ethers.constants.AddressZero,
-              ONCHAINID: ethers.constants.AddressZero,
+              irs: ethers.ZeroAddress,
+              ONCHAINID: ethers.ZeroAddress,
               irAgents: [],
               tokenAgents: [],
               complianceModules: [],
@@ -1081,8 +1081,8 @@ describe('TREXGateway', () => {
                 name: `Token name ${i}`,
                 symbol: `SYM${i}`,
                 decimals: 8,
-                irs: ethers.constants.AddressZero,
-                ONCHAINID: ethers.constants.AddressZero,
+                irs: ethers.ZeroAddress,
+                ONCHAINID: ethers.ZeroAddress,
                 irAgents: [],
                 tokenAgents: [],
                 complianceModules: [],
@@ -1099,8 +1099,8 @@ describe('TREXGateway', () => {
               name: 'Token name behalf',
               symbol: 'SYM42',
               decimals: 8,
-              irs: ethers.constants.AddressZero,
-              ONCHAINID: ethers.constants.AddressZero,
+              irs: ethers.ZeroAddress,
+              ONCHAINID: ethers.ZeroAddress,
               irAgents: [],
               tokenAgents: [],
               complianceModules: [],
@@ -1132,8 +1132,8 @@ describe('TREXGateway', () => {
                 name: `Token name ${i}`,
                 symbol: `SYM${i}`,
                 decimals: 8,
-                irs: ethers.constants.AddressZero,
-                ONCHAINID: ethers.constants.AddressZero,
+                irs: ethers.ZeroAddress,
+                ONCHAINID: ethers.ZeroAddress,
                 irAgents: [],
                 tokenAgents: [],
                 complianceModules: [],
@@ -1166,8 +1166,8 @@ describe('TREXGateway', () => {
                 name: `Token name ${i}`,
                 symbol: `SYM${i}`,
                 decimals: 8,
-                irs: ethers.constants.AddressZero,
-                ONCHAINID: ethers.constants.AddressZero,
+                irs: ethers.ZeroAddress,
+                ONCHAINID: ethers.ZeroAddress,
                 irAgents: [],
                 tokenAgents: [],
                 complianceModules: [],
@@ -1210,8 +1210,8 @@ describe('TREXGateway', () => {
                   name: `Token name ${i}`,
                   symbol: `SYM${i}`,
                   decimals: 8,
-                  irs: ethers.constants.AddressZero,
-                  ONCHAINID: ethers.constants.AddressZero,
+                  irs: ethers.ZeroAddress,
+                  ONCHAINID: ethers.ZeroAddress,
                   irAgents: [],
                   tokenAgents: [],
                   complianceModules: [],
@@ -1255,8 +1255,8 @@ describe('TREXGateway', () => {
                   name: `Token name ${i}`,
                   symbol: `SYM${i}`,
                   decimals: 8,
-                  irs: ethers.constants.AddressZero,
-                  ONCHAINID: ethers.constants.AddressZero,
+                  irs: ethers.ZeroAddress,
+                  ONCHAINID: ethers.ZeroAddress,
                   irAgents: [],
                   tokenAgents: [],
                   complianceModules: [],
@@ -1298,8 +1298,8 @@ describe('TREXGateway', () => {
                 name: `Token name ${i}`,
                 symbol: `SYM${i}`,
                 decimals: 8,
-                irs: ethers.constants.AddressZero,
-                ONCHAINID: ethers.constants.AddressZero,
+                irs: ethers.ZeroAddress,
+                ONCHAINID: ethers.ZeroAddress,
                 irAgents: [],
                 tokenAgents: [],
                 complianceModules: [],
@@ -1336,8 +1336,8 @@ describe('TREXGateway', () => {
                 name: `Token name ${i}`,
                 symbol: `SYM${i}`,
                 decimals: 8,
-                irs: ethers.constants.AddressZero,
-                ONCHAINID: ethers.constants.AddressZero,
+                irs: ethers.ZeroAddress,
+                ONCHAINID: ethers.ZeroAddress,
                 irAgents: [],
                 tokenAgents: [],
                 complianceModules: [],

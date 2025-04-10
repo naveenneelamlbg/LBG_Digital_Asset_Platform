@@ -455,7 +455,7 @@ describe('Token - Transfers', () => {
         await token.connect(tokenAgent).freezePartialTokens(aliceWallet.address, balance.sub(100));
 
         const tx = await token.connect(tokenAgent).burn(aliceWallet.address, balance.sub(50));
-        await expect(tx).to.emit(token, 'Transfer').withArgs(aliceWallet.address, ethers.constants.AddressZero, balance.sub(50));
+        await expect(tx).to.emit(token, 'Transfer').withArgs(aliceWallet.address, ethers.ZeroAddress, balance.sub(50));
         await expect(tx).to.emit(token, 'TokensUnfrozen').withArgs(aliceWallet.address, balance.sub(150));
         await expect(token.getFrozenTokens(aliceWallet.address)).to.be.eventually.equal(50);
       });

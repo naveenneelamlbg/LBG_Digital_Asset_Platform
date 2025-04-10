@@ -43,7 +43,7 @@ export async function deployFullSuiteFixture() {
 
   const trexImplementationAuthority = await ethers.deployContract(
     'TREXImplementationAuthority',
-    [true, ethers.constants.AddressZero, ethers.constants.AddressZero],
+    [true, ethers.ZeroAddress, ethers.ZeroAddress],
     deployer,
   );
   const versionStruct = {

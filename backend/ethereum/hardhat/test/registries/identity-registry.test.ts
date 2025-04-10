@@ -12,26 +12,26 @@ describe('IdentityRegistry', () => {
       } = await loadFixture(deployFullSuiteFixture);
 
       await expect(
-        identityRegistry.connect(deployer).init(ethers.constants.AddressZero, ethers.constants.AddressZero, ethers.constants.AddressZero),
+        identityRegistry.connect(deployer).init(ethers.ZeroAddress, ethers.ZeroAddress, ethers.ZeroAddress),
       ).to.be.revertedWith('Initializable: contract is already initialized');
     });
 
     it('should reject zero address for Trusted Issuers Registry', async () => {
       const identityRegistry = await ethers.deployContract('IdentityRegistry');
       const address = ethers.Wallet.createRandom().address;
-      await expect(identityRegistry.init(ethers.constants.AddressZero, address, address)).to.be.revertedWith('invalid argument - zero address');
+      await expect(identityRegistry.init(ethers.ZeroAddress, address, address)).to.be.revertedWith('invalid argument - zero address');
     });
 
     it('should reject zero address for Claim Topics Registry', async () => {
       const identityRegistry = await ethers.deployContract('IdentityRegistry');
       const address = ethers.Wallet.createRandom().address;
-      await expect(identityRegistry.init(address, ethers.constants.AddressZero, address)).to.be.revertedWith('invalid argument - zero address');
+      await expect(identityRegistry.init(address, ethers.ZeroAddress, address)).to.be.revertedWith('invalid argument - zero address');
     });
 
     it('should reject zero address for Identity Storage', async () => {
       const identityRegistry = await ethers.deployContract('IdentityRegistry');
       const address = ethers.Wallet.createRandom().address;
-      await expect(identityRegistry.init(address, address, ethers.constants.AddressZero)).to.be.revertedWith('invalid argument - zero address');
+      await expect(identityRegistry.init(address, address, ethers.ZeroAddress)).to.be.revertedWith('invalid argument - zero address');
     });
   });
 
@@ -91,7 +91,7 @@ describe('IdentityRegistry', () => {
         } = await loadFixture(deployFullSuiteFixture);
 
         await expect(
-          identityRegistry.connect(anotherWallet).registerIdentity(ethers.constants.AddressZero, ethers.constants.AddressZero, 0),
+          identityRegistry.connect(anotherWallet).registerIdentity(ethers.ZeroAddress, ethers.ZeroAddress, 0),
         ).to.be.revertedWith('AgentRole: caller does not have the Agent role');
       });
     });
@@ -105,7 +105,7 @@ describe('IdentityRegistry', () => {
           accounts: { anotherWallet },
         } = await loadFixture(deployFullSuiteFixture);
 
-        await expect(identityRegistry.connect(anotherWallet).setIdentityRegistryStorage(ethers.constants.AddressZero)).to.be.revertedWith(
+        await expect(identityRegistry.connect(anotherWallet).setIdentityRegistryStorage(ethers.ZeroAddress)).to.be.revertedWith(
           'Ownable: caller is not the owner',
         );
       });
@@ -118,9 +118,9 @@ describe('IdentityRegistry', () => {
           accounts: { deployer },
         } = await loadFixture(deployFullSuiteFixture);
 
-        const tx = await identityRegistry.connect(deployer).setIdentityRegistryStorage(ethers.constants.AddressZero);
-        await expect(tx).to.emit(identityRegistry, 'IdentityStorageSet').withArgs(ethers.constants.AddressZero);
-        expect(await identityRegistry.identityStorage()).to.be.equal(ethers.constants.AddressZero);
+        const tx = await identityRegistry.connect(deployer).setIdentityRegistryStorage(ethers.ZeroAddress);
+        await expect(tx).to.emit(identityRegistry, 'IdentityStorageSet').withArgs(ethers.ZeroAddress);
+        expect(await identityRegistry.identityStorage()).to.be.equal(ethers.ZeroAddress);
       });
     });
   });
@@ -133,7 +133,7 @@ describe('IdentityRegistry', () => {
           accounts: { anotherWallet },
         } = await loadFixture(deployFullSuiteFixture);
 
-        await expect(identityRegistry.connect(anotherWallet).setClaimTopicsRegistry(ethers.constants.AddressZero)).to.be.revertedWith(
+        await expect(identityRegistry.connect(anotherWallet).setClaimTopicsRegistry(ethers.ZeroAddress)).to.be.revertedWith(
           'Ownable: caller is not the owner',
         );
       });
@@ -146,9 +146,9 @@ describe('IdentityRegistry', () => {
           accounts: { deployer },
         } = await loadFixture(deployFullSuiteFixture);
 
-        const tx = await identityRegistry.connect(deployer).setClaimTopicsRegistry(ethers.constants.AddressZero);
-        await expect(tx).to.emit(identityRegistry, 'ClaimTopicsRegistrySet').withArgs(ethers.constants.AddressZero);
-        expect(await identityRegistry.topicsRegistry()).to.be.equal(ethers.constants.AddressZero);
+        const tx = await identityRegistry.connect(deployer).setClaimTopicsRegistry(ethers.ZeroAddress);
+        await expect(tx).to.emit(identityRegistry, 'ClaimTopicsRegistrySet').withArgs(ethers.ZeroAddress);
+        expect(await identityRegistry.topicsRegistry()).to.be.equal(ethers.ZeroAddress);
       });
     });
   });
@@ -161,7 +161,7 @@ describe('IdentityRegistry', () => {
           accounts: { anotherWallet },
         } = await loadFixture(deployFullSuiteFixture);
 
-        await expect(identityRegistry.connect(anotherWallet).setTrustedIssuersRegistry(ethers.constants.AddressZero)).to.be.revertedWith(
+        await expect(identityRegistry.connect(anotherWallet).setTrustedIssuersRegistry(ethers.ZeroAddress)).to.be.revertedWith(
           'Ownable: caller is not the owner',
         );
       });
@@ -174,9 +174,9 @@ describe('IdentityRegistry', () => {
           accounts: { deployer },
         } = await loadFixture(deployFullSuiteFixture);
 
-        const tx = await identityRegistry.connect(deployer).setTrustedIssuersRegistry(ethers.constants.AddressZero);
-        await expect(tx).to.emit(identityRegistry, 'TrustedIssuersRegistrySet').withArgs(ethers.constants.AddressZero);
-        expect(await identityRegistry.issuersRegistry()).to.be.equal(ethers.constants.AddressZero);
+        const tx = await identityRegistry.connect(deployer).setTrustedIssuersRegistry(ethers.ZeroAddress);
+        await expect(tx).to.emit(identityRegistry, 'TrustedIssuersRegistrySet').withArgs(ethers.ZeroAddress);
+        expect(await identityRegistry.issuersRegistry()).to.be.equal(ethers.ZeroAddress);
       });
     });
   });

@@ -42,7 +42,7 @@ describe('IdentityRegistryStorage', () => {
           await identityRegistryStorage.addAgent(tokenAgent.address);
 
           await expect(
-            identityRegistryStorage.connect(tokenAgent).addIdentityToStorage(charlieWallet.address, ethers.constants.AddressZero, 42),
+            identityRegistryStorage.connect(tokenAgent).addIdentityToStorage(charlieWallet.address, ethers.ZeroAddress, 42),
           ).to.be.revertedWith('invalid argument - zero address');
         });
       });
@@ -58,7 +58,7 @@ describe('IdentityRegistryStorage', () => {
           await identityRegistryStorage.addAgent(tokenAgent.address);
 
           await expect(
-            identityRegistryStorage.connect(tokenAgent).addIdentityToStorage(ethers.constants.AddressZero, charlieIdentity.address, 42),
+            identityRegistryStorage.connect(tokenAgent).addIdentityToStorage(ethers.ZeroAddress, charlieIdentity.address, 42),
           ).to.be.revertedWith('invalid argument - zero address');
         });
       });
@@ -107,7 +107,7 @@ describe('IdentityRegistryStorage', () => {
           await identityRegistryStorage.addAgent(tokenAgent.address);
 
           await expect(
-            identityRegistryStorage.connect(tokenAgent).modifyStoredIdentity(charlieWallet.address, ethers.constants.AddressZero),
+            identityRegistryStorage.connect(tokenAgent).modifyStoredIdentity(charlieWallet.address, ethers.ZeroAddress),
           ).to.be.revertedWith('invalid argument - zero address');
         });
       });
@@ -123,7 +123,7 @@ describe('IdentityRegistryStorage', () => {
           await identityRegistryStorage.addAgent(tokenAgent.address);
 
           await expect(
-            identityRegistryStorage.connect(tokenAgent).modifyStoredIdentity(ethers.constants.AddressZero, charlieIdentity.address),
+            identityRegistryStorage.connect(tokenAgent).modifyStoredIdentity(ethers.ZeroAddress, charlieIdentity.address),
           ).to.be.revertedWith('invalid argument - zero address');
         });
       });
@@ -170,7 +170,7 @@ describe('IdentityRegistryStorage', () => {
 
           await identityRegistryStorage.addAgent(tokenAgent.address);
 
-          await expect(identityRegistryStorage.connect(tokenAgent).modifyStoredInvestorCountry(ethers.constants.AddressZero, 42)).to.be.revertedWith(
+          await expect(identityRegistryStorage.connect(tokenAgent).modifyStoredInvestorCountry(ethers.ZeroAddress, 42)).to.be.revertedWith(
             'invalid argument - zero address',
           );
         });
@@ -217,7 +217,7 @@ describe('IdentityRegistryStorage', () => {
 
           await identityRegistryStorage.addAgent(tokenAgent.address);
 
-          await expect(identityRegistryStorage.connect(tokenAgent).removeIdentityFromStorage(ethers.constants.AddressZero)).to.be.revertedWith(
+          await expect(identityRegistryStorage.connect(tokenAgent).removeIdentityFromStorage(ethers.ZeroAddress)).to.be.revertedWith(
             'invalid argument - zero address',
           );
         });
@@ -263,7 +263,7 @@ describe('IdentityRegistryStorage', () => {
             accounts: { deployer },
           } = await loadFixture(deployFullSuiteFixture);
 
-          await expect(identityRegistryStorage.connect(deployer).bindIdentityRegistry(ethers.constants.AddressZero)).to.be.revertedWith(
+          await expect(identityRegistryStorage.connect(deployer).bindIdentityRegistry(ethers.ZeroAddress)).to.be.revertedWith(
             'invalid argument - zero address',
           );
         });
@@ -312,7 +312,7 @@ describe('IdentityRegistryStorage', () => {
             accounts: { deployer },
           } = await loadFixture(deployFullSuiteFixture);
 
-          await expect(identityRegistryStorage.connect(deployer).unbindIdentityRegistry(ethers.constants.AddressZero)).to.be.revertedWith(
+          await expect(identityRegistryStorage.connect(deployer).unbindIdentityRegistry(ethers.ZeroAddress)).to.be.revertedWith(
             'invalid argument - zero address',
           );
         });

@@ -13,7 +13,7 @@ describe('TrexImplementationAuthority', () => {
           accounts: { anotherWallet },
         } = await loadFixture(deployFullSuiteFixture);
 
-        await expect(trexImplementationAuthority.connect(anotherWallet).setTREXFactory(ethers.constants.AddressZero)).to.be.revertedWith(
+        await expect(trexImplementationAuthority.connect(anotherWallet).setTREXFactory(ethers.ZeroAddress)).to.be.revertedWith(
           'Ownable: caller is not the owner',
         );
       });
@@ -32,7 +32,7 @@ describe('TrexImplementationAuthority', () => {
 
             const otherTrexImplementationAuthority = await ethers.deployContract(
               'TREXImplementationAuthority',
-              [true, ethers.constants.AddressZero, ethers.constants.AddressZero],
+              [true, ethers.ZeroAddress, ethers.ZeroAddress],
               deployer,
             );
             const versionStruct = {
@@ -87,7 +87,7 @@ describe('TrexImplementationAuthority', () => {
           accounts: { anotherWallet },
         } = await loadFixture(deployFullSuiteFixture);
 
-        await expect(trexImplementationAuthority.connect(anotherWallet).setIAFactory(ethers.constants.AddressZero)).to.be.revertedWith(
+        await expect(trexImplementationAuthority.connect(anotherWallet).setIAFactory(ethers.ZeroAddress)).to.be.revertedWith(
           'Ownable: caller is not the owner',
         );
       });
@@ -108,7 +108,7 @@ describe('TrexImplementationAuthority', () => {
 
             const implementationAuthorityFactory = await ethers.deployContract(
               'TREXImplementationAuthority',
-              [true, ethers.constants.AddressZero, ethers.constants.AddressZero],
+              [true, ethers.ZeroAddress, ethers.ZeroAddress],
               deployer,
             );
 
@@ -211,7 +211,7 @@ describe('TrexImplementationAuthority', () => {
           tokenImplementation: implementations.tokenImplementation.address,
           ctrImplementation: implementations.claimTopicsRegistryImplementation.address,
           irImplementation: implementations.identityRegistryImplementation.address,
-          irsImplementation: ethers.constants.AddressZero,
+          irsImplementation: ethers.ZeroAddress,
           tirImplementation: implementations.trustedIssuersRegistryImplementation.address,
           mcImplementation: implementations.modularComplianceImplementation.address,
         };
@@ -302,7 +302,7 @@ describe('TrexImplementationAuthority', () => {
               tokenImplementation: implementations.tokenImplementation.address,
               ctrImplementation: implementations.claimTopicsRegistryImplementation.address,
               irImplementation: implementations.identityRegistryImplementation.address,
-              irsImplementation: ethers.constants.AddressZero,
+              irsImplementation: ethers.ZeroAddress,
               tirImplementation: implementations.trustedIssuersRegistryImplementation.address,
               mcImplementation: implementations.modularComplianceImplementation.address,
             };
@@ -380,7 +380,7 @@ describe('TrexImplementationAuthority', () => {
         } = await loadFixture(deployFullSuiteFixture);
 
         await expect(
-          trexImplementationAuthority.changeImplementationAuthority(ethers.constants.AddressZero, anotherWallet.address),
+          trexImplementationAuthority.changeImplementationAuthority(ethers.ZeroAddress, anotherWallet.address),
         ).to.be.revertedWith('invalid argument - zero address');
       });
     });
@@ -404,7 +404,7 @@ describe('TrexImplementationAuthority', () => {
           );
 
           await expect(
-            otherTrexImplementationAuthority.changeImplementationAuthority(token.address, ethers.constants.AddressZero),
+            otherTrexImplementationAuthority.changeImplementationAuthority(token.address, ethers.ZeroAddress),
           ).to.be.revertedWith('only reference contract can deploy new IAs');
         });
       });
@@ -419,7 +419,7 @@ describe('TrexImplementationAuthority', () => {
             } = await loadFixture(deployFullSuiteFixture);
 
             await expect(
-              trexImplementationAuthority.connect(anotherWallet).changeImplementationAuthority(token.address, ethers.constants.AddressZero),
+              trexImplementationAuthority.connect(anotherWallet).changeImplementationAuthority(token.address, ethers.ZeroAddress),
             ).to.be.revertedWith('caller NOT owner of all contracts impacted');
           });
         });
@@ -442,7 +442,7 @@ describe('TrexImplementationAuthority', () => {
             await trexImplementationAuthority.setTREXFactory(trexFactory.address);
             await trexImplementationAuthority.setIAFactory(implementationAuthorityFactory.address);
 
-            const tx = await trexImplementationAuthority.changeImplementationAuthority(token.address, ethers.constants.AddressZero);
+            const tx = await trexImplementationAuthority.changeImplementationAuthority(token.address, ethers.ZeroAddress);
             expect(tx).to.emit(trexImplementationAuthority, 'ImplementationAuthorityChanged');
           });
         });

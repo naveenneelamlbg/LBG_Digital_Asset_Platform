@@ -26,7 +26,7 @@ describe('TrustedIssuersRegistry', () => {
             accounts: { deployer },
           } = await loadFixture(deployFullSuiteFixture);
 
-          await expect(trustedIssuersRegistry.connect(deployer).addTrustedIssuer(ethers.constants.AddressZero, [10])).to.be.revertedWith(
+          await expect(trustedIssuersRegistry.connect(deployer).addTrustedIssuer(ethers.ZeroAddress, [10])).to.be.revertedWith(
             'invalid argument - zero address',
           );
         });
@@ -121,7 +121,7 @@ describe('TrustedIssuersRegistry', () => {
             accounts: { deployer },
           } = await loadFixture(deployFullSuiteFixture);
 
-          await expect(trustedIssuersRegistry.connect(deployer).removeTrustedIssuer(ethers.constants.AddressZero)).to.be.revertedWith(
+          await expect(trustedIssuersRegistry.connect(deployer).removeTrustedIssuer(ethers.ZeroAddress)).to.be.revertedWith(
             'invalid argument - zero address',
           );
         });
@@ -187,7 +187,7 @@ describe('TrustedIssuersRegistry', () => {
             accounts: { deployer },
           } = await loadFixture(deployFullSuiteFixture);
 
-          await expect(trustedIssuersRegistry.connect(deployer).updateIssuerClaimTopics(ethers.constants.AddressZero, [10])).to.be.revertedWith(
+          await expect(trustedIssuersRegistry.connect(deployer).updateIssuerClaimTopics(ethers.ZeroAddress, [10])).to.be.revertedWith(
             'invalid argument - zero address',
           );
         });
