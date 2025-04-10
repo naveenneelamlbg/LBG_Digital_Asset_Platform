@@ -426,15 +426,15 @@ interface IToken is IERC20 {
      */
     function version() external view returns (string memory);
 
-    // /**
-    //  *  @dev Returns the Identity Registry linked to the token
-    //  */
-    // function identityRegistry() external view returns (IIdentityRegistry);
+    /**
+     *  @dev Returns the Identity Registry linked to the token
+     */
+    function identityRegistry() external view returns (IIdentityRegistry);
 
-    // /**
-    //  *  @dev Returns the Compliance contract linked to the token
-    //  */
-    // function compliance() external view returns (IModularCompliance);
+    /**
+     *  @dev Returns the Compliance contract linked to the token
+     */
+    function compliance() external view returns (IModularCompliance);
 
     /**
      * @dev Returns true if the contract is paused, and false otherwise.

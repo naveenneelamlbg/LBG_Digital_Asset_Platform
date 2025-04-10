@@ -338,19 +338,19 @@ contract Token is IToken, AgentRole, TokenStorage{
         return _allowances[_owner][_spender];
     }
 
-    // /**
-    //  *  @dev See {IToken-identityRegistry}.
-    //  */
-    // function identityRegistry() external view override returns (IIdentityRegistry) {
-    //     return _tokenIdentityRegistry;
-    // }
+    /**
+     *  @dev See {IToken-identityRegistry}.
+     */
+    function identityRegistry() external view override returns (IIdentityRegistry) {
+        return _tokenIdentityRegistry;
+    }
 
-    // /**
-    //  *  @dev See {IToken-compliance}.
-    //  */
-    // function compliance() external view override returns (IModularCompliance) {
-    //     return _tokenCompliance;
-    // }
+    /**
+     *  @dev See {IToken-compliance}.
+     */
+    function compliance() external view override returns (IModularCompliance) {
+        return _tokenCompliance;
+    }
 
     /**
      *  @dev See {IToken-paused}.
