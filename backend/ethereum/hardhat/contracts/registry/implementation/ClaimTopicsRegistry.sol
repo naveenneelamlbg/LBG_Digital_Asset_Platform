@@ -66,11 +66,11 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "../storage/CTRStorage.sol";
 import "../interface/IClaimTopicsRegistry.sol";
 
-contract ClaimTopicsRegistry is IClaimTopicsRegistry, Ownable, CTRStorage {
+contract ClaimTopicsRegistry is IClaimTopicsRegistry, Ownable(msg.sender), CTRStorage {
 
-    function init() external initializer {
-        __Ownable_init();
-    }
+    // function init() external {
+    //     __Ownable_init();
+    // }
 
     /**
      *  @dev See {IClaimTopicsRegistry-addClaimTopic}.

@@ -62,8 +62,8 @@
  */
 
 pragma solidity 0.8.20;
-// import "../compliance/modular/IModularCompliance.sol";
-// import "../registry/interface/IIdentityRegistry.sol";
+import "../compliance/modular/IModularCompliance.sol";
+import "../registry/interface/IIdentityRegistry.sol";
 
 contract TokenStorage {
     /// @dev ERC20 basic variables
@@ -84,11 +84,11 @@ contract TokenStorage {
 
     bool internal _tokenPaused = false;
 
-    // /// @dev Identity Registry contract used by the onchain validator system
-    // IIdentityRegistry internal _tokenIdentityRegistry;
+    /// @dev Identity Registry contract used by the onchain validator system
+    IIdentityRegistry internal _tokenIdentityRegistry;
 
-    // /// @dev Compliance contract linked to the onchain validator system
-    // IModularCompliance internal _tokenCompliance;
+    /// @dev Compliance contract linked to the onchain validator system
+    IModularCompliance internal _tokenCompliance;
 
     /**
      * @dev This empty reserved space is put in place to allow future versions to add new

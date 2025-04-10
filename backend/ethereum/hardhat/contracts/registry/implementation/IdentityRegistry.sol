@@ -88,7 +88,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole, IRStorage {
         address _trustedIssuersRegistry,
         address _claimTopicsRegistry,
         address _identityStorage
-    ) external initializer {
+    ) external {
         require(
             _trustedIssuersRegistry != address(0)
             && _claimTopicsRegistry != address(0)
@@ -100,7 +100,7 @@ contract IdentityRegistry is IIdentityRegistry, AgentRole, IRStorage {
         emit ClaimTopicsRegistrySet(_claimTopicsRegistry);
         emit TrustedIssuersRegistrySet(_trustedIssuersRegistry);
         emit IdentityStorageSet(_identityStorage);
-        __Ownable_init();
+        // __Ownable_init();
     }
 
     /**

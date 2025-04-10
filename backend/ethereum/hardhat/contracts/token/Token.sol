@@ -66,9 +66,12 @@ pragma solidity 0.8.20;
 import "./IToken.sol";
 import "@onchain-id/solidity/contracts/interface/IIdentity.sol";
 import "./TokenStorage.sol";
-import "../roles/AgentRoleUpgradeable.sol";
+import "../roles/AgentRole.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Token is IToken, TokenStorage {
+
+contract Token is IToken, AgentRole, TokenStorage{
+//  Ownable(msg.sender) should be added in inheritance for ownership 
 
     /// modifiers
 
@@ -105,7 +108,7 @@ contract Token is IToken, TokenStorage {
         uint8 _decimals,
         // _onchainID can be zero address if not set, can be set later by owner
         address _onchainID
-    ) {
+    ) external {
         // that require is protecting legacy versions of TokenProxy contracts
         // as there was a bug with the initializer modifier on these proxies
         // that check is preventing attackers to call the init functions on those
@@ -120,7 +123,7 @@ contract Token is IToken, TokenStorage {
             && keccak256(abi.encode(_symbol)) != keccak256(abi.encode(""))
         , "invalid argument - empty string");
         require(0 <= _decimals && _decimals <= 18, "decimals between 0 and 18");
-        __Ownable_init();
+        // __Ownable_init();
         _tokenName = _name;
         _tokenSymbol = _symbol;
         _tokenDecimals = _decimals;
@@ -501,25 +504,25 @@ contract Token is IToken, TokenStorage {
         emit TokensUnfrozen(_userAddress, _amount);
     }
 
-    // /**
-    //  *  @dev See {IToken-setIdentityRegistry}.
-    //  */
-    // function setIdentityRegistry(address _identityRegistry) public {
-    //     _tokenIdentityRegistry = IIdentityRegistry(_identityRegistry);
-    //     emit IdentityRegistryAdded(_identityRegistry);
-    // }
+    /**
+     *  @dev See {IToken-setIdentityRegistry}.
+     */
+    function setIdentityRegistry(address _identityRegistry) public {
+        _tokenIdentityRegistry = IIdentityRegistry(_identityRegistry);
+        emit IdentityRegistryAdded(_identityRegistry);
+    }
 
-    // /**
-    //  *  @dev See {IToken-setCompliance}.
-    //  */
-    // function setCompliance(address _compliance) public {
-    //     if (address(_tokenCompliance) != address(0)) {
-    //         _tokenCompliance.unbindToken(address(this));
-    //     }
-    //     _tokenCompliance = IModularCompliance(_compliance);
-    //     _tokenCompliance.bindToken(address(this));
-    //     emit ComplianceAdded(_compliance);
-    // }
+    /**
+     *  @dev See {IToken-setCompliance}.
+     */
+    function setCompliance(address _compliance) public {
+        if (address(_tokenCompliance) != address(0)) {
+            _tokenCompliance.unbindToken(address(this));
+        }
+        _tokenCompliance = IModularCompliance(_compliance);
+        _tokenCompliance.bindToken(address(this));
+        emit ComplianceAdded(_compliance);
+    }
 
     /**
      *  @dev See {IERC20-balanceOf}.

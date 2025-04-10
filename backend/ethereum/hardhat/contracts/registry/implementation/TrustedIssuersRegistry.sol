@@ -64,15 +64,15 @@
 pragma solidity 0.8.20;
 
 import "@onchain-id/solidity/contracts/interface/IClaimIssuer.sol";
-import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "../interface/ITrustedIssuersRegistry.sol";
 import "../storage/TIRStorage.sol";
 
 
-contract TrustedIssuersRegistry is ITrustedIssuersRegistry, OwnableUpgradeable, TIRStorage {
+contract TrustedIssuersRegistry is ITrustedIssuersRegistry, Ownable(msg.sender), TIRStorage {
 
-    function init() external initializer {
-        __Ownable_init();
+    function init() external {
+        // __Ownable_init();
     }
 
     /**
