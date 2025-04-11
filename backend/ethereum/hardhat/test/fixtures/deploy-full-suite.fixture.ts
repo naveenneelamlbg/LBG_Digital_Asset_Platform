@@ -1,4 +1,4 @@
-import { BigNumber, Contract, Signer } from 'ethers';
+import { Contract, Signer } from 'ethers';
 import { ethers } from 'hardhat';
 import OnchainID from '@onchain-id/solidity';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
@@ -89,7 +89,7 @@ export async function deployFullSuiteFixture() {
   const tokenOID = await deployIdentityProxy(identityImplementationAuthority.address, tokenIssuer.address, deployer);
   const tokenName = 'TREXDINO';
   const tokenSymbol = 'TREX';
-  const tokenDecimals = BigNumber.from('0');
+  const tokenDecimals = 0;
   const token = await ethers
     .deployContract(
       'TokenProxy',
