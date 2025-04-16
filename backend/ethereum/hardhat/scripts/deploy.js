@@ -4,7 +4,7 @@ async function main() {
     const ClaimTopicsRegistryContract = await ethers.getContractFactory("ClaimTopicsRegistry");
     const IdentityRegistryContract = await ethers.getContractFactory("IdentityRegistry");
     const IdentityRegistryStorageContract = await ethers.getContractFactory("IdentityRegistryStorage");
-    const ClaimIssuerRegistryContract = await ethers.getContractFactory("ClaimIssuerRegistry");
+    // const ClaimIssuerRegistryContract = await ethers.getContractFactory("ClaimIssuerRegistry");
     const TrustedIssuerRegistryContract = await ethers.getContractFactory("TrustedIssuerRegistry");
     const ModularComplianceContract = await ethers.getContractFactory("ModularCompliance");
 

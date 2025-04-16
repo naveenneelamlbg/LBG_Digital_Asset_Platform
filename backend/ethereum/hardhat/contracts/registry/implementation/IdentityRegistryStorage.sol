@@ -67,11 +67,12 @@ import "@onchain-id/solidity/contracts/interface/IIdentity.sol";
 import "../../roles/AgentRole.sol";
 import "../interface/IIdentityRegistryStorage.sol";
 import "../storage/IRSStorage.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract IdentityRegistryStorage is IIdentityRegistryStorage, AgentRole, IRSStorage {
 
     function init() external {
-        // __Ownable_init();
+        Ownable(msg.sender);
     }
 
     /**

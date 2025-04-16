@@ -71,7 +71,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 
 contract Token is IToken, AgentRole, TokenStorage{
-//  Ownable(msg.sender) should be added in inheritance for ownership 
+    //  Ownable(msg.sender) should be added in inheritance for ownership 
 
     /// modifiers
 
@@ -123,7 +123,7 @@ contract Token is IToken, AgentRole, TokenStorage{
             && keccak256(abi.encode(_symbol)) != keccak256(abi.encode(""))
         , "invalid argument - empty string");
         require(0 <= _decimals && _decimals <= 18, "decimals between 0 and 18");
-        // __Ownable_init();
+        Ownable(msg.sender);
         _tokenName = _name;
         _tokenSymbol = _symbol;
         _tokenDecimals = _decimals;

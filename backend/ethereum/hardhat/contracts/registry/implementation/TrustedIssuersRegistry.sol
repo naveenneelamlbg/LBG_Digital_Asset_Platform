@@ -74,7 +74,7 @@ contract TrustedIssuersRegistry is ITrustedIssuersRegistry, Ownable(msg.sender),
     function init() external {
         // __Ownable_init();
     }
-
+    
     /**
      *  @dev See {ITrustedIssuersRegistry-addTrustedIssuer}.
      */
