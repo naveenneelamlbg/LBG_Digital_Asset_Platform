@@ -4,17 +4,6 @@ import { ethers as ethersHardhat} from "hardhat";
 import OnchainID from '@onchain-id/solidity';
 import { Contract, Signer } from "ethers";
 
-
-// // Function to deploy IdentityProxy
-// export async function deployIdentityProxy(implementationAuthority: Contract['address'], managementKey: string, signer: Signer) {
-//   const identity = await new ethers.ContractFactory(OnchainID.contracts.IdentityProxy.abi, OnchainID.contracts.IdentityProxy.bytecode, signer).deploy(
-//     implementationAuthority,
-//     managementKey,
-//   );
-
-//   return ethers.getContractAt('Identity', identity.address, signer);
-// }
-
 const TokenizationModule = buildModule("TokenizationModule", (m) => {
   const Token = m.contract("Token");
   const ClaimTopicsRegistry = m.contract("ClaimTopicsRegistry");
@@ -23,22 +12,24 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
   const TrustedIssuersRegistry = m.contract("TrustedIssuersRegistry");
   const ModularCompliance = m.contract("ModularCompliance");
   const DefaultCompliance = m.contract("DefaultCompliance");
-  let ClaimIssuer;
+  let tokenOID;
+  let ClaimIssuerOID;
+  let aliceIdentity;
 
 
   (async () => {
     const [deployer, tokenIssuer, tokenAgent, tokenAdmin, claimIssuer, aliceWallet, bobWallet, charlieWallet, davidWallet, anotherWallet] =
       await ethersHardhat.getSigners();
-    
-    // const claimIssuerSigningKey = ethers.Wallet.createRandom();
-    // const identityImplementation = m.contract("Identity", OnchainID.contracts.Identity, [deployer.address, true]);
-    // // console.log("identityImplementation", identityImplementation);
-    // const identityImplementationAuthority = m.contract("ImplementationAuthority", OnchainID.contracts.ImplementationAuthority, [identityImplementation]);
-    // // console.log("identityImplementationAuthority", identityImplementationAuthority);
+
+    const identityImplementation = m.contract("Identity", OnchainID.contracts.Identity, [deployer.address, true]);
+    // console.log("identityImplementation", identityImplementation);
+    const identityImplementationAuthority = m.contract("ImplementationAuthority", OnchainID.contracts.ImplementationAuthority, [identityImplementation]);
+    // console.log("identityImplementationAuthority", identityImplementationAuthority);
     // const identityFactory = m.contract("Factory", OnchainID.contracts.Factory, [identityImplementationAuthority]);
     // // console.log("identityFactory", identityFactory);
-    // const tokenOID = m.contract("IdentityProxy", OnchainID.contracts.IdentityProxy, [identityImplementationAuthority, tokenIssuer.address]);
-    // // console.log("tokenOID", tokenOID);
+    tokenOID = m.contract("IdentityProxy", OnchainID.contracts.IdentityProxy, [identityImplementationAuthority, tokenIssuer.address],{id: "tokenOID"});
+    ClaimIssuerOID = m.contract("IdentityProxy", OnchainID.contracts.IdentityProxy, [identityImplementationAuthority, claimIssuer.address],{id: "ClaimIssuerOID"});
+    // console.log("tokenOID", tokenOID);
     // m.call(IdentityRegistryStorage, "bindIdentityRegistry", [IdentityRegistry])
     // // await identityRegistryStorage.connect(deployer).bindIdentityRegistry(identityRegistry.address);
     // // await token.connect(deployer).addAgent(tokenAgent.address);
@@ -52,7 +43,8 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
     // ClaimIssuer = m.contract("ClaimIssuer", [claimIssuer.address])
     // // const claimIssuerContract = await ethersHardhat.deployContract('ClaimIssuer', [claimIssuer.address], claimIssuer);
     
-    // m.call(ClaimIssuer, "addKey", [ethers.keccak256((ethers.AbiCoder.defaultAbiCoder()).encode(['address'], [claimIssuerSigningKey.address])), 3, 1])
+    // m.call(ClaimIssuerOID, "addKey", [ethers.keccak256((ethers.AbiCoder.defaultAbiCoder()).encode(['address'], [claimIssuerSigningKey.address])), 3, 1],{from: claimIssuer.address})
+    console.log("key for ClaimIssuerOID: ", ethers.keccak256((ethers.AbiCoder.defaultAbiCoder()).encode(['address'], [claimIssuer.address])), 3, 1)
     // // await claimIssuerContract
     // //   .connect(claimIssuer)
     // //   .addKey(ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['address'], [claimIssuerSigningKey.address])), 3, 1);
@@ -61,14 +53,14 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
     // // await trustedIssuersRegistry.connect(deployer).addTrustedIssuer(claimIssuerContract.address, claimTopics);
 
 
-    // const aliceIdentity = m.contract("IdentityProxy", OnchainID.contracts.IdentityProxy, [identityImplementationAuthority, aliceWallet.address],{id: "aliceIdentity"});
+    aliceIdentity = m.contract("IdentityProxy", OnchainID.contracts.IdentityProxy, [identityImplementationAuthority, aliceWallet.address],{id: "aliceIdentity"});
 
-    // // // const aliceIdentity = await deployIdentityProxy(identityImplementationAuthority, aliceWallet.address, deployer);
-    // // // await aliceIdentity
-    // // //   .connect(aliceWallet)
-    // // //   .addKey(ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(['address'], [aliceActionKey.address])), 2, 1);
+    // // // // const aliceIdentity = await deployIdentityProxy(identityImplementationAuthority, aliceWallet.address, deployer);
+    // // // // await aliceIdentity
+    // // // //   .connect(aliceWallet)
+    // // // //   .addKey(ethers.keccak256(ethers.AbiCoder.defaultAbiCoder().encode(['address'], [aliceActionKey.address])), 2, 1);
 
-    // const bobIdentity = m.contract("IdentityProxy", OnchainID.contracts.IdentityProxy, [identityImplementationAuthority, bobWallet.address],{id: "bobIdentity"});
+    // const bobIdentity = m.contract("IdentityProxy", OnchainID.contracts.IdentityProxy, [tokenIssuer.address, bobWallet.address],{id: "bobIdentity"});
   
     // // const bobIdentity = await deployIdentityProxy(identityImplementationAuthority, bobWallet.address, deployer);
     // const charlieIdentity = m.contract("IdentityProxy", OnchainID.contracts.IdentityProxy, [identityImplementationAuthority, charlieWallet.address],{id: "charlieIdentity"});
@@ -79,9 +71,9 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
     // m.call(ClaimTopicsRegistry, "init");
     // m.call(TrustedIssuersRegistry, "init");
     m.call(IdentityRegistry, "init", [TrustedIssuersRegistry, ClaimTopicsRegistry, IdentityRegistryStorage]);
-    ////////// m.call(Token, "init", [IdentityRegistry, ModularCompliance, "ltcBond", "ltcToken", 0, tokenIssuer.address ]);
+    m.call(Token, "init", [IdentityRegistry, ModularCompliance, "ltcBond", "ltcToken", 0, tokenIssuer.address ]);
 
-    m.call(ClaimTopicsRegistry, "addClaimTopic", [7]); // 7 Represents KYC and AML check
+    // m.call(ClaimTopicsRegistry, "addClaimTopic", [7]); // 7 Represents KYC and AML check
     m.call(IdentityRegistry, "transferOwnership", [tokenIssuer.address], {id: "ownershipTransferTokenAgent"}) // For Claim Issuer Identity Contract
     
     m.call(IdentityRegistry, "addAgent", [tokenAgent.address]); //tokenAgent manages the claim topics registry
@@ -96,13 +88,13 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
     // m.call(IdentityRegistry, "addAgent", [bobWallet.address], {id: "bobAddAgent"})
     // // await identityRegistry.connect(deployer).addAgent(token);
   
-    let trustedIssuersRegistryUserCheck = m.staticCall(TrustedIssuersRegistry, "isTrustedIssuer",[tokenIssuer.address],0,{id: "trustedIssuersRegistryUserCheck"});
-    console.log("trustedIssuersRegistryUserCheck: ",trustedIssuersRegistryUserCheck)
+    // let trustedIssuersRegistryUserCheck = m.staticCall(TrustedIssuersRegistry, "isTrustedIssuer",[tokenIssuer.address],0,{id: "trustedIssuersRegistryUserCheck"});
+    // // console.log("trustedIssuersRegistryUserCheck: ",trustedIssuersRegistryUserCheck)
     
     m.call(TrustedIssuersRegistry, "addTrustedIssuer",[tokenIssuer.address, [7]])
   
-    let trustedIssuersRegistryUserCheck2 = m.staticCall(TrustedIssuersRegistry, "isTrustedIssuer",[tokenIssuer.address],0,{id: "trustedIssuersRegistryUserCheck2"});
-    console.log("trustedIssuersRegistryUserCheck2: ",trustedIssuersRegistryUserCheck2)
+    // let trustedIssuersRegistryUserCheck2 = m.staticCall(TrustedIssuersRegistry, "isTrustedIssuer",[tokenIssuer.address],0,{id: "trustedIssuersRegistryUserCheck2"});
+    // // console.log("trustedIssuersRegistryUserCheck2: ",trustedIssuersRegistryUserCheck2)
 
     
 
@@ -111,9 +103,9 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
     
     m.call(Token, "addAgent", [tokenAdmin.address]); //tokenAgent manages the claim topics registry
 
-    // m.call(IdentityRegistryStorage, "addIdentityToStorage", [tokenAdmin.address, IdentityRegistry, 20]); 
-    // m.call(IdentityRegistry, "registerIdentity", [aliceWallet.address, IdentityRegistry, 20], {id: "registerAliceForChainId",  from: tokenIssuer.address})
-    // m.call(IdentityRegistry, "registerIdentity", [bobWallet.address, IdentityRegistry, 20], {id: "registerBobForChainId",  from: tokenIssuer.address})
+    // m.call(IdentityRegistryStorage, "addIdentityToStorage", [aliceWallet.address, IdentityRegistry, 20], { from: tokenAdmin.address}); 
+    m.call(IdentityRegistryStorage, "addIdentityToStorage", [aliceWallet.address, IdentityRegistry, 20], {id: "registerAliceForChainId",  from: tokenAdmin.address})
+    m.call(IdentityRegistryStorage, "addIdentityToStorage", [bobWallet.address, IdentityRegistry, 20], {id: "registerBobForChainId",  from: tokenAdmin.address})
 
 
     // m.call(IdentityRegistry, "batchRegisterIdentity", [[aliceWallet.address, bobWallet.address], [aliceWallet.address, bobWallet.address], [42, 666]], {from: tokenAgent.address})
@@ -123,20 +115,23 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
   
     // const claimForAlice = {
     //   data: ethers.hexlify(ethers.toUtf8Bytes('Some claim public data.')),
-    //   issuer: claimIssuerContract.address,
-    //   topic: claimTopics[0],
+    //   issuer: claimIssuer,
+    //   topic: 7,
     //   scheme: 1,
-    //   identity: aliceIdentity.address,
+    //   identity: "0x3Aa5ebB10DC797CAC828524e59A333d0A371443c",
     //   signature: '',
     // };
-    // claimForAlice.signature = await claimIssuerSigningKey.signMessage(
+    // claimForAlice.signature = await claimIssuer.signMessage(
     //   ethers.getBytes(
     //     ethers.keccak256(
     //       ethers.AbiCoder.defaultAbiCoder().encode(['address', 'uint256', 'bytes'], [claimForAlice.identity, claimForAlice.topic, claimForAlice.data]),
     //     ),
     //   ),
     // );
+
   
+    // console.log("claimForAlice: ",claimForAlice);
+    // m.call(aliceIdentity, "addClaim", [claimForAlice.topic, claimForAlice.scheme, claimForAlice.issuer, claimForAlice.signature, claimForAlice.data, '']);
     // await aliceIdentity
     //   .connect(aliceWallet)
     //   .addClaim(claimForAlice.topic, claimForAlice.scheme, claimForAlice.issuer, claimForAlice.signature, claimForAlice.data, '');
@@ -162,11 +157,11 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
     //   .connect(bobWallet)
     //   .addClaim(claimForBob.topic, claimForBob.scheme, claimForBob.issuer, claimForBob.signature, claimForBob.data, '');
   
-    // m.call(Token, "mint", [aliceWallet.address, 1000], {id: "mintForAlice"})
-    // // await token.connect(tokenAgent).mint(aliceWallet.address, 1000);
+    m.call(Token, "mint", [aliceWallet.address, 1000], {id: "mintForAlice"})
+    // await token.connect(tokenAgent).mint(aliceWallet.address, 1000);
 
-    // m.call(Token, "mint", [bobWallet.address, 1000], {id: "mintForBob"})
-    // // await token.connect(tokenAgent).mint(bobWallet.address, 500);
+    m.call(Token, "mint", [bobWallet.address, 1000], {id: "mintForBob"})
+    // await token.connect(tokenAgent).mint(bobWallet.address, 500);
   
     // m.call(Token, "unpause");
     // await token.connect(tokenAgent).unpause();
@@ -184,11 +179,16 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
     ClaimTopicsRegistry,
     IdentityRegistry,
     IdentityRegistryStorage,
-    // ClaimIssuerRegistry,
     TrustedIssuersRegistry,
-    ModularCompliance,
-    DefaultCompliance,
-    // ClaimIssuer,
+    compliance: {
+      ModularCompliance,
+      DefaultCompliance,
+    },
+    identity: {
+      ClaimIssuerOID,
+      aliceIdentity,
+      tokenOID,
+    },
   };
 });
 

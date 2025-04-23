@@ -113,7 +113,7 @@ contract Token is IToken, AgentRole, TokenStorage{
         // as there was a bug with the initializer modifier on these proxies
         // that check is preventing attackers to call the init functions on those
         // legacy contracts.
-        require(owner() == address(0), "already initialized");
+        // require(owner() == address(0), "already initialized");
         require(
             _identityRegistry != address(0)
             && _compliance != address(0)
