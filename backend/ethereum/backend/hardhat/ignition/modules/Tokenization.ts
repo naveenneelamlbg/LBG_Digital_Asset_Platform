@@ -157,11 +157,11 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
     //   .connect(bobWallet)
     //   .addClaim(claimForBob.topic, claimForBob.scheme, claimForBob.issuer, claimForBob.signature, claimForBob.data, '');
 
-    m.call(Token, "mint", [aliceWallet.address, 1000], { id: "mintForAlice" })
-    // await token.connect(tokenAgent).mint(aliceWallet.address, 1000);
+    // m.call(Token, "mint", [aliceWallet.address, 1000], { id: "mintForAlice" })
+    // // await token.connect(tokenAgent).mint(aliceWallet.address, 1000);
 
-    m.call(Token, "mint", [bobWallet.address, 1000], { id: "mintForBob" })
-    // await token.connect(tokenAgent).mint(bobWallet.address, 500);
+    // m.call(Token, "mint", [bobWallet.address, 1000], { id: "mintForBob" })
+    // // await token.connect(tokenAgent).mint(bobWallet.address, 500);
 
     // m.call(Token, "unpause");
     // await token.connect(tokenAgent).unpause();
