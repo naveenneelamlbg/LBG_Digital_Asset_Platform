@@ -54,15 +54,15 @@ export class TokenController {
     };
   }
   
-  @Post('deploy-implementation-authority')
-  async deployImplementationAuthority(@Body() dto: DeployImplementationAuthorityDto) {
-    const result = await this.tokenService.deployImplementationAuthority(dto.identityImplementationAddress);
-    return {
-      statusCode: HttpStatus.OK,
-      message: 'Implementation authority deployed successfully',
-      ...result
-    };
-  }
+  // @Post('deploy-implementation-authority')
+  // async deployImplementationAuthority(@Body() dto: DeployImplementationAuthorityDto) {
+  //   const result = await this.tokenService.deployImplementationAuthority(dto.identityImplementationAddress);
+  //   return {
+  //     statusCode: HttpStatus.OK,
+  //     message: 'Implementation authority deployed successfully',
+  //     ...result
+  //   };
+  // }
 
 
   // @Post('add-claim-topic')
