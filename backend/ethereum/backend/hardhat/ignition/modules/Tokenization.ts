@@ -43,7 +43,7 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
     // ClaimIssuer = m.contract("ClaimIssuer", [claimIssuer.address])
     // // const claimIssuerContract = await ethersHardhat.deployContract('ClaimIssuer', [claimIssuer.address], claimIssuer);
 
-    // m.call(ClaimIssuerOID, "addKey", [ethers.keccak256((ethers.AbiCoder.defaultAbiCoder()).encode(['address'], [claimIssuerSigningKey.address])), 3, 1],{from: claimIssuer.address})
+    // m.call(ClaimIssuerOID, "addKey", [ethers.keccak256((ethers.AbiCoder.defaultAbiCoder()).encode(['address'], [claimIssuer.address])), 3, 1],{from: claimIssuer.address})
     console.log("key for ClaimIssuerOID: ", ethers.keccak256((ethers.AbiCoder.defaultAbiCoder()).encode(['address'], [claimIssuer.address])), 3, 1)
     // // await claimIssuerContract
     // //   .connect(claimIssuer)
