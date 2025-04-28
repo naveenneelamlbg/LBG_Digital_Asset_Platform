@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class onChainIdCreationDto {
+export class OnChainIdCreationDto {
+  @ApiProperty({ description: 'signer name', example: 'deployer' })
+  signer: string;
+
   @ApiProperty({ description: 'user wallet address', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   address: string;
 
@@ -59,6 +62,9 @@ export class InitTokenDto {
 }
 
 export class AddClaimTopicDto {
+  @ApiProperty({ description: 'signer name', example: 'alice' })
+  signer: string;
+
   @ApiProperty({ description: 'claimTopicsRegistryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   claimTopicsRegistryAddress: string;
 
@@ -99,6 +105,9 @@ export class InitRegistryStorageDto {
 }
 
 export class AddStorageAgentDto {
+  @ApiProperty({ description: 'signer name', example: 'alice' })
+  signer: string;
+
   @ApiProperty({ description: 'registryStorageAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   registryStorageAddress: string;
 
@@ -115,8 +124,8 @@ export class AddTokenAgentDto {
 }
 
 export class AddClaimDto {
-  @ApiProperty({ description: 'sender', example: 'alice' })
-  sender: string;
+  @ApiProperty({ description: 'signer name', example: 'alice' })
+  signer: string;
 
   @ApiProperty({ description: 'identityProxyAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   identityAddress: string;
@@ -155,20 +164,26 @@ export class GenerateClaimSignatureDto {
 }
 
 export class RegisterIdentityDto {
-  @ApiProperty({ description: 'registryStorageAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  registryStorageAddress: string;
+  @ApiProperty({ description: 'signer name', example: 'alice' })
+  signer: string;
 
-  @ApiProperty({ description: 'walletAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  walletAddress: string;
+  @ApiProperty({ description: 'identityRegistryStorageAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  identityRegistryStorageAddress: string;
+
+  @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  userAddress: string;
 
   @ApiProperty({ description: 'identityRegistryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   identityRegistryAddress: string;
 
-  @ApiProperty({ description: 'chainId', example: '0' })
-  chainId: number;
+  @ApiProperty({ description: 'country', example: '91' })
+  country: number;
 }
 
 export class MintTokensDto {
+  @ApiProperty({ description: 'signer name', example: 'alice' })
+  signer: string;
+
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   tokenAddress: string;
 

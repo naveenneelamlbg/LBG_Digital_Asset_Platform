@@ -1,7 +1,7 @@
 import { Controller, Post, Body, HttpStatus } from '@nestjs/common';
 import { TokenService } from './token.service';
 import {
-  onChainIdCreationDto,
+  OnChainIdCreationDto,
   DeployImplementationAuthorityDto,
   DeployIdentityProxyDto,
   InitIdentityRegistryDto,
@@ -21,11 +21,11 @@ import {
 
 @Controller('token')
 export class TokenController {
-  constructor(private readonly tokenService: TokenService) {}
+  constructor(private readonly tokenService: TokenService) { }
 
   @Post('create-onchain-identity')
-  async createOnChainId(@Body() dto: onChainIdCreationDto) {
-    const result = await this.tokenService.createOnChainId(dto.address);
+  async createOnChainId(@Body() dto: OnChainIdCreationDto) {
+    const result = await this.tokenService.createOnChainId(dto);
     return {
       statusCode: HttpStatus.OK,
       message: 'Identity implementation deployed successfully',
@@ -33,7 +33,7 @@ export class TokenController {
     };
   }
 
-  
+
   // @Post('add-key')
   // async addKey(@Body() dto: AddKeyDto) {
   //   const receipt = await this.tokenService.addKey(dto);
@@ -43,7 +43,7 @@ export class TokenController {
   //     receipt
   //   };
   // }
-  
+
   @Post('add-claim')
   async addClaim(@Body() dto: AddClaimDto) {
     const receipt = await this.tokenService.addClaim(dto);
@@ -53,7 +53,7 @@ export class TokenController {
       receipt
     };
   }
-  
+
   // @Post('deploy-implementation-authority')
   // async deployImplementationAuthority(@Body() dto: DeployImplementationAuthorityDto) {
   //   const result = await this.tokenService.deployImplementationAuthority(dto.identityImplementationAddress);
@@ -80,12 +80,7 @@ export class TokenController {
 
   @Post('register-identity')
   async registerIdentity(@Body() dto: RegisterIdentityDto) {
-    const receipt = await this.tokenService.registerIdentity(
-      dto.registryStorageAddress,
-      dto.walletAddress,
-      dto.identityRegistryAddress,
-      dto.chainId
-    );
+    const receipt = await this.tokenService.registerIdentity(dto);
     return {
       statusCode: HttpStatus.OK,
       message: 'Identity registered successfully',
@@ -95,11 +90,7 @@ export class TokenController {
 
   @Post('mint-tokens')
   async mintTokens(@Body() dto: MintTokensDto) {
-    const receipt = await this.tokenService.mintTokens(
-      dto.tokenAddress,
-      dto.recipientAddress,
-      dto.amount
-    );
+    const receipt = await this.tokenService.mintTokens(dto);
     return {
       statusCode: HttpStatus.OK,
       message: 'Tokens minted successfully',
