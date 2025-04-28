@@ -27,8 +27,8 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
     // console.log("identityImplementationAuthority", identityImplementationAuthority);
     // const identityFactory = m.contract("Factory", OnchainID.contracts.Factory, [identityImplementationAuthority]);
     // // console.log("identityFactory", identityFactory);
-    tokenOID = m.contract("IdentityProxy", OnchainID.contracts.IdentityProxy, [identityImplementationAuthority, tokenIssuer.address], { id: "tokenOID" });
-    ClaimIssuerOID = m.contract("IdentityProxy", OnchainID.contracts.IdentityProxy, [identityImplementationAuthority, claimIssuer.address], { id: "ClaimIssuerOID" });
+    // tokenOID = m.contract("IdentityProxy", OnchainID.contracts.IdentityProxy, [identityImplementationAuthority, tokenIssuer.address], { id: "tokenOID" });
+    ClaimIssuerOID = m.contract("ClaimIssuer", OnchainID.contracts.ClaimIssuer, [claimIssuer.address], { id: "ClaimIssuerOID" });
     // console.log("tokenOID", tokenOID);
     // m.call(IdentityRegistryStorage, "bindIdentityRegistry", [IdentityRegistry])
     // // await identityRegistryStorage.connect(deployer).bindIdentityRegistry(identityRegistry.address);
@@ -43,7 +43,7 @@ const TokenizationModule = buildModule("TokenizationModule", (m) => {
     // ClaimIssuer = m.contract("ClaimIssuer", [claimIssuer.address])
     // // const claimIssuerContract = await ethersHardhat.deployContract('ClaimIssuer', [claimIssuer.address], claimIssuer);
 
-    // m.call(ClaimIssuerOID, "addKey", [ethers.keccak256((ethers.AbiCoder.defaultAbiCoder()).encode(['address'], [claimIssuer.address])), 3, 1],{from: claimIssuer.address})
+    m.call(ClaimIssuerOID, "addKey", [ethers.keccak256((ethers.AbiCoder.defaultAbiCoder()).encode(['address'], [claimIssuer.address])), 3, 1],{from: claimIssuer.address})
     console.log("key for ClaimIssuerOID: ", ethers.keccak256((ethers.AbiCoder.defaultAbiCoder()).encode(['address'], [claimIssuer.address])), 3, 1)
     // // await claimIssuerContract
     // //   .connect(claimIssuer)
