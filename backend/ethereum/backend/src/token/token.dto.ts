@@ -173,8 +173,8 @@ export class RegisterIdentityDto {
   @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   userAddress: string;
 
-  @ApiProperty({ description: 'identityRegistryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  identityRegistryAddress: string;
+  @ApiProperty({ description: 'userIdentity', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  userIdentity: string;
 
   @ApiProperty({ description: 'country', example: '91' })
   country: number;

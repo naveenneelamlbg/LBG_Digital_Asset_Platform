@@ -36,7 +36,7 @@ export class TokenService {
 
       await createIdentity.deployed();
 
-      const identity = await IdentitySDK.Identity.at(createIdentity.address, { provider: this.provider });
+      // const identity = await IdentitySDK.Identity.at(createIdentity.address, { provider: this.provider });
 
       return {
         address: createIdentity.address,
@@ -153,7 +153,7 @@ export class TokenService {
 
       const tx = await storage.addIdentityToStorage(
         body.userAddress,
-        body.identityRegistryAddress,
+        body.userIdentity,
         body.country
       );
       return await tx.wait();
