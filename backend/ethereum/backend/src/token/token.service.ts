@@ -12,6 +12,9 @@ export class TokenService {
   private provider;
   private signer: ethers.Signer;
 
+  private claimIssuerSigningKey = ethers.Wallet.createRandom();
+  private aliceActionKey = ethers.Wallet.createRandom();
+
   constructor() {
     this.provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
     process.env.deployerPrivateKey ? this.signer = new ethers.Wallet(process.env.deployerPrivateKey, this.provider) : Error("Please set environment variables");
