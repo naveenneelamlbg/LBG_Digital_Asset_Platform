@@ -6,8 +6,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   // Swagger configuration
   const config = new DocumentBuilder()
-    .setTitle('Daml Token API Documentation')
-    .setDescription('API for managing tokens on Hedera ledger')
+    .setTitle('Ethereaum ERC 3643 Token API Documentation')
+    .setDescription('API for managing tokens on Eth based ledger')
     .setVersion('1.0')
     .build();
 
