@@ -28,13 +28,13 @@ export class TokenService {
   async createOnChainId(body: OnChainIdCreationDto) {
     try {
       const identityFactory = new ethers.ContractFactory(
-        contracts.Identity.abi,
-        contracts.Identity.bytecode,
+        contracts.IdentityProxy.abi,
+        contracts.IdentityProxy.bytecode,
         this.signer
       );
       let createIdentity = await identityFactory.deploy(
-        body.address,
-        false,
+        body.identityImplementationAuthority,
+        body.address
       );
 
       await createIdentity.deployed();
@@ -57,7 +57,7 @@ export class TokenService {
 
       const userSigner = await this.getSigner(body.signer);
 
-      let signKey: string = process.env.claimIssuerPrivateKey || "";
+      let signKey: string = process.env.claimIssuerSignPrivateKey || "";
       const claimIssuer = new ethers.Wallet(signKey, this.provider);
 
       // let name="alice"
@@ -79,25 +79,46 @@ export class TokenService {
       //   }
       // }
 
-      // prepare the claim
-      const claim = new IdentitySDK.Claim({
-        address: body.identityAddress,
+      const claimTopics = [ethers.utils.id('CLAIM_TOPIC')];
+
+      // // prepare the claim
+      // const claim = new IdentitySDK.Claim({
+      //   address: body.identityAddress,
+      //   data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(body.data)),
+      //   issuer: body.claimIssuerContractAddress,
+      //   // emissionDate: Date.now(),
+      //   scheme: body.scheme,
+      //   topic: claimTopics[0] as unknown as number,
+      //   // identity: body.identityAddress,
+      //   uri: "",
+      // });
+
+      const claim = {
+        identity: body.identityAddress,
         data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(body.data)),
-        issuer: claimIssuer.address,
-        // emissionDate: Date.now(),
+        issuer: body.claimIssuerContractAddress,
         scheme: body.scheme,
-        topic: body.topic,
+        topic: claimTopics[0] as unknown as number,
         uri: "",
-      });
+        signature:""
+      };
 
-      // sign the claim
-      const customSigner = new IdentitySDK.SignerModule({
-        publicKey: await claimIssuer.publicKey as unknown as PublicKey,
-        signMessage: claimIssuer.signMessage.bind(userSigner)
-      });
-      await claim.sign(customSigner);
+      claim.signature = await claimIssuer.signMessage(
+        ethers.utils.arrayify(
+          ethers.utils.keccak256(
+            ethers.utils.defaultAbiCoder.encode(['address', 'uint256', 'bytes'], [claim.identity, claim.topic, claim.data]),
+          ),
+        ),
+      );
 
-      let provider = this.provider;
+      // // sign the claim
+      // const customSigner = new IdentitySDK.SignerModule({
+      //   publicKey: await claimIssuer.publicKey as unknown as PublicKey,
+      //   signMessage: claimIssuer.signMessage.bind(userSigner)
+      // });
+      // await claim.sign(customSigner);
+
+      // let provider = this.provider;
       // emit the claim
       // const tx2 = await identity.getKey(key, { signer: userSigner });
 
@@ -148,15 +169,15 @@ export class TokenService {
     body: RegisterIdentityDto
   ) {
     try {
-      const tokenAdmin = await this.getSigner("tokenAdmin");
+      const tokenAgent = await this.getSigner("tokenAgent");
 
       const storage = new ethers.Contract(
-        body.identityRegistryStorageAddress,
-        this.identityRegistryStorageAbi,
-        tokenAdmin
+        body.identityRegistryAddress,
+        this.identityRegistryAbi,
+        tokenAgent
       );
 
-      const tx = await storage.addIdentityToStorage(
+      const tx = await storage.registerIdentity(
         body.userAddress,
         body.userIdentity,
         body.country
@@ -1278,7 +1299,7 @@ export class TokenService {
     }
   ]
 
-  private identityRegistryStorageAbi = [
+  private identityRegistryAbi = [
     {
       "inputs": [
         {
@@ -1333,6 +1354,19 @@ export class TokenService {
         {
           "indexed": true,
           "internalType": "address",
+          "name": "claimTopicsRegistry",
+          "type": "address"
+        }
+      ],
+      "name": "ClaimTopicsRegistrySet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
           "name": "investorAddress",
           "type": "address"
         },
@@ -1343,7 +1377,58 @@ export class TokenService {
           "type": "uint16"
         }
       ],
-      "name": "CountryModified",
+      "name": "CountryUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "investorAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "contract IIdentity",
+          "name": "identity",
+          "type": "address"
+        }
+      ],
+      "name": "IdentityRegistered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "investorAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "contract IIdentity",
+          "name": "identity",
+          "type": "address"
+        }
+      ],
+      "name": "IdentityRemoved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "identityStorage",
+          "type": "address"
+        }
+      ],
+      "name": "IdentityStorageSet",
       "type": "event"
     },
     {
@@ -1362,71 +1447,7 @@ export class TokenService {
           "type": "address"
         }
       ],
-      "name": "IdentityModified",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "identityRegistry",
-          "type": "address"
-        }
-      ],
-      "name": "IdentityRegistryBound",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "identityRegistry",
-          "type": "address"
-        }
-      ],
-      "name": "IdentityRegistryUnbound",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "investorAddress",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "contract IIdentity",
-          "name": "identity",
-          "type": "address"
-        }
-      ],
-      "name": "IdentityStored",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "investorAddress",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "contract IIdentity",
-          "name": "identity",
-          "type": "address"
-        }
-      ],
-      "name": "IdentityUnstored",
+      "name": "IdentityUpdated",
       "type": "event"
     },
     {
@@ -1449,6 +1470,19 @@ export class TokenService {
       "type": "event"
     },
     {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "trustedIssuersRegistry",
+          "type": "address"
+        }
+      ],
+      "name": "TrustedIssuersRegistrySet",
+      "type": "event"
+    },
+    {
       "inputs": [
         {
           "internalType": "address",
@@ -1464,22 +1498,22 @@ export class TokenService {
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "_userAddress",
-          "type": "address"
+          "internalType": "address[]",
+          "name": "_userAddresses",
+          "type": "address[]"
         },
         {
-          "internalType": "contract IIdentity",
-          "name": "_identity",
-          "type": "address"
+          "internalType": "contract IIdentity[]",
+          "name": "_identities",
+          "type": "address[]"
         },
         {
-          "internalType": "uint16",
-          "name": "_country",
-          "type": "uint16"
+          "internalType": "uint16[]",
+          "name": "_countries",
+          "type": "uint16[]"
         }
       ],
-      "name": "addIdentityToStorage",
+      "name": "batchRegisterIdentity",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1488,20 +1522,106 @@ export class TokenService {
       "inputs": [
         {
           "internalType": "address",
-          "name": "_identityRegistry",
+          "name": "_userAddress",
           "type": "address"
         }
       ],
-      "name": "bindIdentityRegistry",
+      "name": "contains",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_userAddress",
+          "type": "address"
+        }
+      ],
+      "name": "deleteIdentity",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_userAddress",
+          "type": "address"
+        }
+      ],
+      "name": "identity",
+      "outputs": [
+        {
+          "internalType": "contract IIdentity",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [],
+      "name": "identityStorage",
+      "outputs": [
+        {
+          "internalType": "contract IIdentityRegistryStorage",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_trustedIssuersRegistry",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_claimTopicsRegistry",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_identityStorage",
+          "type": "address"
+        }
+      ],
       "name": "init",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_userAddress",
+          "type": "address"
+        }
+      ],
+      "name": "investorCountry",
+      "outputs": [
+        {
+          "internalType": "uint16",
+          "name": "",
+          "type": "uint16"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -1524,52 +1644,35 @@ export class TokenService {
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "linkedIdentityRegistries",
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_userAddress",
+          "type": "address"
+        }
+      ],
+      "name": "isVerified",
       "outputs": [
         {
-          "internalType": "address[]",
+          "internalType": "bool",
           "name": "",
-          "type": "address[]"
+          "type": "bool"
         }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [
+      "inputs": [],
+      "name": "issuersRegistry",
+      "outputs": [
         {
-          "internalType": "address",
-          "name": "_userAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "contract IIdentity",
-          "name": "_identity",
+          "internalType": "contract ITrustedIssuersRegistry",
+          "name": "",
           "type": "address"
         }
       ],
-      "name": "modifyStoredIdentity",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_userAddress",
-          "type": "address"
-        },
-        {
-          "internalType": "uint16",
-          "name": "_country",
-          "type": "uint16"
-        }
-      ],
-      "name": "modifyStoredInvestorCountry",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -1589,11 +1692,21 @@ export class TokenService {
       "inputs": [
         {
           "internalType": "address",
-          "name": "_agent",
+          "name": "_userAddress",
           "type": "address"
+        },
+        {
+          "internalType": "contract IIdentity",
+          "name": "_identity",
+          "type": "address"
+        },
+        {
+          "internalType": "uint16",
+          "name": "_country",
+          "type": "uint16"
         }
       ],
-      "name": "removeAgent",
+      "name": "registerIdentity",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1602,11 +1715,11 @@ export class TokenService {
       "inputs": [
         {
           "internalType": "address",
-          "name": "_userAddress",
+          "name": "_agent",
           "type": "address"
         }
       ],
-      "name": "removeIdentityFromStorage",
+      "name": "removeAgent",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -1622,35 +1735,49 @@ export class TokenService {
       "inputs": [
         {
           "internalType": "address",
-          "name": "_userAddress",
+          "name": "_claimTopicsRegistry",
           "type": "address"
         }
       ],
-      "name": "storedIdentity",
-      "outputs": [
-        {
-          "internalType": "contract IIdentity",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
+      "name": "setClaimTopicsRegistry",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [
         {
           "internalType": "address",
-          "name": "_userAddress",
+          "name": "_identityRegistryStorage",
           "type": "address"
         }
       ],
-      "name": "storedInvestorCountry",
+      "name": "setIdentityRegistryStorage",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_trustedIssuersRegistry",
+          "type": "address"
+        }
+      ],
+      "name": "setTrustedIssuersRegistry",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "topicsRegistry",
       "outputs": [
         {
-          "internalType": "uint16",
+          "internalType": "contract IClaimTopicsRegistry",
           "name": "",
-          "type": "uint16"
+          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -1673,11 +1800,34 @@ export class TokenService {
       "inputs": [
         {
           "internalType": "address",
-          "name": "_identityRegistry",
+          "name": "_userAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint16",
+          "name": "_country",
+          "type": "uint16"
+        }
+      ],
+      "name": "updateCountry",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_userAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "contract IIdentity",
+          "name": "_identity",
           "type": "address"
         }
       ],
-      "name": "unbindIdentityRegistry",
+      "name": "updateIdentity",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

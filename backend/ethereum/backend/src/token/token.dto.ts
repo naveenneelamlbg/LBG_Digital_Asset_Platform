@@ -139,6 +139,9 @@ export class AddClaimDto {
   @ApiProperty({ description: 'issuerAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   issuerAddress: string;
 
+  @ApiProperty({ description: 'claimIssuerContractAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  claimIssuerContractAddress: string;
+
   // @ApiProperty({ description: 'signature', example: '0xc43b42f4d30200b2f03855fcb1dc63defcb0c60b25350ad5fdf60ffe83b81f294fbe7e4440ddddb3ba074100a557e4267b1ebc7692b48c7fea2144fef9716c781c' })
   // signature: string;
 
@@ -167,8 +170,8 @@ export class RegisterIdentityDto {
   @ApiProperty({ description: 'signer name', example: 'alice' })
   signer: string;
 
-  @ApiProperty({ description: 'identityRegistryStorageAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  identityRegistryStorageAddress: string;
+  @ApiProperty({ description: 'identityRegistryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  identityRegistryAddress: string;
 
   @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   userAddress: string;
