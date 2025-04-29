@@ -61,6 +61,8 @@ export class TokenService {
       // let idAddr: string = process.env[`${name}Identity`] || " ";
       const identity = await Identity.at(body.identityAddress, this.provider);
 
+      console.log(IdentitySDK.utils.encodeAndHash(['address'], [userSigner?.address]));
+
       // const addKeyTransaction = await identity.addKey(IdentitySDK.utils.encodeAndHash(['address'], [userSigner?.address]), IdentitySDK.utils.enums.KeyPurpose.MANAGEMENT, IdentitySDK.utils.enums.KeyType.ECDSA, { signer: userSigner });
 
       // const keys = await identity.getKeysByPurpose(
