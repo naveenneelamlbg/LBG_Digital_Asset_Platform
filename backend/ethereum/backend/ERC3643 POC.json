@@ -1,0 +1,153 @@
+{
+  "name": "ERC3642 POC",
+  "version": "1",
+  "items": [
+    {
+      "type": "http",
+      "name": "addClaim",
+      "filename": "addClaim.bru",
+      "seq": 5,
+      "request": {
+        "url": "http://localhost:3000/token/add-claim",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"identityAddress\": \"0x3Aa5ebB10DC797CAC828524e59A333d0A371443c\",\n  \"topic\": 10101011011011,\n  \"scheme\": 10101000666003,\n  \"issuerAddress\": \"0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65\",\n  \"data\": \"Adhar card number\",\n  \"uri\": \"\",\n  \"signer\": \"alice\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "app test",
+      "filename": "app test.bru",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:3000",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"deployerAddress\": \"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "create-onchain-identity",
+      "filename": "create-onchain-identity.bru",
+      "seq": 2,
+      "request": {
+        "url": "http://localhost:3000/token/create-onchain-identity",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"address\": \"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a\",\n  \"signer\": \"deployer\"\n}  ",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "mintToken",
+      "filename": "mintToken.bru",
+      "seq": 4,
+      "request": {
+        "url": "http://localhost:3000/token/mint-tokens",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"tokenAddress\": \"0xa513E6E4b8f2a923D98304ec87F64353C4D5C853\",\n  \"recipientAddress\": \"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a\",\n  \"amount\": 100,\n  \"signer\": \"tokenAdmin\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "register-identity",
+      "filename": "register-identity.bru",
+      "seq": 3,
+      "request": {
+        "url": "http://localhost:3000/token/register-identity",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"identityRegistryStorageAddress\": \"0x5FC8d32690cc91D4c39d9d3abcBD16989F875707\",\n  \"userAddress\": \"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a\",\n  \"userIdentity\": \"0x3Aa5ebB10DC797CAC828524e59A333d0A371443c\",\n  \"country\": 91,\n  \"signer\": \"tokenAdmin\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    }
+  ],
+  "environments": [],
+  "brunoConfig": {
+    "version": "1",
+    "name": "ERC3642 POC",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ],
+    "size": 0.0015935897827148438,
+    "filesCount": 5
+  }
+}
