@@ -3,17 +3,13 @@ import { ethers } from 'ethers';
 import { contracts } from "@onchain-id/solidity";
 import { Identity, IdentitySDK } from '@onchain-id/identity-sdk';
 import 'dotenv/config'
-import { PublicKey } from '@onchain-id/identity-sdk/dist/core/SignerModule';
 import { ClaimScheme, ClaimTopic } from '@onchain-id/identity-sdk/dist/claim/Claim.interface';
-import { AddClaimDto, MintTokensDto, OnChainIdCreationDto, RegisterIdentityDto } from './token.dto';
+import { AddClaimDto, AddClaimTopicDto, AddTrustedIssuerClaimTopicsDto, GetClaimTopicsDto, GetUserClaims, MintTokensDto, OnChainIdCreationDto, RegisterIdentityDto, RemoveClaimTopicDto, UpdateTrustedIssuerClaimTopicsDto } from './token.dto';
 
 @Injectable()
 export class TokenService {
   private provider;
   private signer: ethers.Signer;
-
-  private claimIssuerSigningKey = ethers.Wallet.createRandom();
-  private aliceActionKey = ethers.Wallet.createRandom();
 
   constructor() {
     this.provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
@@ -64,7 +60,7 @@ export class TokenService {
       // let idAddr: string = process.env[`${name}Identity`] || " ";
       const identity = await Identity.at(body.identityAddress, this.provider);
 
-      console.log(IdentitySDK.utils.encodeAndHash(['address'], [userSigner?.address]));
+      // console.log(IdentitySDK.utils.encodeAndHash(['address'], [userSigner?.address]));
 
       // const addKeyTransaction = await identity.addKey(IdentitySDK.utils.encodeAndHash(['address'], [userSigner?.address]), IdentitySDK.utils.enums.KeyPurpose.MANAGEMENT, IdentitySDK.utils.enums.KeyType.ECDSA, { signer: userSigner });
 
@@ -79,19 +75,7 @@ export class TokenService {
       //   }
       // }
 
-      const claimTopics = [ethers.utils.id('CLAIM_TOPIC')];
-
-      // // prepare the claim
-      // const claim = new IdentitySDK.Claim({
-      //   address: body.identityAddress,
-      //   data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(body.data)),
-      //   issuer: body.claimIssuerContractAddress,
-      //   // emissionDate: Date.now(),
-      //   scheme: body.scheme,
-      //   topic: claimTopics[0] as unknown as number,
-      //   // identity: body.identityAddress,
-      //   uri: "",
-      // });
+      const claimTopics = [ethers.utils.id(body.topic)];
 
       const claim = {
         identity: body.identityAddress,
@@ -131,20 +115,105 @@ export class TokenService {
     }
   }
 
-  // async addClaimTopic(claimTopicsRegistryAddress: string, topic: number) {
-  //   try {
-  //     const registry = new ethers.Contract(
-  //       claimTopicsRegistryAddress,
-  //       contracts.ClaimTopicsRegistry.abi,
-  //       this.signer
-  //     );
+  async addClaimTopic(body: AddClaimTopicDto) {
+    try {
+      const claimTopics = [ethers.utils.id(body.topic)];
+      const registry = new ethers.Contract(
+        body.claimTopicsRegistryAddress,
+        this.claimTopicsRegistryAbi,
+        this.signer
+      );
 
-  //     const tx = await registry.addClaimTopic(topic);
-  //     return await tx.wait();
-  //   } catch (error) {
-  //     throw new HttpException(error.message || 'Failed to add claim topic', HttpStatus.BAD_REQUEST);
-  //   }
-  // }
+      const tx = await registry.addClaimTopic(claimTopics[0]);
+      return await tx.wait();
+    } catch (error) {
+      throw new HttpException(error.message || 'Failed to add claim topic', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getClaimTopics(body: GetClaimTopicsDto) {
+    try {
+      // const claimTopics = [ethers.utils.id(body.topic)];
+      const registry = new ethers.Contract(
+        body.claimTopicsRegistryAddress,
+        this.claimTopicsRegistryAbi,
+        this.signer
+      );
+
+      const tx = await registry.getClaimTopics();
+      return tx;
+    } catch (error) {
+      throw new HttpException(error.message || 'Failed to get claim topic', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getUserClaims(body: GetUserClaims) {
+    try {
+      // const claimTopics = [ethers.utils.id(body.topic)];
+      const registry = new ethers.Contract(
+        body.identityAddress,
+        contracts.Identity.abi,
+        this.signer
+      );
+
+      const tx = await registry.getClaimIdsByTopic(body.topic);
+      return tx;
+    } catch (error) {
+      throw new HttpException(error.message || 'Failed to get claim topic', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async addTrustedIssuerClaimTopics(body: AddTrustedIssuerClaimTopicsDto) {
+    try {
+      const claimTopics = body.topics.map(
+        (topic)=>ethers.utils.id(topic)
+      );
+      const registry = new ethers.Contract(
+        body.trustedIssuersRegistryContractAddress,
+        this.trustedIssuersRegistryAbi,
+        this.signer
+      );
+
+      const tx = await registry.addTrustedIssuer(body.claimIssuerContractAddress, claimTopics);
+      return await tx.wait();
+    } catch (error) {
+      throw new HttpException(error.message || 'Failed to add claim topic', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async updateTrustedIssuerClaimTopics(body: UpdateTrustedIssuerClaimTopicsDto) {
+    try {
+      const claimTopics = body.topics.map(
+        (topic)=>ethers.utils.id(topic)
+      );
+      const registry = new ethers.Contract(
+        body.trustedIssuersRegistryContractAddress,
+        this.trustedIssuersRegistryAbi,
+        this.signer
+      );
+
+      const tx = await registry.updateIssuerClaimTopics(body.claimIssuerContractAddress, claimTopics);
+      return await tx.wait();
+    } catch (error) {
+      throw new HttpException(error.message || 'Failed to update claim topic', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async removeClaimTopic(body: RemoveClaimTopicDto) {
+    try {
+      const claimTopics = [ethers.utils.id(body.topic)];
+      const registry = new ethers.Contract(
+        body.claimTopicsRegistryAddress,
+        this.claimTopicsRegistryAbi,
+        this.signer
+      );
+
+      const tx = await registry.removeClaimTopic(claimTopics[0]);
+      return await tx.wait();
+    } catch (error) {
+      throw new HttpException(error.message || 'Failed to remove claim topic', HttpStatus.BAD_REQUEST);
+    }
+  }
 
   async deployImplementationAuthority(identityImplementationAddress: string) {
     try {
@@ -1828,6 +1897,417 @@ export class TokenService {
         }
       ],
       "name": "updateIdentity",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+
+  private claimTopicsRegistryAbi = [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "claimTopic",
+          "type": "uint256"
+        }
+      ],
+      "name": "ClaimTopicAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "claimTopic",
+          "type": "uint256"
+        }
+      ],
+      "name": "ClaimTopicRemoved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_claimTopic",
+          "type": "uint256"
+        }
+      ],
+      "name": "addClaimTopic",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getClaimTopics",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_claimTopic",
+          "type": "uint256"
+        }
+      ],
+      "name": "removeClaimTopic",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ]
+
+  private trustedIssuersRegistryAbi = [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IClaimIssuer",
+          "name": "trustedIssuer",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[]",
+          "name": "claimTopics",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "ClaimTopicsUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "version",
+          "type": "uint8"
+        }
+      ],
+      "name": "Initialized",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IClaimIssuer",
+          "name": "trustedIssuer",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[]",
+          "name": "claimTopics",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "TrustedIssuerAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IClaimIssuer",
+          "name": "trustedIssuer",
+          "type": "address"
+        }
+      ],
+      "name": "TrustedIssuerRemoved",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IClaimIssuer",
+          "name": "_trustedIssuer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_claimTopics",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "addTrustedIssuer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IClaimIssuer",
+          "name": "_trustedIssuer",
+          "type": "address"
+        }
+      ],
+      "name": "getTrustedIssuerClaimTopics",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTrustedIssuers",
+      "outputs": [
+        {
+          "internalType": "contract IClaimIssuer[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "claimTopic",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTrustedIssuersForClaimTopic",
+      "outputs": [
+        {
+          "internalType": "contract IClaimIssuer[]",
+          "name": "",
+          "type": "address[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_issuer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_claimTopic",
+          "type": "uint256"
+        }
+      ],
+      "name": "hasClaimTopic",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "init",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_issuer",
+          "type": "address"
+        }
+      ],
+      "name": "isTrustedIssuer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IClaimIssuer",
+          "name": "_trustedIssuer",
+          "type": "address"
+        }
+      ],
+      "name": "removeTrustedIssuer",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IClaimIssuer",
+          "name": "_trustedIssuer",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "_claimTopics",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "updateIssuerClaimTopics",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

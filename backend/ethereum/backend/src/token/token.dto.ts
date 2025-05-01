@@ -61,17 +61,6 @@ export class InitTokenDto {
   tokenIssuerAddress: string;
 }
 
-export class AddClaimTopicDto {
-  @ApiProperty({ description: 'signer name', example: 'alice' })
-  signer: string;
-
-  @ApiProperty({ description: 'claimTopicsRegistryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  claimTopicsRegistryAddress: string;
-
-  @ApiProperty({ description: 'topic', example: '7' })
-  topic: number;
-}
-
 export class TransferRegistryOwnershipDto {
   @ApiProperty({ description: 'registryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   registryAddress: string;
@@ -130,8 +119,8 @@ export class AddClaimDto {
   @ApiProperty({ description: 'identityProxyAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   identityAddress: string;
 
-  @ApiProperty({ description: 'topic', example: '7' })
-  topic: number;
+  @ApiProperty({ description: 'topic', example: 'KYC' })
+  topic: string;
 
   @ApiProperty({ description: 'scheme', example: '1' })
   scheme: number;
@@ -152,6 +141,75 @@ export class AddClaimDto {
   uri?: string;
 }
 
+export class AddClaimTopicDto {
+  @ApiProperty({ description: 'deployer', example: 'alice' })
+  signer: string;
+
+  @ApiProperty({ description: 'claimTopicsRegistry', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  claimTopicsRegistryAddress: string;
+
+  @ApiProperty({ description: 'topic', example: 'KYC' })
+  topic: string;
+}
+
+export class GetClaimTopicsDto {
+  @ApiProperty({ description: 'deployer', example: 'alice' })
+  signer: string;
+
+  @ApiProperty({ description: 'claimTopicsRegistry', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  claimTopicsRegistryAddress: string;
+}
+
+export class GetUserClaims {
+  @ApiProperty({ description: 'deployer', example: 'alice' })
+  signer: string;
+
+  @ApiProperty({ description: 'claimTopicsRegistry', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  identityAddress: string;
+  
+  @ApiProperty({ description: 'topic', example: 'KYC' })
+  topic: string;
+}
+
+export class AddTrustedIssuerClaimTopicsDto {
+  @ApiProperty({ description: 'signer name', example: 'deployer' })
+  signer: string;
+
+  @ApiProperty({ description: 'claimIssuerContractAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  claimIssuerContractAddress: string;
+
+  @ApiProperty({ description: 'trustedIssuersRegistryContractAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  trustedIssuersRegistryContractAddress: string;
+
+  @ApiProperty({ description: 'topics', example: '[7]' })
+  topics: [string];
+}
+
+export class UpdateTrustedIssuerClaimTopicsDto {
+  @ApiProperty({ description: 'signer name', example: 'deployer' })
+  signer: string;
+
+  @ApiProperty({ description: 'claimIssuerContractAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  claimIssuerContractAddress: string;
+
+  @ApiProperty({ description: 'trustedIssuersRegistryContractAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  trustedIssuersRegistryContractAddress: string;
+
+  @ApiProperty({ description: 'topics', example: '[7]' })
+  topics: [string];
+}
+
+export class RemoveClaimTopicDto {
+  @ApiProperty({ description: 'signer name', example: 'deployer' })
+  signer: string;
+
+  @ApiProperty({ description: 'claimTopicsRegistry', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  claimTopicsRegistryAddress: string;
+
+  @ApiProperty({ description: 'topic', example: 'KYC' })
+  topic: string;
+}
+
 export class GenerateClaimSignatureDto {
   @ApiProperty({ description: 'issuerPrivateKey', example: 'lloydsBank' })
   issuerPrivateKey: string;
@@ -159,7 +217,7 @@ export class GenerateClaimSignatureDto {
   @ApiProperty({ description: 'identityAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   identityAddress: string;
 
-  @ApiProperty({ description: 'topic', example: '7' })
+  @ApiProperty({ description: 'topic', example: 'KYC' })
   topic: number;
 
   @ApiProperty({ description: 'data', example: '0x3Aa5ebB10DC797CAC828524e59A333d0A371443c' })
