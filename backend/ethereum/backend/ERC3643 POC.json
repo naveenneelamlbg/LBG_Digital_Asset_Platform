@@ -1,12 +1,12 @@
 {
   "name": "ERC3642 POC",
-  "version": "1",
+  "version": "2",
   "items": [
     {
       "type": "http",
-      "name": "addClaim",
-      "filename": "addClaim.bru",
-      "seq": 5,
+      "name": "issueClaim",
+      "filename": "issueClaim.bru",
+      "seq": 6,
       "request": {
         "url": "http://localhost:3000/token/add-claim",
         "method": "POST",
@@ -14,7 +14,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"identityAddress\": \"0x3Aa5ebB10DC797CAC828524e59A333d0A371443c\",\n  \"topic\": 10101011011011,\n  \"scheme\": 10101000666003,\n  \"issuerAddress\": \"0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65\",\n  \"data\": \"Adhar card number\",\n  \"uri\": \"\",\n  \"signer\": \"alice\"\n}",
+          "json": "{\n  \"identityAddress\": \"0x38a024C0b412B9d1db8BC398140D00F5Af3093D4\",\n  \"topic\": \"AML\",\n  \"scheme\": 10101000666003,\n  \"issuerAddress\": \"0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65\",\n  \"data\": \"Adhar card number\",\n  \"uri\": \"\",\n  \"claimIssuerContractAddress\": \"0xB737dD8FC9B304A3520B3bb609CC7532F1425Ad0\",\n  \"signer\": \"charlie\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -68,7 +68,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"address\": \"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a\",\n  \"signer\": \"deployer\"\n}  ",
+          "json": "{\n  \"address\": \"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955\",\n  \"identityImplementationAuthority\": \"0x04C89607413713Ec9775E14b954286519d836FEf\",\n  \"signer\": \"deployer\"\n}  ",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -87,7 +87,7 @@
       "type": "http",
       "name": "mintToken",
       "filename": "mintToken.bru",
-      "seq": 4,
+      "seq": 7,
       "request": {
         "url": "http://localhost:3000/token/mint-tokens",
         "method": "POST",
@@ -95,7 +95,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"tokenAddress\": \"0xa513E6E4b8f2a923D98304ec87F64353C4D5C853\",\n  \"recipientAddress\": \"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a\",\n  \"amount\": 100,\n  \"signer\": \"tokenAdmin\"\n}",
+          "json": "{\n  \"tokenAddress\": \"0xA7c59f010700930003b33aB25a7a0679C860f29c\",\n  \"recipientAddress\": \"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955\",\n  \"amount\": 100,\n  \"signer\": \"tokenAgent\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -122,7 +122,142 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"identityRegistryStorageAddress\": \"0x5FC8d32690cc91D4c39d9d3abcBD16989F875707\",\n  \"userAddress\": \"0xFABB0ac9d68B0B445fB7357272Ff202C5651694a\",\n  \"userIdentity\": \"0x3Aa5ebB10DC797CAC828524e59A333d0A371443c\",\n  \"country\": 91,\n  \"signer\": \"tokenAdmin\"\n}",
+          "json": "{\n  \"identityRegistryAddress\": \"0x07882Ae1ecB7429a84f1D53048d35c4bB2056877\",\n  \"userAddress\": \"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955\",\n  \"userIdentity\": \"0x38a024C0b412B9d1db8BC398140D00F5Af3093D4\",\n  \"country\": 91,\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "addClaimTopic",
+      "filename": "addClaimTopic.bru",
+      "seq": 4,
+      "request": {
+        "url": "http://localhost:3000/token/add-claim-topic",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"topic\": \"AML\",\n  \"claimTopicsRegistryAddress\": \"0xc0F115A19107322cFBf1cDBC7ea011C19EbDB4F8\",\n  \"signer\": \"deployer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "removeClaimTopic",
+      "filename": "removeClaimTopic.bru",
+      "seq": 5,
+      "request": {
+        "url": "http://localhost:3000/token/remove-claim-topic",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"topic\": \"KYC\",\n  \"claimTopicsRegistryAddress\": \"0xc0F115A19107322cFBf1cDBC7ea011C19EbDB4F8\",\n  \"signer\": \"deployer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "update-trusted-issuer-claim-topics",
+      "filename": "update-trusted-issuer-claim-topics.bru",
+      "seq": 10,
+      "request": {
+        "url": "http://localhost:3000/token/update-trusted-issuer-claim-topics",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"topics\": [\"AML\"],\n  \"claimIssuerContractAddress\": \"0xB737dD8FC9B304A3520B3bb609CC7532F1425Ad0\",\n  \"trustedIssuersRegistryContractAddress\": \"0xc96304e3c037f81dA488ed9dEa1D8F2a48278a75\",\n  \"signer\": \"deployer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "get-claim-topics",
+      "filename": "get-claim-topics.bru",
+      "seq": 11,
+      "request": {
+        "url": "http://localhost:3000/token/get-claim-topics",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"claimTopicsRegistryAddress\": \"0xc0F115A19107322cFBf1cDBC7ea011C19EbDB4F8\",\n  \"signer\": \"deployer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "get-user-claims",
+      "filename": "get-user-claims.bru",
+      "seq": 11,
+      "request": {
+        "url": "http://localhost:3000/token/get-user-claims",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"topic\": \"0xaf192d67680c4285e52cd2a94216ce249fb4e0227d267dcc01ea88f1b020a119\",\n  \"identityAddress\": \"0x38a024C0b412B9d1db8BC398140D00F5Af3093D4\",\n  \"signer\": \"deployer\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
