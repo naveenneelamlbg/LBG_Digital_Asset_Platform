@@ -10,7 +10,8 @@ import {
   AddTrustedIssuerClaimTopicsDto,
   UpdateTrustedIssuerClaimTopicsDto,
   GetClaimTopicsDto,
-  GetUserClaims
+  GetUserClaims,
+  GetUserTokens
 } from './token.dto';
 
 @Controller('token')
@@ -74,6 +75,16 @@ export class TokenController {
     return {
       statusCode: HttpStatus.OK,
       message: 'User Claims for the topic provided retrieved successfully',
+      receipt
+    };
+  }
+
+  @Get('get-user-tokens')
+  async getUserTokenBalance(@Body() dto: GetUserTokens) {
+    const receipt = await this.tokenService.getUserTokenBalance(dto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'User token balance for the provided user address retrieved successfully',
       receipt
     };
   }

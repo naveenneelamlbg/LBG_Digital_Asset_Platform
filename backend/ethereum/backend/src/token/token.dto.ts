@@ -164,11 +164,22 @@ export class GetUserClaims {
   @ApiProperty({ description: 'deployer', example: 'alice' })
   signer: string;
 
-  @ApiProperty({ description: 'claimTopicsRegistry', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  @ApiProperty({ description: 'identityAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   identityAddress: string;
   
   @ApiProperty({ description: 'topic', example: 'KYC' })
   topic: string;
+}
+
+export class GetUserTokens {
+  @ApiProperty({ description: 'deployer', example: 'alice' })
+  signer: string;
+
+  @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  tokenAddress: string;
+  
+  @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  userAddress: string;
 }
 
 export class AddTrustedIssuerClaimTopicsDto {
