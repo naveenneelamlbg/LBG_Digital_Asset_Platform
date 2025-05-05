@@ -16,7 +16,7 @@ export async function deployFullSuiteFixture() {
   const [deployer, tokenIssuer, tokenAgent, tokenAdmin, claimIssuer, aliceWallet, bobWallet, charlieWallet, davidWallet, claimIssuerSigningKey] =
     await ethers.getSigners();
   // const claimIssuerSigningKey = ethers.Wallet.createRandom();
-  const aliceActionKey = ethers.Wallet.createRandom();
+  // const aliceActionKey = ethers.Wallet.createRandom();
 
   // Deploy implementations
   const claimTopicsRegistryImplementation = await ethers.deployContract('ClaimTopicsRegistry', deployer);
@@ -111,7 +111,7 @@ export async function deployFullSuiteFixture() {
   await token.connect(deployer).addAgent(tokenAgent.address);
 
   const claimTopics = [ethers.utils.id('KYC')];
-  await claimTopicsRegistry.connect(deployer).addClaimTopic(claimTopics[0]);
+  // await claimTopicsRegistry.connect(deployer).addClaimTopic(claimTopics[0]);
 
   const claimIssuerContract = await ethers.deployContract('ClaimIssuer', [claimIssuer.address], claimIssuer);
   await claimIssuerContract
@@ -120,62 +120,62 @@ export async function deployFullSuiteFixture() {
 
   await trustedIssuersRegistry.connect(deployer).addTrustedIssuer(claimIssuerContract.address, claimTopics);
 
-  const aliceIdentity = await deployIdentityProxy(identityImplementationAuthority.address, aliceWallet.address, deployer);
-  await aliceIdentity
-    .connect(aliceWallet)
-    .addKey(ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['address'], [aliceActionKey.address])), 2, 1);
-  const bobIdentity = await deployIdentityProxy(identityImplementationAuthority.address, bobWallet.address, deployer);
-  const charlieIdentity = await deployIdentityProxy(identityImplementationAuthority.address, charlieWallet.address, deployer);
+  // const aliceIdentity = await deployIdentityProxy(identityImplementationAuthority.address, aliceWallet.address, deployer);
+  // await aliceIdentity
+  //   .connect(aliceWallet)
+  //   .addKey(ethers.utils.keccak256(ethers.utils.defaultAbiCoder.encode(['address'], [aliceActionKey.address])), 2, 1);
+  // const bobIdentity = await deployIdentityProxy(identityImplementationAuthority.address, bobWallet.address, deployer);
+  // const charlieIdentity = await deployIdentityProxy(identityImplementationAuthority.address, charlieWallet.address, deployer);
 
   await identityRegistry.connect(deployer).addAgent(tokenAgent.address);
   await identityRegistry.connect(deployer).addAgent(token.address);
 
-  await identityRegistry
-    .connect(tokenAgent)
-    .batchRegisterIdentity([aliceWallet.address, bobWallet.address], [aliceIdentity.address, bobIdentity.address], [42, 666]);
+  // await identityRegistry
+  //   .connect(tokenAgent)
+  //   .batchRegisterIdentity([aliceWallet.address, bobWallet.address], [aliceIdentity.address, bobIdentity.address], [42, 666]);
 
-  const claimForAlice = {
-    data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes('Some claim public data.')),
-    issuer: claimIssuerContract.address,
-    topic: claimTopics[0],
-    scheme: 1,
-    identity: aliceIdentity.address,
-    signature: '',
-  };
-  claimForAlice.signature = await claimIssuerSigningKey.signMessage(
-    ethers.utils.arrayify(
-      ethers.utils.keccak256(
-        ethers.utils.defaultAbiCoder.encode(['address', 'uint256', 'bytes'], [claimForAlice.identity, claimForAlice.topic, claimForAlice.data]),
-      ),
-    ),
-  );
+  // const claimForAlice = {
+  //   data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes('Some claim public data.')),
+  //   issuer: claimIssuerContract.address,
+  //   topic: claimTopics[0],
+  //   scheme: 1,
+  //   identity: aliceIdentity.address,
+  //   signature: '',
+  // };
+  // claimForAlice.signature = await claimIssuerSigningKey.signMessage(
+  //   ethers.utils.arrayify(
+  //     ethers.utils.keccak256(
+  //       ethers.utils.defaultAbiCoder.encode(['address', 'uint256', 'bytes'], [claimForAlice.identity, claimForAlice.topic, claimForAlice.data]),
+  //     ),
+  //   ),
+  // );
 
-  await aliceIdentity
-    .connect(aliceWallet)
-    .addClaim(claimForAlice.topic, claimForAlice.scheme, claimForAlice.issuer, claimForAlice.signature, claimForAlice.data, '');
+  // await aliceIdentity
+  //   .connect(aliceWallet)
+  //   .addClaim(claimForAlice.topic, claimForAlice.scheme, claimForAlice.issuer, claimForAlice.signature, claimForAlice.data, '');
 
-  const claimForBob = {
-    data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes('Some claim public data.')),
-    issuer: claimIssuerContract.address,
-    topic: claimTopics[0],
-    scheme: 1,
-    identity: bobIdentity.address,
-    signature: '',
-  };
-  claimForBob.signature = await claimIssuerSigningKey.signMessage(
-    ethers.utils.arrayify(
-      ethers.utils.keccak256(
-        ethers.utils.defaultAbiCoder.encode(['address', 'uint256', 'bytes'], [claimForBob.identity, claimForBob.topic, claimForBob.data]),
-      ),
-    ),
-  );
+  // const claimForBob = {
+  //   data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes('Some claim public data.')),
+  //   issuer: claimIssuerContract.address,
+  //   topic: claimTopics[0],
+  //   scheme: 1,
+  //   identity: bobIdentity.address,
+  //   signature: '',
+  // };
+  // claimForBob.signature = await claimIssuerSigningKey.signMessage(
+  //   ethers.utils.arrayify(
+  //     ethers.utils.keccak256(
+  //       ethers.utils.defaultAbiCoder.encode(['address', 'uint256', 'bytes'], [claimForBob.identity, claimForBob.topic, claimForBob.data]),
+  //     ),
+  //   ),
+  // );
 
-  await bobIdentity
-    .connect(bobWallet)
-    .addClaim(claimForBob.topic, claimForBob.scheme, claimForBob.issuer, claimForBob.signature, claimForBob.data, '');
+  // await bobIdentity
+  //   .connect(bobWallet)
+  //   .addClaim(claimForBob.topic, claimForBob.scheme, claimForBob.issuer, claimForBob.signature, claimForBob.data, '');
 
-  await token.connect(tokenAgent).mint(aliceWallet.address, 1000);
-  await token.connect(tokenAgent).mint(bobWallet.address, 500);
+  // await token.connect(tokenAgent).mint(aliceWallet.address, 1000);
+  // await token.connect(tokenAgent).mint(bobWallet.address, 500);
 
   await token.connect(tokenAgent).unpause();
 
@@ -187,7 +187,7 @@ export async function deployFullSuiteFixture() {
       tokenAdmin,
       claimIssuer,
       claimIssuerSigningKey,
-      aliceActionKey,
+      // aliceActionKey,
       aliceWallet,
       bobWallet,
       charlieWallet,
@@ -232,25 +232,25 @@ export async function deployFullSuiteFixture() {
 export async function deploySuiteWithModularCompliancesFixture() {
   const context = await loadFixture(deployFullSuiteFixture);
 
-  console.log("authorities.identityImplementationAuthority address", context.authorities.identityImplementationAuthority.address);
-  console.log("implementations.tokenImplementation.address", context.implementations.tokenImplementation.address);
-  console.log("implementations.identityImplementation.address", context.implementations.identityImplementation.address);
-  console.log("implementations.modularComplianceImplementation.address", context.implementations.modularComplianceImplementation.address);
-  console.log("implementations.trustedIssuersRegistryImplementation.address", context.implementations.trustedIssuersRegistryImplementation.address);
+  console.log("identityImplementationAuthority address", context.authorities.identityImplementationAuthority.address);
+  console.log("tokenImplementation.address", context.implementations.tokenImplementation.address);
+  console.log("identityImplementation.address", context.implementations.identityImplementation.address);
+  console.log("modularComplianceImplementation.address", context.implementations.modularComplianceImplementation.address);
+  console.log("trustedIssuersRegistryImplementation.address", context.implementations.trustedIssuersRegistryImplementation.address);
   
   
-  // console.log("identities.aliceIdentity.address: ", context.identities.aliceIdentity.address);
-  // console.log("identities.bobIdentity.address: ", context.identities.bobIdentity.address);
-  // console.log("identities.charlieIdentity.address: ", context.identities.charlieIdentity.address);
+  // console.log("aliceIdentity.address: ", context.identities.aliceIdentity.address);
+  // console.log("bobIdentity.address: ", context.identities.bobIdentity.address);
+  // console.log("charlieIdentity.address: ", context.identities.charlieIdentity.address);
 
-  console.log("suite.claimIssuerContract.address: ", context.suite.claimIssuerContract.address);
-  console.log("suite.claimTopicsRegistry.address: ", context.suite.claimTopicsRegistry.address);
-  console.log("suite.defaultCompliance.address: ", context.suite.defaultCompliance.address);
-  console.log("suite.identityRegistry.address: ", context.suite.identityRegistry.address);
-  console.log("suite.identityRegistryStorage.address: ", context.suite.identityRegistryStorage.address);
-  console.log("suite.token.address: ", context.suite.token.address);
-  console.log("suite.tokenOID.address: ", context.suite.tokenOID.address);
-  console.log("suite.trustedIssuersRegistry.address: ", context.suite.trustedIssuersRegistry.address);
+  console.log("claimIssuerContract.address: ", context.suite.claimIssuerContract.address);
+  console.log("claimTopicsRegistry.address: ", context.suite.claimTopicsRegistry.address);
+  console.log("defaultCompliance.address: ", context.suite.defaultCompliance.address);
+  console.log("identityRegistry.address: ", context.suite.identityRegistry.address);
+  console.log("identityRegistryStorage.address: ", context.suite.identityRegistryStorage.address);
+  console.log("token.address: ", context.suite.token.address);
+  console.log("tokenOID.address: ", context.suite.tokenOID.address);
+  console.log("trustedIssuersRegistry.address: ", context.suite.trustedIssuersRegistry.address);
 
 
 
