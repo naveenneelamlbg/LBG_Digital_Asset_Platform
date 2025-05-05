@@ -14,7 +14,8 @@ import {
   GetUserTokens,
   GetTokenDetails,
   ApproveUserTokensForTransfer,
-  TransferTokens
+  TransferTokens,
+  BurnTokens
 } from './token.dto';
 
 @Controller('token')
@@ -97,7 +98,7 @@ export class TokenController {
     const receipt = await this.tokenService.approveUserTokensForTransfer(dto);
     return {
       statusCode: HttpStatus.OK,
-      message: 'User is approved to transfer the requested ammount of tokens successfully',
+      message: 'User is approved to transfer the requested amount of tokens successfully',
       receipt
     };
   }
@@ -107,7 +108,17 @@ export class TokenController {
     const receipt = await this.tokenService.transferTokens(dto);
     return {
       statusCode: HttpStatus.OK,
-      message: 'Transfered the requested ammount of tokens successfully',
+      message: 'Transfered the requested amount of tokens successfully',
+      receipt
+    };
+  }
+
+  @Post('burn-tokens')
+  async burnTokens(@Body() dto: BurnTokens) {
+    const receipt = await this.tokenService.burnTokens(dto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'Burned the requested amount of tokens successfully',
       receipt
     };
   }
