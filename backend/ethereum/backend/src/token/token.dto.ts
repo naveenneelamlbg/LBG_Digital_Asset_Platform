@@ -182,6 +182,14 @@ export class GetUserTokens {
   userAddress: string;
 }
 
+export class GetTokenDetails {
+  @ApiProperty({ description: 'deployer', example: 'alice' })
+  signer: string;
+
+  @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  tokenAddress: string;
+}
+
 export class AddTrustedIssuerClaimTopicsDto {
   @ApiProperty({ description: 'signer name', example: 'deployer' })
   signer: string;

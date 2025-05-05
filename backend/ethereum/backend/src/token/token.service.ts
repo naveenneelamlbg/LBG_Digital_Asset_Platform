@@ -4,7 +4,7 @@ import { contracts } from "@onchain-id/solidity";
 import { Identity, IdentitySDK } from '@onchain-id/identity-sdk';
 import 'dotenv/config'
 import { ClaimScheme, ClaimTopic } from '@onchain-id/identity-sdk/dist/claim/Claim.interface';
-import { AddClaimDto, AddClaimTopicDto, AddTrustedIssuerClaimTopicsDto, GetClaimTopicsDto, GetUserClaims, GetUserTokens, MintTokensDto, OnChainIdCreationDto, RegisterIdentityDto, RemoveClaimTopicDto, UpdateTrustedIssuerClaimTopicsDto } from './token.dto';
+import { AddClaimDto, AddClaimTopicDto, AddTrustedIssuerClaimTopicsDto, GetClaimTopicsDto, GetTokenDetails, GetUserClaims, GetUserTokens, MintTokensDto, OnChainIdCreationDto, RegisterIdentityDto, RemoveClaimTopicDto, UpdateTrustedIssuerClaimTopicsDto } from './token.dto';
 
 @Injectable()
 export class TokenService {
@@ -84,7 +84,7 @@ export class TokenService {
         scheme: body.scheme,
         topic: claimTopics[0] as unknown as number,
         uri: "",
-        signature:""
+        signature: ""
       };
 
       claim.signature = await claimIssuer.signMessage(
@@ -172,10 +172,37 @@ export class TokenService {
       );
 
       const tx = await registry.balanceOf(body.userAddress);
-      
+
       let balance = ethers.BigNumber.from(tx._hex).toString();
 
-      return {balance, tx};
+      return { balance, tx };
+    } catch (error) {
+      throw new HttpException(error.message || 'Failed to get user tokens', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getTokenDetails(body: GetTokenDetails) {
+    try {
+      const registry = new ethers.Contract(
+        body.tokenAddress,
+        this.tokenAbi,
+        this.signer
+      );
+
+      const name = await registry.name();
+      const symbol = await registry.symbol();
+      const owner = await registry.owner();
+      const paused = await registry.paused();
+      const totalSupplyTx = await registry.totalSupply();
+      let totalSupply = ethers.BigNumber.from(totalSupplyTx._hex).toString();
+
+      return { 
+        totalSupply,
+        name,
+        symbol,
+        owner,
+        paused,
+       };
     } catch (error) {
       throw new HttpException(error.message || 'Failed to get user tokens', HttpStatus.BAD_REQUEST);
     }
@@ -184,7 +211,7 @@ export class TokenService {
   async addTrustedIssuerClaimTopics(body: AddTrustedIssuerClaimTopicsDto) {
     try {
       const claimTopics = body.topics.map(
-        (topic)=>ethers.utils.id(topic)
+        (topic) => ethers.utils.id(topic)
       );
       const registry = new ethers.Contract(
         body.trustedIssuersRegistryContractAddress,
@@ -202,7 +229,7 @@ export class TokenService {
   async updateTrustedIssuerClaimTopics(body: UpdateTrustedIssuerClaimTopicsDto) {
     try {
       const claimTopics = body.topics.map(
-        (topic)=>ethers.utils.id(topic)
+        (topic) => ethers.utils.id(topic)
       );
       const registry = new ethers.Contract(
         body.trustedIssuersRegistryContractAddress,
