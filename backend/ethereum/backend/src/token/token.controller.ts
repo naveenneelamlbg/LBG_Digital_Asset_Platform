@@ -12,7 +12,8 @@ import {
   GetClaimTopicsDto,
   GetUserClaims,
   GetUserTokens,
-  GetTokenDetails
+  GetTokenDetails,
+  ApproveUserTokensForTransfer
 } from './token.dto';
 
 @Controller('token')
@@ -86,6 +87,16 @@ export class TokenController {
     return {
       statusCode: HttpStatus.OK,
       message: 'User token balance for the provided user address retrieved successfully',
+      receipt
+    };
+  }
+
+  @Get('get-user-tokens-for-transfer')
+  async approveUserTokensForTransfer(@Body() dto: ApproveUserTokensForTransfer) {
+    const receipt = await this.tokenService.approveUserTokensForTransfer(dto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'User is approved to transfer the requested ammount of tokens successfully',
       receipt
     };
   }

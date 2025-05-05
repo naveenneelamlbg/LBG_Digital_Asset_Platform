@@ -4,7 +4,7 @@ import { contracts } from "@onchain-id/solidity";
 import { Identity, IdentitySDK } from '@onchain-id/identity-sdk';
 import 'dotenv/config'
 import { ClaimScheme, ClaimTopic } from '@onchain-id/identity-sdk/dist/claim/Claim.interface';
-import { AddClaimDto, AddClaimTopicDto, AddTrustedIssuerClaimTopicsDto, GetClaimTopicsDto, GetTokenDetails, GetUserClaims, GetUserTokens, MintTokensDto, OnChainIdCreationDto, RegisterIdentityDto, RemoveClaimTopicDto, UpdateTrustedIssuerClaimTopicsDto } from './token.dto';
+import { AddClaimDto, AddClaimTopicDto, AddTrustedIssuerClaimTopicsDto, ApproveUserTokensForTransfer, GetClaimTopicsDto, GetTokenDetails, GetUserClaims, GetUserTokens, MintTokensDto, OnChainIdCreationDto, RegisterIdentityDto, RemoveClaimTopicDto, UpdateTrustedIssuerClaimTopicsDto } from './token.dto';
 
 @Injectable()
 export class TokenService {
@@ -176,6 +176,22 @@ export class TokenService {
       let balance = ethers.BigNumber.from(tx._hex).toString();
 
       return { balance, tx };
+    } catch (error) {
+      throw new HttpException(error.message || 'Failed to get user tokens', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async approveUserTokensForTransfer(body: ApproveUserTokensForTransfer) {
+    try {
+      const registry = new ethers.Contract(
+        body.tokenAddress,
+        this.tokenAbi,
+        this.signer
+      );
+
+      const tx = await registry.approve(body.userAddress, body.amount);
+
+      return { tx };
     } catch (error) {
       throw new HttpException(error.message || 'Failed to get user tokens', HttpStatus.BAD_REQUEST);
     }
