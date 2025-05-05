@@ -196,6 +196,20 @@ export class ApproveUserTokensForTransfer {
   amount: number;
 }
 
+export class TransferTokens {
+  @ApiProperty({ description: 'deployer', example: 'alice' })
+  signer: string;
+
+  @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  tokenAddress: string;
+  
+  @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  userAddress: string;
+
+  @ApiProperty({ description: 'amount', example: '100' })
+  amount: number;
+}
+
 export class GetTokenDetails {
   @ApiProperty({ description: 'deployer', example: 'alice' })
   signer: string;
