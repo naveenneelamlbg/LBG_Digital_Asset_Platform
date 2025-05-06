@@ -1,24 +1,23 @@
-# T-REX : Token for Regulated EXchanges
+## Project setup
 
-![GitHub](https://img.shields.io/github/license/TokenySolutions/T-REX?color=green) 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/TokenySolutions/T-REX)
-![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/TokenySolutions/T-REX/publish-release.yml)
-![GitHub repo size](https://img.shields.io/github/repo-size/TokenySolutions/T-REX)
-![GitHub Release Date](https://img.shields.io/github/release-date/TokenySolutions/T-REX)
+```bash
+$ npm install
+```
 
+## Compile, run the node and deploy smart contracts 
+```bash
+$ npx hardhat node
+```
+Run below command in another terminal
 
-
-
-----
-
-<br><br>
-
-<p align="center">
-  <a href="https://tokeny.com/erc3643-whitepaper/">
-  <img src="./docs/img/T-REX.png" width="150" title="t-rex">
-  </a>
-</p>
-
+You might face this issue TLS_REJECT_UNAUTHORIZED for next command, if its please run the below command and run the command again
+```bash
+$ $env:NODE_TLS_REJECT_UNAUTHORIZED=0
+```
+```bash
+$ npx hardhat run .\scripts\deploy.ts --network localhost
+```
+Please note down the all smart contract addresses from the terminal to use in endpoints calling.
 
 ## Overview
 
