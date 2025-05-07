@@ -4,7 +4,7 @@ import { contracts } from "@onchain-id/solidity";
 import { Identity, IdentitySDK } from '@onchain-id/identity-sdk';
 import 'dotenv/config'
 import { ClaimScheme, ClaimTopic } from '@onchain-id/identity-sdk/dist/claim/Claim.interface';
-import { AddClaimDto, AddClaimTopicDto, AddTrustedIssuerClaimTopicsDto, ApproveUserTokensForTransfer, BurnTokens, GetClaimTopicsDto, GetTokenDetails, GetUserClaims, GetUserTokens, MintTokensDto, OnChainIdCreationDto, RegisterIdentityDto, RemoveClaimTopicDto, TransferTokens, UpdateTrustedIssuerClaimTopicsDto } from './token.dto';
+import { AddClaimDto, AddClaimTopicDto, AddTrustedIssuerClaimTopicsDto, ApproveUserTokensForTransfer, BurnTokens, GetClaimTopicsDto, GetTokenDetails, GetUserClaims, GetUserTokens, MintTokensDto, OnChainIdCreationDto, RegisterIdentityDto, RemoveClaimTopicDto, TransferApprovedTokens, TransferTokens, UpdateTrustedIssuerClaimTopicsDto } from './token.dto';
 
 @Injectable()
 export class TokenService {
@@ -183,10 +183,11 @@ export class TokenService {
 
   async approveUserTokensForTransfer(body: ApproveUserTokensForTransfer) {
     try {
+      const signer = await this.getSigner(body.signer);
       const registry = new ethers.Contract(
         body.tokenAddress,
         this.tokenAbi,
-        this.signer
+        signer
       );
 
       const tx = await registry.approve(body.userAddress, body.amount);
@@ -210,7 +211,26 @@ export class TokenService {
 
       return { tx };
     } catch (error) {
-      throw new HttpException(error.message || 'Failed to get user tokens', HttpStatus.BAD_REQUEST);
+      throw new HttpException(error.message || 'Failed to transfer user tokens', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  
+  async transferApprovedTokens(body: TransferApprovedTokens) {
+    try {
+      const signer = await this.getSigner(body.signer);
+      const registry = new ethers.Contract(
+        body.tokenAddress,
+        this.tokenAbi,
+        signer
+      );
+
+      // const approvedBalanceCheck = regi
+      const tx = await registry.transferFrom(body.from, body.to, body.amount);
+
+      return { tx };
+    } catch (error) {
+      throw new HttpException(error.message || 'Failed to transfer user tokens', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -371,28 +391,6 @@ export class TokenService {
 
   private tokenAbi = [
     {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "owner",
-          "type": "address"
-        }
-      ],
-      "name": "OwnableInvalidOwner",
-      "type": "error"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "OwnableUnauthorizedAccount",
-      "type": "error"
-    },
-    {
       "anonymous": false,
       "inputs": [
         {
@@ -492,6 +490,19 @@ export class TokenService {
         }
       ],
       "name": "IdentityRegistryAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint8",
+          "name": "version",
+          "type": "uint8"
+        }
+      ],
+      "name": "Initialized",
       "type": "event"
     },
     {

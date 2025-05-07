@@ -13,9 +13,9 @@ export async function deployIdentityProxy(implementationAuthority: Contract['add
 }
 
 export async function deployFullSuiteFixture() {
-  const [deployer, tokenIssuer, tokenAgent, tokenAdmin, claimIssuer, aliceWallet, bobWallet, charlieWallet, davidWallet, claimIssuerSigningKey] =
+  const [deployer, tokenIssuer, tokenAgent, tokenAdmin, claimIssuer, aliceWallet, bobWallet, charlieWallet, davidWallet, anotherWallet] =
     await ethers.getSigners();
-  // const claimIssuerSigningKey = ethers.Wallet.createRandom();
+  const claimIssuerSigningKey = ethers.Wallet.createRandom();
   const aliceActionKey = ethers.Wallet.createRandom();
 
   // Deploy implementations
@@ -110,7 +110,7 @@ export async function deployFullSuiteFixture() {
 
   await token.connect(deployer).addAgent(tokenAgent.address);
 
-  const claimTopics = [ethers.utils.id('KYC')];
+  const claimTopics = [ethers.utils.id('CLAIM_TOPIC')];
   await claimTopicsRegistry.connect(deployer).addClaimTopic(claimTopics[0]);
 
   const claimIssuerContract = await ethers.deployContract('ClaimIssuer', [claimIssuer.address], claimIssuer);
@@ -192,13 +192,13 @@ export async function deployFullSuiteFixture() {
       bobWallet,
       charlieWallet,
       davidWallet,
-      // anotherWallet,
+      anotherWallet,
     },
-    // identities: {
-    //   aliceIdentity,
-    //   bobIdentity,
-    //   charlieIdentity,
-    // },
+    identities: {
+      aliceIdentity,
+      bobIdentity,
+      charlieIdentity,
+    },
     suite: {
       claimIssuerContract,
       claimTopicsRegistry,
@@ -232,28 +232,6 @@ export async function deployFullSuiteFixture() {
 export async function deploySuiteWithModularCompliancesFixture() {
   const context = await loadFixture(deployFullSuiteFixture);
 
-  console.log("authorities.identityImplementationAuthority address", context.authorities.identityImplementationAuthority.address);
-  console.log("implementations.tokenImplementation.address", context.implementations.tokenImplementation.address);
-  console.log("implementations.identityImplementation.address", context.implementations.identityImplementation.address);
-  console.log("implementations.modularComplianceImplementation.address", context.implementations.modularComplianceImplementation.address);
-  console.log("implementations.trustedIssuersRegistryImplementation.address", context.implementations.trustedIssuersRegistryImplementation.address);
-  
-  
-  // console.log("identities.aliceIdentity.address: ", context.identities.aliceIdentity.address);
-  // console.log("identities.bobIdentity.address: ", context.identities.bobIdentity.address);
-  // console.log("identities.charlieIdentity.address: ", context.identities.charlieIdentity.address);
-
-  console.log("suite.claimIssuerContract.address: ", context.suite.claimIssuerContract.address);
-  console.log("suite.claimTopicsRegistry.address: ", context.suite.claimTopicsRegistry.address);
-  console.log("suite.defaultCompliance.address: ", context.suite.defaultCompliance.address);
-  console.log("suite.identityRegistry.address: ", context.suite.identityRegistry.address);
-  console.log("suite.identityRegistryStorage.address: ", context.suite.identityRegistryStorage.address);
-  console.log("suite.token.address: ", context.suite.token.address);
-  console.log("suite.tokenOID.address: ", context.suite.tokenOID.address);
-  console.log("suite.trustedIssuersRegistry.address: ", context.suite.trustedIssuersRegistry.address);
-
-
-
   const complianceProxy = await ethers.deployContract('ModularComplianceProxy', [context.authorities.trexImplementationAuthority.address]);
   const compliance = await ethers.getContractAt('ModularCompliance', complianceProxy.address);
 
@@ -269,8 +247,6 @@ export async function deploySuiteWithModularCompliancesFixture() {
     },
   };
 }
-
-deploySuiteWithModularCompliancesFixture();
 
 export async function deploySuiteWithModuleComplianceBoundToWallet() {
   const context = await loadFixture(deployFullSuiteFixture);

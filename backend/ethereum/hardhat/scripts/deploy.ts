@@ -232,25 +232,25 @@ export async function deployFullSuiteFixture() {
 export async function deploySuiteWithModularCompliancesFixture() {
   const context = await loadFixture(deployFullSuiteFixture);
 
-  console.log("identityImplementationAuthority address", context.authorities.identityImplementationAuthority.address);
-  console.log("tokenImplementation.address", context.implementations.tokenImplementation.address);
-  console.log("identityImplementation.address", context.implementations.identityImplementation.address);
-  console.log("modularComplianceImplementation.address", context.implementations.modularComplianceImplementation.address);
-  console.log("trustedIssuersRegistryImplementation.address", context.implementations.trustedIssuersRegistryImplementation.address);
+  console.log("identityImplementationAuthority_smart_contract_address=", `"${context.authorities.identityImplementationAuthority.address}"`);
+  console.log("tokenImplementation_smart_contract_address=", `"${context.implementations.tokenImplementation.address}"`);
+  console.log("identityImplementation_smart_contract_address=", `"${context.implementations.identityImplementation.address}"`);
+  console.log("modularComplianceImplementation_smart_contract_address=", `"${context.implementations.modularComplianceImplementation.address}"`);
+  console.log("trustedIssuersRegistryImplementation_smart_contract_address=", `"${context.implementations.trustedIssuersRegistryImplementation.address}"`);
   
   
-  // console.log("aliceIdentity.address: ", context.identities.aliceIdentity.address);
-  // console.log("bobIdentity.address: ", context.identities.bobIdentity.address);
-  // console.log("charlieIdentity.address: ", context.identities.charlieIdentity.address);
+  // console.log("aliceIdentity_smart_contract_address=", `"${context.identities.aliceIdentity.address}"`);
+  // console.log("bobIdentity_smart_contract_address=", `"${context.identities.bobIdentity.address}"`);
+  // console.log("charlieIdentity_smart_contract_address=", `"${context.identities.charlieIdentity.address}"`);
 
-  console.log("claimIssuerContract.address: ", context.suite.claimIssuerContract.address);
-  console.log("claimTopicsRegistry.address: ", context.suite.claimTopicsRegistry.address);
-  console.log("defaultCompliance.address: ", context.suite.defaultCompliance.address);
-  console.log("identityRegistry.address: ", context.suite.identityRegistry.address);
-  console.log("identityRegistryStorage.address: ", context.suite.identityRegistryStorage.address);
-  console.log("token.address: ", context.suite.token.address);
-  console.log("tokenOID.address: ", context.suite.tokenOID.address);
-  console.log("trustedIssuersRegistry.address: ", context.suite.trustedIssuersRegistry.address);
+  console.log("claimIssuerContract_smart_contract_address=", `"${context.suite.claimIssuerContract.address}"`);
+  console.log("claimTopicsRegistry_smart_contract_address=", `"${context.suite.claimTopicsRegistry.address}"`);
+  console.log("defaultCompliance_smart_contract_address=", `"${context.suite.defaultCompliance.address}"`);
+  console.log("identityRegistry_smart_contract_address=", `"${context.suite.identityRegistry.address}"`);
+  console.log("identityRegistryStorage_smart_contract_address=", `"${context.suite.identityRegistryStorage.address}"`);
+  console.log("token_smart_contract_address=", `"${context.suite.token.address}"`);
+  console.log("tokenOID_smart_contract_address=", `"${context.suite.tokenOID.address}"`);
+  console.log("trustedIssuersRegistry_smart_contract_address=", `"${context.suite.trustedIssuersRegistry.address}"`);
 
 
 
