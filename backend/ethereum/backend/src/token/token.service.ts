@@ -4,7 +4,7 @@ import { contracts } from "@onchain-id/solidity";
 import { Identity, IdentitySDK } from '@onchain-id/identity-sdk';
 import 'dotenv/config'
 import { ClaimScheme, ClaimTopic } from '@onchain-id/identity-sdk/dist/claim/Claim.interface';
-import { AddClaimDto, AddClaimTopicDto, AddTrustedIssuerClaimTopicsDto, ApproveUserTokensForTransfer, BurnTokens, GetClaimTopicsDto, GetTokenDetails, GetUserClaims, GetUserTokens, MintTokensDto, OnChainIdCreationDto, RegisterIdentityDto, RemoveClaimTopicDto, TransferApprovedTokens, TransferTokens, UpdateTrustedIssuerClaimTopicsDto } from './token.dto';
+import { AddClaimDto, AddClaimTopicDto, AddTrustedIssuerClaimTopicsDto, ApproveUserTokensForTransfer, BurnTokens, FreezeTokens, GetClaimTopicsDto, GetTokenDetails, GetUserClaims, GetUserTokens, MintTokensDto, OnChainIdCreationDto, RegisterIdentityDto, RemoveClaimTopicDto, TransferApprovedTokens, TransferTokens, UpdateTrustedIssuerClaimTopicsDto } from './token.dto';
 
 @Injectable()
 export class TokenService {
@@ -212,6 +212,40 @@ export class TokenService {
       return { tx };
     } catch (error) {
       throw new HttpException(error.message || 'Failed to transfer user tokens', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async freezeTokens(body: FreezeTokens) {
+    try {
+      const signer = await this.getSigner(body.signer);
+      const registry = new ethers.Contract(
+        body.tokenAddress,
+        this.tokenAbi,
+        signer
+      );
+
+      const tx = await registry.freezePartialTokens(body.userAddress, body.amount);
+
+      return { tx };
+    } catch (error) {
+      throw new HttpException(error.message || 'Failed to freez user tokens', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async unFreezeTokens(body: FreezeTokens) {
+    try {
+      const signer = await this.getSigner(body.signer);
+      const registry = new ethers.Contract(
+        body.tokenAddress,
+        this.tokenAbi,
+        signer
+      );
+
+      const tx = await registry.unfreezePartialTokens(body.userAddress, body.amount);
+
+      return { tx };
+    } catch (error) {
+      throw new HttpException(error.message || 'Failed to unfreez user tokens', HttpStatus.BAD_REQUEST);
     }
   }
 

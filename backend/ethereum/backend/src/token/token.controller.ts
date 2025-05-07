@@ -16,7 +16,8 @@ import {
   ApproveUserTokensForTransfer,
   TransferTokens,
   BurnTokens,
-  TransferApprovedTokens
+  TransferApprovedTokens,
+  FreezeTokens
 } from './token.dto';
 
 @Controller('token')
@@ -110,6 +111,26 @@ export class TokenController {
     return {
       statusCode: HttpStatus.OK,
       message: 'Transfered the requested amount of tokens successfully',
+      receipt
+    };
+  }
+
+  @Post('freeze-tokens')
+  async freezeTokens(@Body() dto: FreezeTokens) {
+    const receipt = await this.tokenService.freezeTokens(dto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'freezed the requested amount of tokens successfully',
+      receipt
+    };
+  }
+
+  @Post('unfreeze-tokens')
+  async unFreezeTokens(@Body() dto: FreezeTokens) {
+    const receipt = await this.tokenService.unFreezeTokens(dto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'unfreezed the requested amount of tokens successfully',
       receipt
     };
   }
