@@ -1,0 +1,502 @@
+{
+  "name": "ERC3643 POC",
+  "version": "1",
+  "items": [
+    {
+      "type": "http",
+      "name": "issueClaim",
+      "filename": "issueClaim.bru",
+      "seq": 6,
+      "request": {
+        "url": "http://localhost:3000/token/add-claim",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"identityAddress\": \"0xf5c4a909455C00B99A90d93b48736F3196DB5621\",\n  \"topic\": \"KYC\",\n  \"scheme\": 10101000666003,\n  \"data\": \"Adhar card number\",\n  \"uri\": \"\",\n  \"signer\": \"alice\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "app test",
+      "filename": "app test.bru",
+      "seq": 1,
+      "request": {
+        "url": "http://localhost:3000",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"deployerAddress\": \"0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "create-onchain-identity",
+      "filename": "create-onchain-identity.bru",
+      "seq": 2,
+      "request": {
+        "url": "http://localhost:3000/token/create-onchain-identity",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"signer\": \"deployer\"\n}  ",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "mintToken",
+      "filename": "mintToken.bru",
+      "seq": 7,
+      "request": {
+        "url": "http://localhost:3000/token/mint-tokens",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"recipientAddress\": \"alice\",\n  \"amount\": 500,\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "register-identity",
+      "filename": "register-identity.bru",
+      "seq": 3,
+      "request": {
+        "url": "http://localhost:3000/token/register-identity",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"userIdentity\": \"0xf5c4a909455C00B99A90d93b48736F3196DB5621\",\n  \"country\": 91,\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "addClaimTopic",
+      "filename": "addClaimTopic.bru",
+      "seq": 4,
+      "request": {
+        "url": "http://localhost:3000/token/add-claim-topic",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"topic\": \"KYC\",\n  \"signer\": \"deployer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "removeClaimTopic",
+      "filename": "removeClaimTopic.bru",
+      "seq": 5,
+      "request": {
+        "url": "http://localhost:3000/token/remove-claim-topic",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"topic\": \"KYC\",\n  \"signer\": \"deployer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "update-trusted-issuer-claim-topics",
+      "filename": "update-trusted-issuer-claim-topics.bru",
+      "seq": 8,
+      "request": {
+        "url": "http://localhost:3000/token/update-trusted-issuer-claim-topics",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"topics\": [\"AML\"],\n  \"signer\": \"deployer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "get-claim-topics",
+      "filename": "get-claim-topics.bru",
+      "seq": 9,
+      "request": {
+        "url": "http://localhost:3000/token/get-claim-topics",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"signer\": \"deployer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "get-user-claims",
+      "filename": "get-user-claims.bru",
+      "seq": 10,
+      "request": {
+        "url": "http://localhost:3000/token/get-user-claims",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"topic\": \"0xf10451f2068956fc6b77c861ed53a001af01cf7ac253ae3e3e8e4145a5f43c53\",\n  \"identityAddress\": \"0xde2Bd2ffEA002b8E84ADeA96e5976aF664115E2c\",\n  \"signer\": \"deployer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "get-user-tokens",
+      "filename": "get-user-tokens.bru",
+      "seq": 11,
+      "request": {
+        "url": "http://localhost:3000/token/get-user-tokens",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"signer\": \"deployer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "get-token-details",
+      "filename": "get-token-details.bru",
+      "seq": 12,
+      "request": {
+        "url": "http://localhost:3000/token/get-token-details",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"signer\": \"deployer\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "approve-user-tokens-for-transfer",
+      "filename": "approve-user-tokens-for-transfer.bru",
+      "seq": 15,
+      "request": {
+        "url": "http://localhost:3000/token/approve-user-tokens-for-transfer",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"bob\",\n  \"amount\": 20,\n  \"signer\": \"alice\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "transfer-tokens",
+      "filename": "transfer-tokens.bru",
+      "seq": 13,
+      "request": {
+        "url": "http://localhost:3000/token/transfer-tokens",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"bob\",\n  \"amount\":100,\n  \"signer\": \"alice\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "burn-tokens",
+      "filename": "burn-tokens.bru",
+      "seq": 14,
+      "request": {
+        "url": "http://localhost:3000/token/burn-tokens",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"amount\": 10,\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "transfer-approved-tokens",
+      "filename": "transfer-approved-tokens.bru",
+      "seq": 17,
+      "request": {
+        "url": "http://localhost:3000/token/transfer-approved-tokens",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"from\": \"alice\",\n  \"to\": \"bob\",\n  \"amount\": 20,\n  \"signer\": \"bob\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "freeze-tokens",
+      "filename": "freeze-tokens.bru",
+      "seq": 18,
+      "request": {
+        "url": "http://localhost:3000/token/freeze-tokens",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"amount\": 10,\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "unfreeze-tokens",
+      "filename": "unfreeze-tokens.bru",
+      "seq": 19,
+      "request": {
+        "url": "http://localhost:3000/token/unfreeze-tokens",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"amount\": 10,\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    }
+  ],
+  "environments": [],
+  "brunoConfig": {
+    "version": "1",
+    "name": "ERC3643 POC",
+    "type": "collection",
+    "ignore": [
+      "node_modules",
+      ".git"
+    ]
+  }
+}
