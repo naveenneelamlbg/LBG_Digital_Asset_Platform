@@ -29,7 +29,7 @@ export class TokenController {
     const result = await this.tokenService.createOnChainId(dto);
     return {
       statusCode: HttpStatus.OK,
-      message: `Identity has been created successfully, please use response address as identity of this user ${dto.address} `,
+      message: `Identity has been created successfully, please use response address as identity of this user ${dto.userAddress} `,
       ...result
     };
   }

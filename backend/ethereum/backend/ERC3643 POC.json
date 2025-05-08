@@ -14,7 +14,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"identityAddress\": \"0xc5a5C42992dECbae36851359345FE25997F5C42d\",\n  \"topic\": \"KYC\",\n  \"scheme\": 10101000666003,\n  \"issuerAddress\": \"0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65\",\n  \"data\": \"Adhar card number\",\n  \"uri\": \"\",\n  \"claimIssuerContractAddress\": \"0xbdEd0D2bf404bdcBa897a74E6657f1f12e5C6fb6\",\n  \"signer\": \"charlie\"\n}",
+          "json": "{\n  \"identityAddress\": \"0xf5c4a909455C00B99A90d93b48736F3196DB5621\",\n  \"topic\": \"KYC\",\n  \"scheme\": 10101000666003,\n  \"data\": \"Adhar card number\",\n  \"uri\": \"\",\n  \"signer\": \"alice\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -68,7 +68,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"address\": \"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955\",\n  \"identityImplementationAuthority\": \"0xa513E6E4b8f2a923D98304ec87F64353C4D5C853\",\n  \"signer\": \"deployer\"\n}  ",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"signer\": \"deployer\"\n}  ",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -95,7 +95,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"tokenAddress\": \"0x3Aa5ebB10DC797CAC828524e59A333d0A371443c\",\n  \"recipientAddress\": \"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955\",\n  \"amount\": 100,\n  \"signer\": \"tokenAgent\"\n}",
+          "json": "{\n  \"recipientAddress\": \"alice\",\n  \"amount\": 500,\n  \"signer\": \"tokenAgent\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -122,7 +122,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"identityRegistryAddress\": \"0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE\",\n  \"userAddress\": \"0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc\",\n  \"userIdentity\": \"0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E\",\n  \"country\": 91,\n  \"signer\": \"tokenAgent\"\n}",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"userIdentity\": \"0xf5c4a909455C00B99A90d93b48736F3196DB5621\",\n  \"country\": 91,\n  \"signer\": \"tokenAgent\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -149,7 +149,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"topic\": \"KYC\",\n  \"claimTopicsRegistryAddress\": \"0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82\",\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"topic\": \"KYC\",\n  \"signer\": \"deployer\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -176,7 +176,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"topic\": \"KYC\",\n  \"claimTopicsRegistryAddress\": \"0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82\",\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"topic\": \"KYC\",\n  \"signer\": \"deployer\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -195,7 +195,7 @@
       "type": "http",
       "name": "update-trusted-issuer-claim-topics",
       "filename": "update-trusted-issuer-claim-topics.bru",
-      "seq": 10,
+      "seq": 8,
       "request": {
         "url": "http://localhost:3000/token/update-trusted-issuer-claim-topics",
         "method": "POST",
@@ -203,7 +203,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"topics\": [\"AML\"],\n  \"claimIssuerContractAddress\": \"0xB737dD8FC9B304A3520B3bb609CC7532F1425Ad0\",\n  \"trustedIssuersRegistryContractAddress\": \"0xc96304e3c037f81dA488ed9dEa1D8F2a48278a75\",\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"topics\": [\"AML\"],\n  \"signer\": \"deployer\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -222,7 +222,7 @@
       "type": "http",
       "name": "get-claim-topics",
       "filename": "get-claim-topics.bru",
-      "seq": 11,
+      "seq": 9,
       "request": {
         "url": "http://localhost:3000/token/get-claim-topics",
         "method": "GET",
@@ -230,7 +230,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"claimTopicsRegistryAddress\": \"0x0DCd1Bf9A1b36cE34237eEaFef220932846BCD82\",\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"signer\": \"deployer\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -249,7 +249,7 @@
       "type": "http",
       "name": "get-user-claims",
       "filename": "get-user-claims.bru",
-      "seq": 11,
+      "seq": 10,
       "request": {
         "url": "http://localhost:3000/token/get-user-claims",
         "method": "GET",
@@ -257,7 +257,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"topic\": \"0xaf192d67680c4285e52cd2a94216ce249fb4e0227d267dcc01ea88f1b020a119\",\n  \"identityAddress\": \"0x38a024C0b412B9d1db8BC398140D00F5Af3093D4\",\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"topic\": \"0xf10451f2068956fc6b77c861ed53a001af01cf7ac253ae3e3e8e4145a5f43c53\",\n  \"identityAddress\": \"0xde2Bd2ffEA002b8E84ADeA96e5976aF664115E2c\",\n  \"signer\": \"deployer\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -276,7 +276,7 @@
       "type": "http",
       "name": "get-user-tokens",
       "filename": "get-user-tokens.bru",
-      "seq": 12,
+      "seq": 11,
       "request": {
         "url": "http://localhost:3000/token/get-user-tokens",
         "method": "GET",
@@ -284,7 +284,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"tokenAddress\": \"0x3Aa5ebB10DC797CAC828524e59A333d0A371443c\",\n  \"userAddress\": \"0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc\",\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"signer\": \"deployer\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -303,7 +303,7 @@
       "type": "http",
       "name": "get-token-details",
       "filename": "get-token-details.bru",
-      "seq": 13,
+      "seq": 12,
       "request": {
         "url": "http://localhost:3000/token/get-token-details",
         "method": "GET",
@@ -311,7 +311,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"tokenAddress\": \"0x3Aa5ebB10DC797CAC828524e59A333d0A371443c\",\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"signer\": \"deployer\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -328,9 +328,9 @@
     },
     {
       "type": "http",
-      "name": "get-user-tokens-for-transfer",
-      "filename": "get-user-tokens-for-transfer.bru",
-      "seq": 14,
+      "name": "approve-user-tokens-for-transfer",
+      "filename": "approve-user-tokens-for-transfer.bru",
+      "seq": 15,
       "request": {
         "url": "http://localhost:3000/token/approve-user-tokens-for-transfer",
         "method": "POST",
@@ -338,7 +338,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"tokenAddress\": \"0x3Aa5ebB10DC797CAC828524e59A333d0A371443c\",\n  \"userAddress\": \"0x14dC79964da2C08b23698B3D3cc7Ca32193d9955\",\n  \"amount\": 100,\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"userAddress\": \"bob\",\n  \"amount\": 20,\n  \"signer\": \"alice\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -357,7 +357,7 @@
       "type": "http",
       "name": "transfer-tokens",
       "filename": "transfer-tokens.bru",
-      "seq": 15,
+      "seq": 13,
       "request": {
         "url": "http://localhost:3000/token/transfer-tokens",
         "method": "POST",
@@ -365,7 +365,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"tokenAddress\": \"0x3Aa5ebB10DC797CAC828524e59A333d0A371443c\",\n  \"userAddress\": \"0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc\",\n  \"amount\": 100,\n  \"signer\": \"charlie\"\n}",
+          "json": "{\n  \"userAddress\": \"bob\",\n  \"amount\":100,\n  \"signer\": \"alice\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -384,7 +384,7 @@
       "type": "http",
       "name": "burn-tokens",
       "filename": "burn-tokens.bru",
-      "seq": 16,
+      "seq": 14,
       "request": {
         "url": "http://localhost:3000/token/burn-tokens",
         "method": "POST",
@@ -392,7 +392,88 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"tokenAddress\": \"0x3Aa5ebB10DC797CAC828524e59A333d0A371443c\",\n  \"userAddress\": \"0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc\",\n  \"amount\": 10,\n  \"signer\": \"tokenAgent\"\n}",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"amount\": 10,\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "transfer-approved-tokens",
+      "filename": "transfer-approved-tokens.bru",
+      "seq": 17,
+      "request": {
+        "url": "http://localhost:3000/token/transfer-approved-tokens",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"from\": \"alice\",\n  \"to\": \"bob\",\n  \"amount\": 20,\n  \"signer\": \"bob\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "freeze-tokens",
+      "filename": "freeze-tokens.bru",
+      "seq": 18,
+      "request": {
+        "url": "http://localhost:3000/token/freeze-tokens",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"amount\": 10,\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "unfreeze-tokens",
+      "filename": "unfreeze-tokens.bru",
+      "seq": 19,
+      "request": {
+        "url": "http://localhost:3000/token/unfreeze-tokens",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"amount\": 10,\n  \"signer\": \"tokenAgent\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []

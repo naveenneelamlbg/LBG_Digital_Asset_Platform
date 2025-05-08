@@ -5,7 +5,7 @@ export class OnChainIdCreationDto {
   signer: string;
 
   @ApiProperty({ description: 'user wallet address', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  address: string;
+  userAddress: string;
 
   @ApiProperty({ description: 'identityImplementationAuthority address', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   identityImplementationAuthority?: string;
@@ -13,12 +13,12 @@ export class OnChainIdCreationDto {
 
 export class DeployImplementationAuthorityDto {
   @ApiProperty({ description: 'identityImplementationAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  identityImplementationAddress: string;
+  identityImplementationAddress?: string;
 }
 
 export class DeployIdentityProxyDto {
   @ApiProperty({ description: 'implementationAuthorityAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  implementationAuthorityAddress: string;
+  implementationAuthorityAddress?: string;
 
   @ApiProperty({ description: 'ownerAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   ownerAddress: string;
@@ -29,18 +29,18 @@ export class InitIdentityRegistryDto {
   registryAddress: string;
 
   @ApiProperty({ description: 'trustedIssuersRegistryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  trustedIssuersRegistryAddress: string;
+  trustedIssuersRegistryAddress?: string;
 
   @ApiProperty({ description: 'claimTopicsRegistryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  claimTopicsRegistryAddress: string;
+  claimTopicsRegistryAddress?: string;
 
   @ApiProperty({ description: 'registryStorageAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  registryStorageAddress: string;
+  registryStorageAddress?: string;
 }
 
 export class InitTokenDto {
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  tokenAddress: string;
+  tokenAddress?: string;
 
   @ApiProperty({ description: 'identityRegistryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   identityRegistryAddress: string;
@@ -63,7 +63,7 @@ export class InitTokenDto {
 
 export class TransferRegistryOwnershipDto {
   @ApiProperty({ description: 'registryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  registryAddress: string;
+  registryAddress?: string;
 
   @ApiProperty({ description: 'newOwnerAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   newOwnerAddress: string;
@@ -79,7 +79,7 @@ export class AddRegistryAgentDto {
 
 export class AddTrustedIssuerDto {
   @ApiProperty({ description: 'trustedIssuersRegistryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  trustedIssuersRegistryAddress: string;
+  trustedIssuersRegistryAddress?: string;
 
   @ApiProperty({ description: 'issuerAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   issuerAddress: string;
@@ -90,7 +90,7 @@ export class AddTrustedIssuerDto {
 
 export class InitRegistryStorageDto {
   @ApiProperty({ description: 'registryStorageAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  registryStorageAddress: string;
+  registryStorageAddress?: string;
 }
 
 export class AddStorageAgentDto {
@@ -98,7 +98,7 @@ export class AddStorageAgentDto {
   signer: string;
 
   @ApiProperty({ description: 'registryStorageAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  registryStorageAddress: string;
+  registryStorageAddress?: string;
 
   @ApiProperty({ description: 'agentAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   agentAddress: string;
@@ -106,7 +106,7 @@ export class AddStorageAgentDto {
 
 export class AddTokenAgentDto {
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  tokenAddress: string;
+  tokenAddress?: string;
 
   @ApiProperty({ description: 'agentAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   agentAddress: string;
@@ -129,7 +129,7 @@ export class AddClaimDto {
   issuerAddress: string;
 
   @ApiProperty({ description: 'claimIssuerContractAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  claimIssuerContractAddress: string;
+  claimIssuerContractAddress?: string;
 
   // @ApiProperty({ description: 'signature', example: '0xc43b42f4d30200b2f03855fcb1dc63defcb0c60b25350ad5fdf60ffe83b81f294fbe7e4440ddddb3ba074100a557e4267b1ebc7692b48c7fea2144fef9716c781c' })
   // signature: string;
@@ -146,7 +146,7 @@ export class AddClaimTopicDto {
   signer: string;
 
   @ApiProperty({ description: 'claimTopicsRegistry', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  claimTopicsRegistryAddress: string;
+  claimTopicsRegistryAddress?: string;
 
   @ApiProperty({ description: 'topic', example: 'KYC' })
   topic: string;
@@ -157,7 +157,7 @@ export class GetClaimTopicsDto {
   signer: string;
 
   @ApiProperty({ description: 'claimTopicsRegistry', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  claimTopicsRegistryAddress: string;
+  claimTopicsRegistryAddress?: string;
 }
 
 export class GetUserClaims {
@@ -176,9 +176,9 @@ export class GetUserTokens {
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  tokenAddress: string;
+  tokenAddress?: string;
   
-  @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  @ApiProperty({ description: 'userAddress', example: 'alice' })
   userAddress: string;
 }
 
@@ -187,9 +187,9 @@ export class ApproveUserTokensForTransfer {
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  tokenAddress: string;
+  tokenAddress?: string;
   
-  @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  @ApiProperty({ description: 'userAddress', example: 'alice' })
   userAddress: string;
 
   @ApiProperty({ description: 'amount', example: '100' })
@@ -201,9 +201,9 @@ export class TransferTokens {
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  tokenAddress: string;
+  tokenAddress?: string;
   
-  @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  @ApiProperty({ description: 'userAddress', example: 'alice' })
   userAddress: string;
 
   @ApiProperty({ description: 'amount', example: '100' })
@@ -215,9 +215,9 @@ export class FreezeTokens {
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  tokenAddress: string;
+  tokenAddress?: string;
   
-  @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  @ApiProperty({ description: 'userAddress', example: 'alice' })
   userAddress: string;
 
   @ApiProperty({ description: 'amount', example: '100' })
@@ -230,12 +230,12 @@ export class TransferApprovedTokens {
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  tokenAddress: string;
+  tokenAddress?: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   from: string;
   
-  @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  @ApiProperty({ description: 'userAddress', example: 'alice' })
   to: string;
 
   @ApiProperty({ description: 'amount', example: '100' })
@@ -247,9 +247,9 @@ export class BurnTokens {
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  tokenAddress: string;
+  tokenAddress?: string;
   
-  @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  @ApiProperty({ description: 'userAddress', example: 'alice' })
   userAddress: string;
 
   @ApiProperty({ description: 'amount', example: '100' })
@@ -261,7 +261,7 @@ export class GetTokenDetails {
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  tokenAddress: string;
+  tokenAddress?: string;
 }
 
 export class AddTrustedIssuerClaimTopicsDto {
@@ -269,10 +269,10 @@ export class AddTrustedIssuerClaimTopicsDto {
   signer: string;
 
   @ApiProperty({ description: 'claimIssuerContractAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  claimIssuerContractAddress: string;
+  claimIssuerContractAddress?: string;
 
   @ApiProperty({ description: 'trustedIssuersRegistryContractAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  trustedIssuersRegistryContractAddress: string;
+  trustedIssuersRegistryContractAddress?: string;
 
   @ApiProperty({ description: 'topics', example: '[7]' })
   topics: [string];
@@ -283,7 +283,7 @@ export class UpdateTrustedIssuerClaimTopicsDto {
   signer: string;
 
   @ApiProperty({ description: 'claimIssuerContractAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  claimIssuerContractAddress: string;
+  claimIssuerContractAddress?: string;
 
   @ApiProperty({ description: 'trustedIssuersRegistryContractAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   trustedIssuersRegistryContractAddress: string;
@@ -297,7 +297,7 @@ export class RemoveClaimTopicDto {
   signer: string;
 
   @ApiProperty({ description: 'claimTopicsRegistry', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  claimTopicsRegistryAddress: string;
+  claimTopicsRegistryAddress?: string;
 
   @ApiProperty({ description: 'topic', example: 'KYC' })
   topic: string;
@@ -324,7 +324,7 @@ export class RegisterIdentityDto {
   @ApiProperty({ description: 'identityRegistryAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   identityRegistryAddress: string;
 
-  @ApiProperty({ description: 'userAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  @ApiProperty({ description: 'userAddress', example: 'alice' })
   userAddress: string;
 
   @ApiProperty({ description: 'userIdentity', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
@@ -339,7 +339,7 @@ export class MintTokensDto {
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
-  tokenAddress: string;
+  tokenAddress?: string;
 
   @ApiProperty({ description: 'recipientAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
   recipientAddress: string;

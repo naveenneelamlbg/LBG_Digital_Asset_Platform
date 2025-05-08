@@ -29,8 +29,8 @@ export class TokenService {
         this.signer
       );
       let createIdentity = await identityFactory.deploy(
-        body.identityImplementationAuthority,
-        body.address
+        process.env.identityImplementationAuthority_smart_contract_address,
+        process.env[body.userAddress]
       );
 
       await createIdentity.deployed();
@@ -80,7 +80,7 @@ export class TokenService {
       const claim = {
         identity: body.identityAddress,
         data: ethers.utils.hexlify(ethers.utils.toUtf8Bytes(body.data)),
-        issuer: body.claimIssuerContractAddress,
+        issuer: process.env.claimIssuerContract_smart_contract_address as string,
         scheme: body.scheme,
         topic: claimTopics[0] as unknown as number,
         uri: "",
@@ -119,7 +119,7 @@ export class TokenService {
     try {
       const claimTopics = [ethers.utils.id(body.topic)];
       const registry = new ethers.Contract(
-        body.claimTopicsRegistryAddress,
+        process.env.claimTopicsRegistry_smart_contract_address as string,
         this.claimTopicsRegistryAbi,
         this.signer
       );
@@ -135,7 +135,7 @@ export class TokenService {
     try {
       // const claimTopics = [ethers.utils.id(body.topic)];
       const registry = new ethers.Contract(
-        body.claimTopicsRegistryAddress,
+        process.env.claimTopicsRegistry_smart_contract_address as string,
         this.claimTopicsRegistryAbi,
         this.signer
       );
@@ -166,12 +166,12 @@ export class TokenService {
   async getUserTokenBalance(body: GetUserTokens) {
     try {
       const registry = new ethers.Contract(
-        body.tokenAddress,
+        process.env.token_smart_contract_address as string,
         this.tokenAbi,
         this.signer
       );
 
-      const tx = await registry.balanceOf(body.userAddress);
+      const tx = await registry.balanceOf(process.env[body.userAddress]);
 
       let balance = ethers.BigNumber.from(tx._hex).toString();
 
@@ -185,12 +185,12 @@ export class TokenService {
     try {
       const signer = await this.getSigner(body.signer);
       const registry = new ethers.Contract(
-        body.tokenAddress,
+        process.env.token_smart_contract_address as string,
         this.tokenAbi,
         signer
       );
 
-      const tx = await registry.approve(body.userAddress, body.amount);
+      const tx = await registry.approve(process.env[body.userAddress], body.amount);
 
       return { tx };
     } catch (error) {
@@ -202,12 +202,12 @@ export class TokenService {
     try {
       const signer = await this.getSigner(body.signer);
       const registry = new ethers.Contract(
-        body.tokenAddress,
+        process.env.token_smart_contract_address as string,
         this.tokenAbi,
         signer
       );
 
-      const tx = await registry.transfer(body.userAddress, body.amount);
+      const tx = await registry.transfer(process.env[body.userAddress], body.amount);
 
       return { tx };
     } catch (error) {
@@ -219,12 +219,12 @@ export class TokenService {
     try {
       const signer = await this.getSigner(body.signer);
       const registry = new ethers.Contract(
-        body.tokenAddress,
+        process.env.token_smart_contract_address as string,
         this.tokenAbi,
         signer
       );
 
-      const tx = await registry.freezePartialTokens(body.userAddress, body.amount);
+      const tx = await registry.freezePartialTokens(process.env[body.userAddress], body.amount);
 
       return { tx };
     } catch (error) {
@@ -236,12 +236,12 @@ export class TokenService {
     try {
       const signer = await this.getSigner(body.signer);
       const registry = new ethers.Contract(
-        body.tokenAddress,
+        process.env.token_smart_contract_address as string,
         this.tokenAbi,
         signer
       );
 
-      const tx = await registry.unfreezePartialTokens(body.userAddress, body.amount);
+      const tx = await registry.unfreezePartialTokens(process.env[body.userAddress], body.amount);
 
       return { tx };
     } catch (error) {
@@ -254,13 +254,13 @@ export class TokenService {
     try {
       const signer = await this.getSigner(body.signer);
       const registry = new ethers.Contract(
-        body.tokenAddress,
+        process.env.token_smart_contract_address as string,
         this.tokenAbi,
         signer
       );
 
       // const approvedBalanceCheck = regi
-      const tx = await registry.transferFrom(body.from, body.to, body.amount);
+      const tx = await registry.transferFrom(process.env[body.from], process.env[body.to], body.amount);
 
       return { tx };
     } catch (error) {
@@ -272,12 +272,12 @@ export class TokenService {
     try {
       const signer = await this.getSigner(body.signer);
       const registry = new ethers.Contract(
-        body.tokenAddress,
+        process.env.token_smart_contract_address as string,
         this.tokenAbi,
         signer
       );
 
-      const tx = await registry.burn(body.userAddress, body.amount);
+      const tx = await registry.burn(process.env[body.userAddress], body.amount);
 
       return { tx };
     } catch (error) {
@@ -288,7 +288,7 @@ export class TokenService {
   async getTokenDetails(body: GetTokenDetails) {
     try {
       const registry = new ethers.Contract(
-        body.tokenAddress,
+        process.env.token_smart_contract_address as string,
         this.tokenAbi,
         this.signer
       );
@@ -318,12 +318,12 @@ export class TokenService {
         (topic) => ethers.utils.id(topic)
       );
       const registry = new ethers.Contract(
-        body.trustedIssuersRegistryContractAddress,
+        process.env.trustedIssuersRegistry_smart_contract_address as string,
         this.trustedIssuersRegistryAbi,
         this.signer
       );
 
-      const tx = await registry.addTrustedIssuer(body.claimIssuerContractAddress, claimTopics);
+      const tx = await registry.addTrustedIssuer(process.env.claimIssuerContract_smart_contract_address as string, claimTopics);
       return await tx.wait();
     } catch (error) {
       throw new HttpException(error.message || 'Failed to add claim topic', HttpStatus.BAD_REQUEST);
@@ -336,12 +336,12 @@ export class TokenService {
         (topic) => ethers.utils.id(topic)
       );
       const registry = new ethers.Contract(
-        body.trustedIssuersRegistryContractAddress,
+        process.env.trustedIssuersRegistry_smart_contract_address as string,
         this.trustedIssuersRegistryAbi,
         this.signer
       );
 
-      const tx = await registry.updateIssuerClaimTopics(body.claimIssuerContractAddress, claimTopics);
+      const tx = await registry.updateIssuerClaimTopics(process.env.claimIssuerContract_smart_contract_address as string, claimTopics);
       return await tx.wait();
     } catch (error) {
       throw new HttpException(error.message || 'Failed to update claim topic', HttpStatus.BAD_REQUEST);
@@ -352,7 +352,7 @@ export class TokenService {
     try {
       const claimTopics = [ethers.utils.id(body.topic)];
       const registry = new ethers.Contract(
-        body.claimTopicsRegistryAddress,
+        process.env.claimTopicsRegistry_smart_contract_address as string,
         this.claimTopicsRegistryAbi,
         this.signer
       );
@@ -390,13 +390,13 @@ export class TokenService {
       const tokenAgent = await this.getSigner("tokenAgent");
 
       const storage = new ethers.Contract(
-        body.identityRegistryAddress,
+        process.env.identityRegistry_smart_contract_address as string,
         this.identityRegistryAbi,
         tokenAgent
       );
 
       const tx = await storage.registerIdentity(
-        body.userAddress,
+        process.env[body.userAddress],
         body.userIdentity,
         body.country
       );
@@ -410,12 +410,12 @@ export class TokenService {
     try {
       const tokenIssuer = await this.getSigner(body.signer);
       const token = new ethers.Contract(
-        body.tokenAddress,
+        process.env.token_smart_contract_address as string,
         this.tokenAbi,
         tokenIssuer
       );
 
-      const tx = await token.mint(body.recipientAddress, body.amount);
+      const tx = await token.mint(process.env[body.recipientAddress], body.amount);
       return await tx.wait();
     } catch (error) {
       throw new HttpException(error.message || 'Failed to mint tokens', HttpStatus.BAD_REQUEST);

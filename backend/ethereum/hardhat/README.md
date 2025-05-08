@@ -17,7 +17,7 @@ $ $env:NODE_TLS_REJECT_UNAUTHORIZED=0
 ```bash
 $ npx hardhat run .\scripts\deploy.ts --network localhost
 ```
-Please note down the all smart contract addresses from the terminal to use in endpoints calling.
+Please copy the all smart contract addresses to backend .env file (copy paste the all content from console excluding any warning messages)
 
 ## Overview
 
