@@ -13,7 +13,7 @@ export class TokenService {
 
   constructor() {
     this.provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-    process.env.deployerPrivateKey ? this.signer = new ethers.Wallet(process.env.deployerPrivateKey, this.provider) : Error("Please set environment variables");
+    process.env.lbgPrivateKey ? this.signer = new ethers.Wallet(process.env.lbgPrivateKey, this.provider) : Error("Please set environment variables");
   }
 
   private async getSigner(name: string) {
