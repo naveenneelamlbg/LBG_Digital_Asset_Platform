@@ -14,7 +14,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"identityAddress\": \"0xf5c4a909455C00B99A90d93b48736F3196DB5621\",\n  \"topic\": \"KYC\",\n  \"scheme\": 10101000666003,\n  \"data\": \"Adhar card number\",\n  \"uri\": \"\",\n  \"signer\": \"alice\"\n}",
+          "json": "{\n  \"identityAddress\": \"0xf5c4a909455C00B99A90d93b48736F3196DB5621\",\n  \"topic\": \"KYC\",\n  \"scheme\": 10101000666003,\n  \"data\": \"Adhar card number\",\n  \"uri\": \"google.cloud/aliceAdharCard.png\",\n  \"signer\": \"alice\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -68,7 +68,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"userAddress\": \"alice\",\n  \"signer\": \"deployer\"\n}  ",
+          "json": "{\n  \"userAddress\": \"charlie\",\n  \"signer\": \"lbg\"\n}  ",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -122,7 +122,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"userAddress\": \"alice\",\n  \"userIdentity\": \"0xf5c4a909455C00B99A90d93b48736F3196DB5621\",\n  \"country\": 91,\n  \"signer\": \"tokenAgent\"\n}",
+          "json": "{\n  \"userAddress\": \"bob\",\n  \"userIdentity\": \"0x67d269191c92Caf3cD7723F116c85e6E9bf55933\",\n  \"country\": 91,\n  \"signer\": \"tokenAgent\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -149,7 +149,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"topic\": \"KYC\",\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"topic\": \"KYC\",\n  \"signer\": \"lbg\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -176,7 +176,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"topic\": \"KYC\",\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"topic\": \"KYC\",\n  \"signer\": \"lbg\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -203,7 +203,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"topics\": [\"AML\"],\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"topics\": [\"AML\"],\n  \"signer\": \"lbg\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -230,7 +230,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"signer\": \"lbg\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -257,7 +257,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"topic\": \"0xf10451f2068956fc6b77c861ed53a001af01cf7ac253ae3e3e8e4145a5f43c53\",\n  \"identityAddress\": \"0xde2Bd2ffEA002b8E84ADeA96e5976aF664115E2c\",\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"topic\": \"0xf10451f2068956fc6b77c861ed53a001af01cf7ac253ae3e3e8e4145a5f43c53\",\n  \"identityAddress\": \"0xde2Bd2ffEA002b8E84ADeA96e5976aF664115E2c\",\n  \"signer\": \"lbg\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -284,7 +284,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"userAddress\": \"alice\",\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"signer\": \"lbg\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -311,7 +311,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"signer\": \"lbg\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -411,7 +411,7 @@
       "type": "http",
       "name": "transfer-approved-tokens",
       "filename": "transfer-approved-tokens.bru",
-      "seq": 17,
+      "seq": 16,
       "request": {
         "url": "http://localhost:3000/token/transfer-approved-tokens",
         "method": "POST",
@@ -438,7 +438,7 @@
       "type": "http",
       "name": "freeze-tokens",
       "filename": "freeze-tokens.bru",
-      "seq": 18,
+      "seq": 17,
       "request": {
         "url": "http://localhost:3000/token/freeze-tokens",
         "method": "POST",
@@ -465,7 +465,7 @@
       "type": "http",
       "name": "unfreeze-tokens",
       "filename": "unfreeze-tokens.bru",
-      "seq": 19,
+      "seq": 18,
       "request": {
         "url": "http://localhost:3000/token/unfreeze-tokens",
         "method": "POST",
@@ -474,6 +474,141 @@
         "body": {
           "mode": "json",
           "json": "{\n  \"userAddress\": \"alice\",\n  \"amount\": 10,\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "freeze-account",
+      "filename": "freeze-account.bru",
+      "seq": 19,
+      "request": {
+        "url": "http://localhost:3000/token/freeze-account",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "unfreeze-account",
+      "filename": "unfreeze-account.bru",
+      "seq": 20,
+      "request": {
+        "url": "http://localhost:3000/token/unfreeze-account",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"userAddress\": \"alice\",\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "pause-token",
+      "filename": "pause-token.bru",
+      "seq": 21,
+      "request": {
+        "url": "http://localhost:3000/token/pause-token",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "unpause-token",
+      "filename": "unpause-token.bru",
+      "seq": 22,
+      "request": {
+        "url": "http://localhost:3000/token/unpause-token",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"signer\": \"tokenAgent\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "inherit"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "recover-account",
+      "filename": "recover-account.bru",
+      "seq": 23,
+      "request": {
+        "url": "http://localhost:3000/token/recover-account",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"lostWalletAddress\": \"alice\",\n  \"newWalletAddress\": \"charlie\",\n  \"userIdentity\": \"0xE6E340D132b5f46d1e472DebcD681B2aBc16e57E\",\n  \"signer\": \"tokenAgent\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
