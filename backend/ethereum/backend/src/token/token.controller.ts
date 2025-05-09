@@ -17,7 +17,10 @@ import {
   TransferTokens,
   BurnTokens,
   TransferApprovedTokens,
-  FreezeTokens
+  FreezeTokens,
+  FreezeAccount,
+  PauseToken,
+  RecoverAccount
 } from './token.dto';
 
 @Controller('token')
@@ -115,6 +118,16 @@ export class TokenController {
     };
   }
 
+  @Post('recover-account')
+  async recoverAccount(@Body() dto: RecoverAccount) {
+    const receipt = await this.tokenService.recoverAccount(dto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'recovered the requested account successfully',
+      receipt
+    };
+  }
+
   @Post('freeze-tokens')
   async freezeTokens(@Body() dto: FreezeTokens) {
     const receipt = await this.tokenService.freezeTokens(dto);
@@ -131,6 +144,48 @@ export class TokenController {
     return {
       statusCode: HttpStatus.OK,
       message: 'unfreezed the requested amount of tokens successfully',
+      receipt
+    };
+  }
+
+  @Post('pause-token')
+  async pauseToken(@Body() dto: PauseToken) {
+    const receipt = await this.tokenService.pauseToken(dto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'paused the requested token successfully',
+      receipt
+    };
+  }
+
+  @Post('unpause-token')
+  async unpauseToken(@Body() dto: PauseToken) {
+    const receipt = await this.tokenService.unpauseToken(dto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'unpaused the requested token successfully',
+      receipt
+    };
+  }
+
+  @Post('freeze-account')
+  async freezeAccount(@Body() dto: FreezeAccount) {
+    dto.status = true;
+    const receipt = await this.tokenService.freezeAccount(dto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'freezed the requested account successfully',
+      receipt
+    };
+  }
+
+  @Post('unfreeze-account')
+  async unFreezeAccount(@Body() dto: FreezeAccount) {
+    dto.status = false;
+    const receipt = await this.tokenService.freezeAccount(dto);
+    return {
+      statusCode: HttpStatus.OK,
+      message: 'unfreezed the requested account successfully',
       receipt
     };
   }

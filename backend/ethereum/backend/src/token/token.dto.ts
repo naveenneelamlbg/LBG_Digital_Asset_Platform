@@ -142,7 +142,7 @@ export class AddClaimDto {
 }
 
 export class AddClaimTopicDto {
-  @ApiProperty({ description: 'deployer', example: 'alice' })
+  @ApiProperty({ description: 'signer', example: 'lbg' })
   signer: string;
 
   @ApiProperty({ description: 'claimTopicsRegistry', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
@@ -153,7 +153,7 @@ export class AddClaimTopicDto {
 }
 
 export class GetClaimTopicsDto {
-  @ApiProperty({ description: 'deployer', example: 'alice' })
+  @ApiProperty({ description: 'signer', example: 'lbg' })
   signer: string;
 
   @ApiProperty({ description: 'claimTopicsRegistry', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
@@ -161,7 +161,7 @@ export class GetClaimTopicsDto {
 }
 
 export class GetUserClaims {
-  @ApiProperty({ description: 'deployer', example: 'alice' })
+  @ApiProperty({ description: 'signer', example: 'lbg' })
   signer: string;
 
   @ApiProperty({ description: 'identityAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
@@ -172,7 +172,7 @@ export class GetUserClaims {
 }
 
 export class GetUserTokens {
-  @ApiProperty({ description: 'deployer', example: 'alice' })
+  @ApiProperty({ description: 'signer', example: 'lbg' })
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
@@ -183,7 +183,7 @@ export class GetUserTokens {
 }
 
 export class ApproveUserTokensForTransfer {
-  @ApiProperty({ description: 'deployer', example: 'alice' })
+  @ApiProperty({ description: 'signer', example: 'lbg' })
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
@@ -197,7 +197,7 @@ export class ApproveUserTokensForTransfer {
 }
 
 export class TransferTokens {
-  @ApiProperty({ description: 'deployer', example: 'alice' })
+  @ApiProperty({ description: 'signer', example: 'lbg' })
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
@@ -211,7 +211,7 @@ export class TransferTokens {
 }
 
 export class FreezeTokens {
-  @ApiProperty({ description: 'deployer', example: 'alice' })
+  @ApiProperty({ description: 'signer', example: 'lbg' })
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
@@ -224,9 +224,42 @@ export class FreezeTokens {
   amount: number;
 }
 
+export class FreezeAccount {
+  @ApiProperty({ description: 'signer', example: 'lbg' })
+  signer: string;
+
+  @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  tokenAddress?: string;
+  
+  @ApiProperty({ description: 'userAddress', example: 'alice' })
+  userAddress: string;
+  
+  @ApiProperty({ description: 'status', example: 'true' })
+  status?: boolean;
+}
+
+export class RecoverAccount {
+  @ApiProperty({ description: 'signer', example: 'lbg' })
+  signer: string;
+
+  @ApiProperty({ description: 'lostWalletAddress', example: 'alice' })
+  lostWalletAddress: string;
+  
+  @ApiProperty({ description: 'newWalletAddress', example: 'alice' })
+  newWalletAddress: string;
+  
+  @ApiProperty({ description: 'userIdentity', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
+  userIdentity?: string;
+}
+
+export class PauseToken {
+  @ApiProperty({ description: 'deployer', example: 'tokenAgent' })
+  signer: string;
+}
+
 
 export class TransferApprovedTokens {
-  @ApiProperty({ description: 'deployer', example: 'alice' })
+  @ApiProperty({ description: 'signer', example: 'lbg' })
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
@@ -243,7 +276,7 @@ export class TransferApprovedTokens {
 }
 
 export class BurnTokens {
-  @ApiProperty({ description: 'deployer', example: 'alice' })
+  @ApiProperty({ description: 'signer', example: 'lbg' })
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
@@ -257,7 +290,7 @@ export class BurnTokens {
 }
 
 export class GetTokenDetails {
-  @ApiProperty({ description: 'deployer', example: 'alice' })
+  @ApiProperty({ description: 'signer', example: 'lbg' })
   signer: string;
 
   @ApiProperty({ description: 'tokenAddress', example: '0x5B38Da6a701c568545dCfcB03FcB875f56beddC4' })
