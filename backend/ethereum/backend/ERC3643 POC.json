@@ -311,7 +311,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"signer\": \"deployer\"\n}",
+          "json": "{\n  \"signer\": \"lbg\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -411,7 +411,7 @@
       "type": "http",
       "name": "transfer-approved-tokens",
       "filename": "transfer-approved-tokens.bru",
-      "seq": 17,
+      "seq": 16,
       "request": {
         "url": "http://localhost:3000/token/transfer-approved-tokens",
         "method": "POST",
@@ -438,7 +438,7 @@
       "type": "http",
       "name": "freeze-tokens",
       "filename": "freeze-tokens.bru",
-      "seq": 18,
+      "seq": 17,
       "request": {
         "url": "http://localhost:3000/token/freeze-tokens",
         "method": "POST",
@@ -465,7 +465,7 @@
       "type": "http",
       "name": "unfreeze-tokens",
       "filename": "unfreeze-tokens.bru",
-      "seq": 19,
+      "seq": 18,
       "request": {
         "url": "http://localhost:3000/token/unfreeze-tokens",
         "method": "POST",
@@ -492,7 +492,7 @@
       "type": "http",
       "name": "freeze-account",
       "filename": "freeze-account.bru",
-      "seq": 20,
+      "seq": 19,
       "request": {
         "url": "http://localhost:3000/token/freeze-account",
         "method": "POST",
@@ -519,7 +519,7 @@
       "type": "http",
       "name": "unfreeze-account",
       "filename": "unfreeze-account.bru",
-      "seq": 21,
+      "seq": 20,
       "request": {
         "url": "http://localhost:3000/token/unfreeze-account",
         "method": "POST",
@@ -546,7 +546,7 @@
       "type": "http",
       "name": "pause-token",
       "filename": "pause-token.bru",
-      "seq": 22,
+      "seq": 21,
       "request": {
         "url": "http://localhost:3000/token/pause-token",
         "method": "POST",
@@ -573,7 +573,7 @@
       "type": "http",
       "name": "unpause-token",
       "filename": "unpause-token.bru",
-      "seq": 23,
+      "seq": 22,
       "request": {
         "url": "http://localhost:3000/token/unpause-token",
         "method": "POST",
@@ -600,7 +600,7 @@
       "type": "http",
       "name": "recover-account",
       "filename": "recover-account.bru",
-      "seq": 24,
+      "seq": 23,
       "request": {
         "url": "http://localhost:3000/token/recover-account",
         "method": "POST",
