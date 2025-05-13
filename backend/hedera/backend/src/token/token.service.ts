@@ -12,8 +12,13 @@ export class TokenService {
     private client = Client.forTestnet().setOperator(this.operatorId, this.operatorKey);
 
     private getAccountDetails(sender: string) {
+
         const accountId = AccountId.fromString(process.env[`${sender}_id`] as unknown as string);
-        const accountKey = PrivateKey.fromStringED25519(process.env[`${sender}_key`] as unknown as string);
+        let accountKey;
+
+        process.env[`${sender}_keyType`] === "ED25519" ? accountKey = PrivateKey.fromStringED25519(process.env[`${sender}_key`] as unknown as string)
+            : accountKey = PrivateKey.fromStringECDSA(process.env[`${sender}_key`] as unknown as string)
+  
         return { accountId, accountKey };
     }
 
@@ -281,7 +286,7 @@ export class TokenService {
                 .addTokenTransfer(body.tokenId, accountId, -body.amount)
                 .addTokenTransfer(body.tokenId, this.operatorId, body.amount)
                 .freezeWith(this.client)
-                .sign(this.operatorKey);
+                .sign(accountKey);
 
             let tokenRefundTransferSubmit = await transaction.execute(this.client);
             let tokenRefundTransferRx = await tokenRefundTransferSubmit.getReceipt(this.client);
