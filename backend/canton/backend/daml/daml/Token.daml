@@ -23,7 +23,7 @@ template Token
         assertMsg "Amount must be positive" (newAmount > 0)
         create this with amount = amount + newAmount
 
-    choice Transfer : ContractId Token
+    choice Transfer : Optional (ContractId Token, Optional (ContractId Token))
       with
         newOwner: Party
         transferAmount: Int
@@ -31,17 +31,31 @@ template Token
       do
         assertMsg "Transfer amount must be positive" (transferAmount > 0)
         assertMsg "Insufficient balance" (amount >= transferAmount)
-        create this with owner = newOwner, amount = transferAmount
-        create this with amount = amount - transferAmount
+        let
+          newOwnerToken = this with owner = newOwner, amount = transferAmount
+        if amount == transferAmount then
+          do
+            newCid <- create newOwnerToken
+            return (Some (newCid, None))
+        else
+          do
+            newCid1 <- create newOwnerToken
+            newCid2 <- create this with amount = amount - transferAmount
+            return (Some (newCid1, Some newCid2))
 
-    choice Redeem : ContractId Token
+    choice Redeem : Optional (ContractId Token)
       with
         redeemAmount: Int
       controller owner
       do
         assertMsg "Redeem amount must be positive" (redeemAmount > 0)
         assertMsg "Insufficient balance" (amount >= redeemAmount)
-        create this with amount = amount - redeemAmount
+        if amount == redeemAmount then
+          return None
+        else
+          do
+            newCid <- create this with amount = amount - redeemAmount
+            return (Some newCid)
 
     choice Purchase : ContractId Token
       with

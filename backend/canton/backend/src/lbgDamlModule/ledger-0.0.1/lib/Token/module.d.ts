@@ -7,6 +7,7 @@ import * as damlTypes from '@daml/types';
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import * as damlLedger from '@daml/ledger';
 
+import * as pkg40f452260bef3f29dede136108fc08a88d5a5250310281067087da6f0baddff7 from '@daml.ts/40f452260bef3f29dede136108fc08a88d5a5250310281067087da6f0baddff7';
 import * as pkgd14e08374fc7197d6a0de468c968ae8ba3aadbf9315476fd39071831f5923662 from '@daml.ts/d14e08374fc7197d6a0de468c968ae8ba3aadbf9315476fd39071831f5923662';
 
 export declare type Purchase = {
@@ -62,13 +63,13 @@ export declare type Token = {
 
 export declare interface TokenInterface {
   Mint: damlTypes.Choice<Token, Mint, damlTypes.ContractId<Token>, undefined> & damlTypes.ChoiceFrom<damlTypes.Template<Token, undefined>>;
-  Transfer: damlTypes.Choice<Token, Transfer, damlTypes.ContractId<Token>, undefined> & damlTypes.ChoiceFrom<damlTypes.Template<Token, undefined>>;
-  Redeem: damlTypes.Choice<Token, Redeem, damlTypes.ContractId<Token>, undefined> & damlTypes.ChoiceFrom<damlTypes.Template<Token, undefined>>;
+  Transfer: damlTypes.Choice<Token, Transfer, damlTypes.Optional<pkg40f452260bef3f29dede136108fc08a88d5a5250310281067087da6f0baddff7.DA.Types.Tuple2<damlTypes.ContractId<Token>, damlTypes.Optional<damlTypes.ContractId<Token>>>>, undefined> & damlTypes.ChoiceFrom<damlTypes.Template<Token, undefined>>;
+  Redeem: damlTypes.Choice<Token, Redeem, damlTypes.Optional<damlTypes.ContractId<Token>>, undefined> & damlTypes.ChoiceFrom<damlTypes.Template<Token, undefined>>;
   Archive: damlTypes.Choice<Token, pkgd14e08374fc7197d6a0de468c968ae8ba3aadbf9315476fd39071831f5923662.DA.Internal.Template.Archive, {}, undefined> & damlTypes.ChoiceFrom<damlTypes.Template<Token, undefined>>;
   Purchase: damlTypes.Choice<Token, Purchase, damlTypes.ContractId<Token>, undefined> & damlTypes.ChoiceFrom<damlTypes.Template<Token, undefined>>;
 }
 export declare const Token:
-  damlTypes.Template<Token, undefined, '5761d37bf11a5049d5a30f5156e1fe5eb3f4c5f789e32c8da6d1e1e096a5f723:Token:Token'> &
+  damlTypes.Template<Token, undefined, 'c02d6f4d4eaa633d92fcf6b39902af87a032d5264b92e9f7db24e985aec8cbc8:Token:Token'> &
   damlTypes.ToInterface<Token, never> &
   TokenInterface;
 

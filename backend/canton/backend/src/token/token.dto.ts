@@ -1,7 +1,7 @@
 import { ContractId } from "@daml/types";
 import { Token } from "@daml.ts/ledger-0.0.1/lib/Token/module";
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsNumberString, IsOptional, IsObject } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsOptional, IsObject } from 'class-validator';
 
 export class CreateContractDto {
   @ApiProperty({ description: 'Template ID of the contract' })
@@ -25,7 +25,7 @@ export class CreateContractDto {
   symbol: string;
 
   @ApiProperty({ description: 'Amount of the token' })
-  @IsNumberString()
+  @IsNumber()
   @IsNotEmpty()
   amount: string;
 
@@ -35,7 +35,7 @@ export class CreateContractDto {
   name: string;
 
   @ApiProperty({ description: 'Value of the token' })
-  @IsNumberString()
+  @IsNumber()
   @IsNotEmpty()
   tokenValue: string;
 
@@ -50,8 +50,8 @@ export class CreateContractDto {
 export class MintDto {
   @ApiProperty({ description: 'Issuer of the token' })
   @IsString()
-  @IsNotEmpty()
-  issuer: string;
+  @IsOptional()
+  issuer?: string;
 
   @ApiProperty({ description: 'Contract ID of the token' })
   @IsString() // Adjust based on actual type of ContractId<Token>
@@ -59,7 +59,7 @@ export class MintDto {
   tokenCid: ContractId<Token>;
 
   @ApiProperty({ description: 'Amount to mint' })
-  @IsNumberString()
+  @IsNumber()
   @IsNotEmpty()
   newAmount: string;
 }
@@ -82,7 +82,7 @@ export class TransferDto {
   newOwner: string;
 
   @ApiProperty({ description: 'Amount to transfer' })
-  @IsNumberString()
+  @IsNumber()
   @IsNotEmpty()
   transferAmount: string;
 }
@@ -100,7 +100,7 @@ export class RedeemDto {
   tokenCid: ContractId<Token>;
 
   @ApiProperty({ description: 'Amount to redeem' })
-  @IsNumberString()
+  @IsNumber()
   @IsNotEmpty()
   redeemAmount: string;
 }
@@ -124,7 +124,7 @@ export class PurchaseDto {
   buyer: string;
 
   @ApiProperty({ description: 'Amount to purchase' })
-  @IsNumberString()
+  @IsNumber()
   @IsNotEmpty()
   purchaseAmount: string;
 }

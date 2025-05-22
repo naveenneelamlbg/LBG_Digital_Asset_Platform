@@ -11,4 +11,4 @@ var SupplyChain = require('./SupplyChain');
 exports.SupplyChain = SupplyChain;
 var Token = require('./Token');
 exports.Token = Token;
-exports.packageId = '5761d37bf11a5049d5a30f5156e1fe5eb3f4c5f789e32c8da6d1e1e096a5f723';
+exports.packageId = 'c02d6f4d4eaa633d92fcf6b39902af87a032d5264b92e9f7db24e985aec8cbc8';

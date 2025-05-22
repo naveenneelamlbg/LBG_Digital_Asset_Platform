@@ -46,7 +46,7 @@ export class TokenService {
   }
 
   async mintToken(mintDto: MintDto) {
-    const { issuer, tokenCid, newAmount } = mintDto;
+    const { tokenCid, newAmount } = mintDto;
     return this.ledger.exercise(Token.Mint, tokenCid, { newAmount });
   }
 

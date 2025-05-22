@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, Param, Query } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, Query, HttpCode } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { TokenService } from './token.service';
 import { CreateContractDto, CreateUserDto, GetUserTokenDto, MintDto, PurchaseDto, RedeemDto, TransferDto } from './token.dto';
@@ -9,6 +9,7 @@ export class TokenController {
   constructor(private readonly tokenService: TokenService) { }
 
   @ApiOperation({ summary: 'Create a user' })
+  @HttpCode(201)
   @ApiResponse({ status: 201, description: 'User created successfully.' })
   @Post('create-user')
   async createUser(@Body() createUserDto: CreateUserDto) {
@@ -16,15 +17,17 @@ export class TokenController {
   }
 
   @ApiOperation({ summary: 'Generate user token' })
+  @HttpCode(200)
   @ApiResponse({ status: 200, description: 'User token generated successfully.' })
   @Get('generateUserToken')
   async generateUserToken(@Query() query: GetUserTokenDto) {
     const token = await this.tokenService.generateUserToken(query.userId);
-    return { token };
+    return { token, message:"token created he is current user no need to copy this"};
   }
 
 
   @ApiOperation({ summary: 'List user rights' })
+  @HttpCode(200)
   @ApiResponse({ status: 200, description: 'List of user rights retrieved successfully.' })
   @Get('listUserRights')
   async listUserRights() {
@@ -33,6 +36,7 @@ export class TokenController {
   }
 
   @ApiOperation({ summary: 'Get list of parties' })
+  @HttpCode(200)
   @ApiResponse({ status: 200, description: 'List of parties retrieved successfully.' })
   @Get()
   async getParties() {
@@ -41,6 +45,7 @@ export class TokenController {
   }
 
   @ApiOperation({ summary: 'List users' })
+  @HttpCode(200)
   @ApiResponse({ status: 200, description: 'List of users retrieved successfully.' })
   @Get("listUsers")
   async listUsers() {
@@ -50,6 +55,7 @@ export class TokenController {
 
 
   @ApiOperation({ summary: 'Get user contracts' })
+  @HttpCode(200)
   @ApiResponse({ status: 200, description: 'User contracts retrieved successfully.' })
   @Get('getUserContracts')
   async getUserContracts() {
@@ -59,6 +65,7 @@ export class TokenController {
 
 
   @ApiOperation({ summary: 'Create a contract' })
+  @HttpCode(201)
   @ApiResponse({ status: 201, description: 'Contract created successfully.' })
   @Post('create')
   async createContract(@Body() createContractDto: CreateContractDto) {
@@ -66,6 +73,7 @@ export class TokenController {
   }
 
   @ApiOperation({ summary: 'Mint tokens' })
+  @HttpCode(200)
   @ApiResponse({ status: 200, description: 'Tokens minted successfully.' })
   @Post('mint')
   async mintToken(@Body() mintDto: MintDto) {
@@ -73,6 +81,7 @@ export class TokenController {
   }
 
   @ApiOperation({ summary: 'Transfer tokens' })
+  @HttpCode(200)
   @ApiResponse({ status: 200, description: 'Tokens transferred successfully.' })
   @Post('transfer')
   async transferToken(@Body() transferDto: TransferDto) {
@@ -80,6 +89,7 @@ export class TokenController {
   }
 
   @ApiOperation({ summary: 'Redeem tokens' })
+  @HttpCode(200)
   @ApiResponse({ status: 200, description: 'Tokens redeemed successfully.' })
   @Post('redeem')
   async redeemToken(@Body() redeemDto: RedeemDto) {
@@ -87,6 +97,7 @@ export class TokenController {
   }
 
   // @ApiOperation({ summary: 'Purchase tokens' })
+  // @HttpCode(200)
   // @ApiResponse({ status: 200, description: 'Tokens purchased successfully.' })
   // @Post('purchase')
   // async purchaseToken(@Body() purchaseDto: PurchaseDto) {
