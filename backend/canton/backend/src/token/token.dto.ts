@@ -1,7 +1,7 @@
 import { ContractId } from "@daml/types";
 import { Token } from "@daml.ts/ledger-0.0.1/lib/Token/module";
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsNumber, IsOptional, IsObject } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber, IsOptional, IsObject, Matches } from 'class-validator';
 
 export class CreateContractDto {
   @ApiProperty({ description: 'Template ID of the contract' })
@@ -32,6 +32,7 @@ export class CreateContractDto {
   @ApiProperty({ description: 'Name of the token' })
   @IsString()
   @IsNotEmpty()
+  @Matches(/^[a-zA-Z0-9]+$/)
   name: string;
 
   @ApiProperty({ description: 'Value of the token' })
@@ -134,6 +135,7 @@ export class CreateUserDto {
   @ApiProperty({ description: 'Name of the user' })
   @IsString()
   @IsNotEmpty()
+  @Matches(/^[a-zA-Z]+$/)
   name: string;
 
   @ApiProperty({ description: 'User ID' })
@@ -156,5 +158,6 @@ export class GetUserTokenDto {
   @ApiProperty({ description: 'Name of the user', example: 'lloydsBank' })
   @IsString()
   @IsNotEmpty()
+  @Matches(/^[a-zA-Z]+$/)
   userId: string;
 }
