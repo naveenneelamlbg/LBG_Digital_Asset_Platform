@@ -1,5 +1,5 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { Client, TokenCreateTransaction, TokenMintTransaction, TokenBurnTransaction, TokenAssociateTransaction, TokenDissociateTransaction, TransferTransaction, AccountBalanceQuery, TransactionRecordQuery, AccountId, PrivateKey, TokenInfoQuery, TokenType, TokenSupplyType, CustomFixedFee, TokenUpdateTransaction, SignatureMap, TransactionId } from '@hashgraph/sdk';
+import { Client, TokenCreateTransaction, TokenMintTransaction, TokenBurnTransaction, TokenAssociateTransaction, TokenDissociateTransaction, TransferTransaction, AccountBalanceQuery, TransactionRecordQuery, AccountId, PrivateKey, TokenInfoQuery, TokenType, TokenSupplyType, CustomFixedFee, TokenUpdateTransaction, SignatureMap, TransactionId, PublicKey, AccountInfoQuery } from '@hashgraph/sdk';
 import * as dotenv from 'dotenv';
 import { FireblocksService } from './fireblock.service';
 import { SourceMap } from 'module';
@@ -116,16 +116,16 @@ export class TokenService {
         try {
             const { accountId, accountKey } = this.getAccountDetails(body.sender);
             const address = await this.fireblocksService.getAddress();
-            // const transaction = await new TokenAssociateTransaction()
-            //     .setAccountId(AccountId.fromString(address))
-            //     .setTokenIds([body.tokenId])
-            //     .freezeWith(this.client)
-
             const transaction = await new TokenAssociateTransaction()
-                .setAccountId(accountId)
+                .setAccountId(AccountId.fromString(address))
                 .setTokenIds([body.tokenId])
                 .freezeWith(this.client)
-            //     // .sign(accountKey)
+
+            // const transaction = await new TokenAssociateTransaction()
+            //     .setAccountId(accountId)
+            //     .setTokenIds([body.tokenId])
+            //     .freezeWith(this.client)
+            // //     // .sign(accountKey)
 
             const transactionBytes = transaction.toBytes();
 
@@ -134,14 +134,14 @@ export class TokenService {
 
             // console.log(transaction.getSignatures());
 
-            // let trn = new SignatureMap()
-            let trn = SignatureMap._fromTransaction(transaction);
+            let trn = new SignatureMap()
+            // let trn = SignatureMap._fromTransaction(transaction);
 
             // transaction.setTransactionId()
             console.log(trn.getFlatSignatureList())
 
             // let signTxn = await transaction.signWith(signTx.pubKey, this.fireblocksService.sign);
-            let signTxn = await transaction.sign(accountKey);
+            // let signTxn = await transaction.sign(accountKey);
 
             // trn.addSignature(AccountId.fromString(address), transaction.transactionId as TransactionId, signTx.pubKey, signTx.signature)
             // console.log(trn.getFlatSignatureList())
@@ -153,18 +153,41 @@ export class TokenService {
 
             // // const removedSigs = transaction.removeAllSignatures()
             // transaction._addSignatureLegacy(signTx.pubKey, [signTx.signature, signTx.signature, signTx.signature, signTx.signature, signTx.signature]);
-            
-            transaction._signOnDemand = true;
-            // transaction.addSignature(signTx.pubKey, [signTx.signature, signTx.signature, signTx.signature, signTx.signature, signTx.signature])
 
+
+            // await transaction.signWith(signTx.pubKey, async (message) => signTx.signature);
+
+            //Collate all three signatures with the transaction
+            const signedTransaction = transaction.addSignature(signTx.pubKey, new Uint8Array(signTx.signature));
+
+            console.log("The public keys that signed the transaction  " + signedTransaction.getSignatures());
 
             console.log(SignatureMap._fromTransaction(transaction).getFlatSignatureList())
+            // console.log(trn.getFlatSignatureList())
 
             // console.log(await transaction.getSignaturesAsync())
 
             // transaction.executeWithSigner(this.fireblocksService.getClient())
+            // const accounts = await this.fireblocksService.getVaultPagedAccounts(100);
 
-            const txResponse = await transaction.execute(this.client);
+
+            const accountInfo = await new AccountInfoQuery()
+                .setAccountId(AccountId.fromString(address))
+                .execute(this.client);
+
+            const onChainKey = accountInfo.key;
+
+            console.log("Account Pub Matches?", onChainKey.toString() === signTx.pubKey.toString());
+
+            const verifySign = signTx.pubKey.verify(transactionBytes, signTx.signature);
+
+            console.log("Signature Matches?", onChainKey.toString() === signTx.pubKey.toString());
+
+            const txResponse = await signedTransaction.execute(this.client);
+            const txId = txResponse.transactionId.toString();
+            //Print the transaction ID to the console
+            console.log("The transaction ID " + txId);
+
             const receipt = await txResponse.getReceipt(this.client);
 
             if (!receipt.status) {

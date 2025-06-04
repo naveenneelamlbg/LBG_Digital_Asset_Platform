@@ -22,7 +22,7 @@
   "dependencies": {
     "@fireblocks/ts-sdk": "^10.1.1",
     "@hashgraph/hedera-custodians-integration": "^1.4.1",
-    "@hashgraph/sdk": "^2.60.1",
+    "@hashgraph/sdk": "^2.65.1",
     "@nestjs/common": "^11.0.11",
     "@nestjs/core": "^11.0.11",
     "@nestjs/platform-express": "^11.0.11",
