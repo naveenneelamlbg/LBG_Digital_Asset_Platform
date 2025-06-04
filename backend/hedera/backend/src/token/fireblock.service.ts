@@ -33,6 +33,7 @@ export class FireblocksService {
 
     private fireblocks = new Fireblocks({
         apiKey: "68f17824-2bc4-4803-b573-8d36a562f72a",
+        API Key: 514c25b1-8e87-4d4b-8669-65530d139f5c,
         basePath: "https://sandbox-api.fireblocks.io/v1",
         secretKey: this.privateKey,
         // testnet: true,
