@@ -20,12 +20,16 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@fireblocks/ts-sdk": "^10.1.1",
+    "@hashgraph/hedera-custodians-integration": "^1.4.1",
     "@hashgraph/sdk": "^2.60.1",
     "@nestjs/common": "^11.0.11",
     "@nestjs/core": "^11.0.11",
     "@nestjs/platform-express": "^11.0.11",
     "@nestjs/swagger": "^11.0.6",
+    "@noble/ed25519": "^2.2.3",
     "dotenv": "^16.4.7",
+    "hedera-fireblocks-sdk": "github:fireblocks/hbar-fireblocks-sdk",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1"

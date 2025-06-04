@@ -1,0 +1,20 @@
+meta {
+  name: Transfer Token Within Vault
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:3000/api/vaults/transfer
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "assetId": "HBAR_TEST",
+    "amount": 0.1,
+    "srcId": 1,
+    "destId": 3
+  }
+}
