@@ -26,6 +26,7 @@ export class FireblocksService {
     private fireblocks = new Fireblocks({
         // apiKey: "68f17824-2bc4-4803-b573-8d36a562f72a",
         // apiKey: "514c25b1-8e87-4d4b-8669-65530d139f5c",
+        apiKey: 2ba1a7ec-1807-4a90-a671-9fbda533dcba,
         apiKey:"f4969d4b-30d8-4721-a6e2-ccb2c1b1daa2",
         basePath: "https://sandbox-api.fireblocks.io/v1",
         secretKey: this.privateKey,
