@@ -2,18 +2,24 @@ import { TokenCreateTransaction, TokenType } from "@hashgraph/sdk";
 import { FireblocksHederaClient } from "../src/FireblocksHederaClient";
 import { FireblocksHederaClientConfig } from "../src/type";
 import { BasePath } from "@fireblocks/ts-sdk";
+// import * as fs from 'fs';
+
 
 let client: FireblocksHederaClient;
+
+    // let FIREBLOCKS_API_SECRET_PATH = "examples/editor_sandbox_lbg_user_secret.key";
+
+    // let privateKey = fs.readFileSync(FIREBLOCKS_API_SECRET_PATH, 'utf8');
 
 // code example for token creation transaction, examplifying the use case of working with two different wallets as signers and multiple nodes (no limitation)
 
 (async () => {
   const clientConfig: FireblocksHederaClientConfig = {
-    apiKey: "YOUR_API_KEY_ID",
-    secretKeyPath: "/PATH/TO/API/SECRET/KEY",
-    vaultAccountId: 0, // update the client's vault account id
+    apiKey:"68f17824-2bc4-4803-b573-8d36a562f72a",
+    secretKeyPath: "src/editor_sandbox_lbg_user_secret.key",
+    vaultAccountId: 1, // update the client's vault account id
     testnet: true,
-    apiEndpoint: BasePath.US,
+    apiEndpoint: BasePath.Sandbox,
   };
   client = new FireblocksHederaClient(clientConfig);
   await client.init();

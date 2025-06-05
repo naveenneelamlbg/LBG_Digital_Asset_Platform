@@ -9,11 +9,11 @@ let client: FireblocksHederaClient;
 
 (async () => {
   const clientConfig: FireblocksHederaClientConfig = {
-    apiKey: "YOUR_API_KEY_ID",
-    secretKeyPath: "/PATH/TO/API/SECRET/KEY",
-    vaultAccountId: 0, // update the client's vault account id
+    apiKey: "68f17824-2bc4-4803-b573-8d36a562f72a",
+    secretKeyPath: "src/editor_sandbox_lbg_user_secret.key",
+    vaultAccountId: 1, // update the client's vault account id
     testnet: true,
-    apiEndpoint: BasePath.US,
+    apiEndpoint: BasePath.Sandbox,
     maxNumberOfPayloadsPerTransaction: 1,
   };
   client = new FireblocksHederaClient(clientConfig);
@@ -22,7 +22,7 @@ let client: FireblocksHederaClient;
   const clientSigner = await client.getSigner(clientConfig.vaultAccountId);
   const clientPublicKey = (await clientSigner.getAccountInfo()).key;
 
-  const treasuryVaultId = 2;
+  const treasuryVaultId = 1;
   const treasurySigner = await client.getSigner(treasuryVaultId);
   const treasuryAccountId = await client.getFireblocksAccountId();
 

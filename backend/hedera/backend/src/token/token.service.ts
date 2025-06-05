@@ -158,9 +158,9 @@ export class TokenService {
             // await transaction.signWith(signTx.pubKey, async (message) => signTx.signature);
 
             //Collate all three signatures with the transaction
-            const signedTransaction = transaction.addSignature(signTx.pubKey, new Uint8Array(signTx.signature));
+            const signedTransaction = transaction.addSignature(signTx.pubKey, [signTx.signature, signTx.signature, signTx.signature, signTx.signature, signTx.signature]);
 
-            console.log("The public keys that signed the transaction  " + signedTransaction.getSignatures());
+            // console.log("The public keys that signed the transaction  " + signedTransaction.getSignatures());
 
             console.log(SignatureMap._fromTransaction(transaction).getFlatSignatureList())
             // console.log(trn.getFlatSignatureList())
