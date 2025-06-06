@@ -2,9 +2,9 @@
 import { Injectable } from '@nestjs/common';
 import { BasePath, Fireblocks, TransferPeerPathType } from '@fireblocks/ts-sdk';
 import * as fs from 'fs';
-import { AccountId, PrivateKey, PublicKey } from '@hashgraph/sdk';
+// import { AccountId, PrivateKey, PublicKey } from '@hashgraph/sdk';
 
-import { CustodialWalletService, SignatureRequest, FireblocksConfig } from '@hashgraph/hedera-custodians-integration';
+// import { CustodialWalletService, SignatureRequest, FireblocksConfig } from '@hashgraph/hedera-custodians-integration';
 import { FireblocksHederaClient, FireblocksHederaClientConfig } from 'src/fireblocks_helper/src';
 
 // import { FireblocksHederaClient } from "hedera-fireblocks-sdk";
@@ -119,51 +119,51 @@ export class FireblocksService {
     // }
 
 
-    async getAccountDetailsFromFireblocks(sender: string) {
+    // async getAccountDetailsFromFireblocks(sender: string) {
 
-        const accountId = AccountId.fromString(await this.getAddress());
-        let keyStr = fs.readFileSync(this.FIREBLOCKS_API_SECRET_PATH, "utf8");
-        let accountKey = await PrivateKey.fromPem(keyStr);;
+    //     const accountId = AccountId.fromString(await this.getAddress());
+    //     let keyStr = fs.readFileSync(this.FIREBLOCKS_API_SECRET_PATH, "utf8");
+    //     let accountKey = await PrivateKey.fromPem(keyStr);;
 
-        // process.env[`${sender}_keyType`] === "ED25519" ? accountKey = PrivateKey.fromStringED25519(process.env[`${sender}_key`] as unknown as string)
-        //     : accountKey = PrivateKey.fromStringECDSA(process.env[`${sender}_key`] as unknown as string)
+    //     // process.env[`${sender}_keyType`] === "ED25519" ? accountKey = PrivateKey.fromStringED25519(process.env[`${sender}_key`] as unknown as string)
+    //     //     : accountKey = PrivateKey.fromStringECDSA(process.env[`${sender}_key`] as unknown as string)
 
-        return { accountId, accountKey };
-    }
-
-    // async getAccountInfo() {
-    //     const vaultAccounts = await this.fireblocks.vaults.getPagedVaultAccounts({ namePrefix: 'Hedera' });
-    //     const account = vaultAccounts.accounts[0]; // Simplified: pick the first one
-    //     return {
-    //         accountId: account.id,
-    //         address: account.assets.find(a => a.id === 'HBAR')?.address || '',
-    //     };
+    //     return { accountId, accountKey };
     // }
 
-    async getAddress(): Promise<string> {
-        let body = {
-            // The ID of the vault account to return
-            vaultAccountId: this.vaultAccountId,
-            // The ID of the asset
-            assetId: "HBAR_TEST"
-        };
+    // // async getAccountInfo() {
+    // //     const vaultAccounts = await this.fireblocks.vaults.getPagedVaultAccounts({ namePrefix: 'Hedera' });
+    // //     const account = vaultAccounts.accounts[0]; // Simplified: pick the first one
+    // //     return {
+    // //         accountId: account.id,
+    // //         address: account.assets.find(a => a.id === 'HBAR')?.address || '',
+    // //     };
+    // // }
 
-        let res = await this.fireblocks.vaults.getVaultAccountAssetAddressesPaginated(body);
-        return res?.data?.addresses?.at(0)?.address || "account not found";
-    }
+    // async getAddress(): Promise<string> {
+    //     let body = {
+    //         // The ID of the vault account to return
+    //         vaultAccountId: this.vaultAccountId,
+    //         // The ID of the asset
+    //         assetId: "HBAR_TEST"
+    //     };
 
-    //retrive vault accounts
-    async getVaultPagedAccounts(limit) {
-        try {
-            const vaults = await this.fireblocks.vaults.getPagedVaultAccounts({
-                limit
-            });
-            console.log(JSON.stringify(vaults.data, null, 2))
-            return vaults;
-        } catch (e) {
-            console.log(e);
-        }
-    }
+    //     let res = await this.fireblocks.vaults.getVaultAccountAssetAddressesPaginated(body);
+    //     return res?.data?.addresses?.at(0)?.address || "account not found";
+    // }
+
+    // //retrive vault accounts
+    // async getVaultPagedAccounts(limit) {
+    //     try {
+    //         const vaults = await this.fireblocks.vaults.getPagedVaultAccounts({
+    //             limit
+    //         });
+    //         console.log(JSON.stringify(vaults.data, null, 2))
+    //         return vaults;
+    //     } catch (e) {
+    //         console.log(e);
+    //     }
+    // }
 
 
 
