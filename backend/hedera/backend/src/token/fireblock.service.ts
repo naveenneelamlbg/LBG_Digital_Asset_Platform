@@ -1,16 +1,18 @@
 // src/fireblocks/fireblocks.service.ts
 import { Injectable } from '@nestjs/common';
-import { Fireblocks, TransferPeerPathType } from '@fireblocks/ts-sdk';
+import { BasePath, Fireblocks, TransferPeerPathType } from '@fireblocks/ts-sdk';
 import * as fs from 'fs';
 import { AccountId, PrivateKey, PublicKey } from '@hashgraph/sdk';
 
 import { CustodialWalletService, SignatureRequest, FireblocksConfig } from '@hashgraph/hedera-custodians-integration';
+import { FireblocksHederaClient, FireblocksHederaClientConfig } from 'src/fireblocks_helper/src';
 
+// import { FireblocksHederaClient } from "hedera-fireblocks-sdk";
 @Injectable()
 export class FireblocksService {
 
 
-    private readonly client;
+    private readonly client: FireblocksHederaClient;
     private readonly signer;
 
     // private fireblocks: Fireblocks;
@@ -32,89 +34,89 @@ export class FireblocksService {
         // testnet: true,
     });
 
-    private config = new FireblocksConfig(
-        // "68f17824-2bc4-4803-b573-8d36a562f72a",
-        "514c25b1-8e87-4d4b-8669-65530d139f5c",
-        this.privateKey,
-        "https://sandbox-api.fireblocks.io/",
-        this.vaultAccountId,
-        "HBAR_TEST"
-    );
+    private clientConfig: FireblocksHederaClientConfig = {
+        apiKey: "68f17824-2bc4-4803-b573-8d36a562f72a",
+        secretKeyPath: "src/token/fireblocks_secret.key",
+        vaultAccountId: 1, // update the client's vault account id
+        testnet: true,
+        apiEndpoint: BasePath.Sandbox,
+        maxNumberOfPayloadsPerTransaction: 1,
+    };
     constructor() {
-        this.client = new CustodialWalletService(this.config)
+        this.client = new FireblocksHederaClient(this.clientConfig);
     }
 
     getClient() {
         return this.client;
     }
 
-    async sign(transactionBytes) {
-        // const transactionBytes = new Uint8Array([transaction]);
-        const request = new SignatureRequest(transactionBytes);
-        const signature = await this.client.signTransaction(request);
-        // // console.log(signature);
-        // let pubKey = await this.fireblocks.vaults.getPublicKeyInfoForAddress({ vaultAccountId: this.vaultAccountId, assetId: "HBAR_TEST", change: 0, addressIndex: 0, compressed: false });
+    // async sign(transactionBytes) {
+    //     // const transactionBytes = new Uint8Array([transaction]);
+    //     const request = new SignatureRequest(transactionBytes);
+    //     const signature = await this.client.signTransaction(request);
+    //     // // console.log(signature);
+    //     let pubKey = await this.fireblocks.vaults.getPublicKeyInfoForAddress({ vaultAccountId: this.vaultAccountId, assetId: "HBAR_TEST", change: 0, addressIndex: 0, compressed: false });
 
-        // // // Example hex public key (replace with your actual key)
-        // // const hexPublicKey = 'd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a';
+    //     // // // Example hex public key (replace with your actual key)
+    //     // // const hexPublicKey = 'd75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a';
 
-        // // // Convert hex to Uint8Array
-        // // const publicKeyBytes = Uint8Array.from(Buffer.from(pubKey.data.publicKey as typeof hexPublicKey, 'hex'));
+    //     // // // Convert hex to Uint8Array
+    //     // // const publicKeyBytes = Uint8Array.from(Buffer.from(pubKey.data.publicKey as typeof hexPublicKey, 'hex'));
 
-        // // // Now you can use this public key with noble-ed25519
-        // // // (async () => {
-        // // // Example: verify a signature
-        // // const message = new TextEncoder().encode('Hello, world!');
+    //     // // // Now you can use this public key with noble-ed25519
+    //     // // // (async () => {
+    //     // // // Example: verify a signature
+    //     // // const message = new TextEncoder().encode('Hello, world!');
 
-        // // // const isValid = await ed25519.verify(signature, message, publicKeyBytes);
-        // // // console.log('Signature valid:', isValid);
-        // // // })();
-
-
-        // const publicKey = PublicKey.fromStringED25519(pubKey?.data?.publicKey as string);
-
-        // const verifySign = publicKey.verify(transactionBytes, signature);
-
-        return signature;
-    }
-
-    async signTransaction(transactionBytes) {
-        const request = new SignatureRequest(transactionBytes);
-        const signature = await this.client.signTransaction(request);
-        let pubKey = await this.fireblocks.vaults.getPublicKeyInfoForAddress({ vaultAccountId: this.vaultAccountId, assetId: "HBAR_TEST", change: 0, addressIndex: 0, compressed: false });
-        const publicKey = PublicKey.fromStringED25519(pubKey?.data?.publicKey as string);
-
-        return { pubKey: publicKey, signature };
+    //     // // // const isValid = await ed25519.verify(signature, message, publicKeyBytes);
+    //     // // // console.log('Signature valid:', isValid);
+    //     // // // })();
 
 
-        // const base64Tx = Buffer.from(transactionBytes).toString("base64");
+    //     const publicKey = PublicKey.fromStringED25519(pubKey?.data?.publicKey as string);
 
-        // // Step 2: Send to Fireblocks
-        // const res = await this.fireblocks.transactions.createTransaction(
-        //     {
-        //         transactionRequest: {
-        //             assetId: 'HBAR_TEST',
-        //             note: 'Token associate raw signing',
-        //             source: {
-        //                 type: TransferPeerPathType.VaultAccount,
-        //                 id: "vaultAccountId",
-        //             },
-        //             operation: .RAW,
-        //             extraParameters: {
-        //                 rawMessageData: {
-        //                     messages: [
-        //                         {
-        //                             content: base64Tx,
-        //                         },
-        //                     ],
-        //                 },
-        //             },
-        //         }
-        //     }
-        // );
+    //     // const verifySign = publicKey.verify(transactionBytes, signature);
 
-        // return { pubKey: publicKey, res };
-    }
+    //     return signature;
+    // }
+
+    // async signTransaction(transactionBytes) {
+    //     const request = new SignatureRequest(transactionBytes);
+    //     const signature = await this.client.signTransaction(request);
+    //     let pubKey = await this.fireblocks.vaults.getPublicKeyInfoForAddress({ vaultAccountId: this.vaultAccountId, assetId: "HBAR_TEST", change: 0, addressIndex: 0, compressed: false });
+    //     const publicKey = PublicKey.fromStringED25519(pubKey?.data?.publicKey as string);
+
+    //     return { pubKey: publicKey, signature };
+
+
+    //     // const base64Tx = Buffer.from(transactionBytes).toString("base64");
+
+    //     // // Step 2: Send to Fireblocks
+    //     // const res = await this.fireblocks.transactions.createTransaction(
+    //     //     {
+    //     //         transactionRequest: {
+    //     //             assetId: 'HBAR_TEST',
+    //     //             note: 'Token associate raw signing',
+    //     //             source: {
+    //     //                 type: TransferPeerPathType.VaultAccount,
+    //     //                 id: "vaultAccountId",
+    //     //             },
+    //     //             operation: .RAW,
+    //     //             extraParameters: {
+    //     //                 rawMessageData: {
+    //     //                     messages: [
+    //     //                         {
+    //     //                             content: base64Tx,
+    //     //                         },
+    //     //                     ],
+    //     //                 },
+    //     //             },
+    //     //         }
+    //     //     }
+    //     // );
+
+    //     // return { pubKey: publicKey, res };
+    // }
 
 
     async getAccountDetailsFromFireblocks(sender: string) {

@@ -112,82 +112,104 @@ export class TokenService {
         }
     }
 
-    async associateToken(body: { tokenId: string; sender: string }) {
+    // (Didn't worked) Fireblock integration trail with Custodial Wallet Service from Hedera
+    // async associateToken(body: { tokenId: string; sender: string }) {
+    //     try {
+    //         const { accountId, accountKey } = this.getAccountDetails(body.sender);
+    //         const address = await this.fireblocksService.getAddress();
+    //         const transaction = await new TokenAssociateTransaction()
+    //             .setAccountId(AccountId.fromString(address))
+    //             .setTokenIds([body.tokenId])
+    //             .freezeWith(this.client)
+
+    //         // const transaction = await new TokenAssociateTransaction()
+    //         //     .setAccountId(accountId)
+    //         //     .setTokenIds([body.tokenId])
+    //         //     .freezeWith(this.client)
+    //         // //     // .sign(accountKey)
+
+    //         const transactionBytes = transaction.toBytes();
+
+    //         // const signTx = await transaction.signWithSigner(this.fireblocksService.getClient())
+    //         const signTx = await this.fireblocksService.signTransaction(transactionBytes)//await transaction.sign(accountKey)
+
+    //         // console.log(transaction.getSignatures());
+
+    //         let trn = new SignatureMap()
+    //         // let trn = SignatureMap._fromTransaction(transaction);
+
+    //         // transaction.setTransactionId()
+    //         console.log(trn.getFlatSignatureList())
+
+    //         // let signTxn = await transaction.signWith(signTx.pubKey, this.fireblocksService.sign);
+    //         // let signTxn = await transaction.sign(accountKey);
+
+    //         // trn.addSignature(AccountId.fromString(address), transaction.transactionId as TransactionId, signTx.pubKey, signTx.signature)
+    //         // console.log(trn.getFlatSignatureList())
+    //         // new SignatureMap()
+
+    //         // // let ssigg: Uint8Array = signTx.signature;
+
+    //         // // console.log(await transaction.getSignaturesAsync())
+
+    //         // // const removedSigs = transaction.removeAllSignatures()
+    //         // transaction._addSignatureLegacy(signTx.pubKey, [signTx.signature, signTx.signature, signTx.signature, signTx.signature, signTx.signature]);
+
+
+    //         // await transaction.signWith(signTx.pubKey, async (message) => signTx.signature);
+
+    //         //Collate all three signatures with the transaction
+    //         const signedTransaction = transaction.addSignature(signTx.pubKey, [signTx.signature, signTx.signature, signTx.signature, signTx.signature, signTx.signature]);
+
+    //         // console.log("The public keys that signed the transaction  " + signedTransaction.getSignatures());
+
+    //         console.log(SignatureMap._fromTransaction(transaction).getFlatSignatureList())
+    //         // console.log(trn.getFlatSignatureList())
+
+    //         // console.log(await transaction.getSignaturesAsync())
+
+    //         // transaction.executeWithSigner(this.fireblocksService.getClient())
+    //         // const accounts = await this.fireblocksService.getVaultPagedAccounts(100);
+
+
+    //         const accountInfo = await new AccountInfoQuery()
+    //             .setAccountId(AccountId.fromString(address))
+    //             .execute(this.client);
+
+    //         const onChainKey = accountInfo.key;
+
+    //         console.log("Account Pub Matches?", onChainKey.toString() === signTx.pubKey.toString());
+
+    //         const verifySign = signTx.pubKey.verify(transactionBytes, signTx.signature);
+
+    //         console.log("Signature Matches?", onChainKey.toString() === signTx.pubKey.toString());
+
+    //         const txResponse = await signedTransaction.execute(this.client);
+    //         const txId = txResponse.transactionId.toString();
+    //         //Print the transaction ID to the console
+    //         console.log("The transaction ID " + txId);
+
+    //         const receipt = await txResponse.getReceipt(this.client);
+
+    //         if (!receipt.status) {
+    //             throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
+    //         }
+    //         return { statusCode: HttpStatus.OK, message: 'Token associated successfully', receipt };
+    //     } catch (error) {
+    //         throw new HttpException(error.message || 'Failed to associate token', HttpStatus.BAD_REQUEST, error);
+    //     }
+    // }
+
+        async associateToken(body: { tokenId: string; sender: string }) {
         try {
             const { accountId, accountKey } = this.getAccountDetails(body.sender);
-            const address = await this.fireblocksService.getAddress();
             const transaction = await new TokenAssociateTransaction()
-                .setAccountId(AccountId.fromString(address))
+                .setAccountId(accountId)
                 .setTokenIds([body.tokenId])
                 .freezeWith(this.client)
+                .sign(accountKey);
 
-            // const transaction = await new TokenAssociateTransaction()
-            //     .setAccountId(accountId)
-            //     .setTokenIds([body.tokenId])
-            //     .freezeWith(this.client)
-            // //     // .sign(accountKey)
-
-            const transactionBytes = transaction.toBytes();
-
-            // const signTx = await transaction.signWithSigner(this.fireblocksService.getClient())
-            const signTx = await this.fireblocksService.signTransaction(transactionBytes)//await transaction.sign(accountKey)
-
-            // console.log(transaction.getSignatures());
-
-            let trn = new SignatureMap()
-            // let trn = SignatureMap._fromTransaction(transaction);
-
-            // transaction.setTransactionId()
-            console.log(trn.getFlatSignatureList())
-
-            // let signTxn = await transaction.signWith(signTx.pubKey, this.fireblocksService.sign);
-            // let signTxn = await transaction.sign(accountKey);
-
-            // trn.addSignature(AccountId.fromString(address), transaction.transactionId as TransactionId, signTx.pubKey, signTx.signature)
-            // console.log(trn.getFlatSignatureList())
-            // new SignatureMap()
-
-            // // let ssigg: Uint8Array = signTx.signature;
-
-            // // console.log(await transaction.getSignaturesAsync())
-
-            // // const removedSigs = transaction.removeAllSignatures()
-            // transaction._addSignatureLegacy(signTx.pubKey, [signTx.signature, signTx.signature, signTx.signature, signTx.signature, signTx.signature]);
-
-
-            // await transaction.signWith(signTx.pubKey, async (message) => signTx.signature);
-
-            //Collate all three signatures with the transaction
-            const signedTransaction = transaction.addSignature(signTx.pubKey, [signTx.signature, signTx.signature, signTx.signature, signTx.signature, signTx.signature]);
-
-            // console.log("The public keys that signed the transaction  " + signedTransaction.getSignatures());
-
-            console.log(SignatureMap._fromTransaction(transaction).getFlatSignatureList())
-            // console.log(trn.getFlatSignatureList())
-
-            // console.log(await transaction.getSignaturesAsync())
-
-            // transaction.executeWithSigner(this.fireblocksService.getClient())
-            // const accounts = await this.fireblocksService.getVaultPagedAccounts(100);
-
-
-            const accountInfo = await new AccountInfoQuery()
-                .setAccountId(AccountId.fromString(address))
-                .execute(this.client);
-
-            const onChainKey = accountInfo.key;
-
-            console.log("Account Pub Matches?", onChainKey.toString() === signTx.pubKey.toString());
-
-            const verifySign = signTx.pubKey.verify(transactionBytes, signTx.signature);
-
-            console.log("Signature Matches?", onChainKey.toString() === signTx.pubKey.toString());
-
-            const txResponse = await signedTransaction.execute(this.client);
-            const txId = txResponse.transactionId.toString();
-            //Print the transaction ID to the console
-            console.log("The transaction ID " + txId);
-
+            const txResponse = await transaction.execute(this.client);
             const receipt = await txResponse.getReceipt(this.client);
 
             if (!receipt.status) {

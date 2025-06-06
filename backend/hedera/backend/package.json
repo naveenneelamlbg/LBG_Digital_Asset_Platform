@@ -17,11 +17,16 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "example01": "npx ts-node ./src/fireblocks_helper/examples/createTokenTwoSignersSingleNode.ts",
+    "example02": "npx ts-node ./src/fireblocks_helper/examples/createTokenTwoSignersMultiNode.ts",
+    "example03": "npx ts-node ./src/fireblocks_helper/examples/hbarTransferSingleNode.ts",
+    "example04": "npx ts-node ./src/fireblocks_helper/examples/hbarTransferMultiNodes.ts"
   },
   "dependencies": {
     "@fireblocks/ts-sdk": "^10.1.1",
     "@hashgraph/hedera-custodians-integration": "^1.4.1",
+    "@hashgraph/proto": "^2.18.5",
     "@hashgraph/sdk": "^2.65.1",
     "@nestjs/common": "^11.0.11",
     "@nestjs/core": "^11.0.11",
@@ -29,7 +34,6 @@
     "@nestjs/swagger": "^11.0.6",
     "@noble/ed25519": "^2.2.3",
     "dotenv": "^16.4.7",
-    "hedera-fireblocks-sdk": "github:fireblocks/hbar-fireblocks-sdk",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1"
@@ -44,8 +48,10 @@
     "@swc/core": "^1.10.7",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
+    "@types/long": "^4.0.2",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
+    "@types/typescript": "^0.4.29",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
