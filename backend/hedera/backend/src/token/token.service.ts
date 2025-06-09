@@ -1,43 +1,21 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-import { Client, TokenCreateTransaction, TokenMintTransaction, TokenBurnTransaction, TokenAssociateTransaction, TokenDissociateTransaction, TransferTransaction, AccountBalanceQuery, TransactionRecordQuery, AccountId, PrivateKey, TokenInfoQuery, TokenType, TokenSupplyType, CustomFixedFee, TokenUpdateTransaction, SignatureMap, TransactionId, PublicKey, AccountInfoQuery } from '@hashgraph/sdk';
+import { TokenCreateTransaction, TokenMintTransaction, TokenBurnTransaction, TokenAssociateTransaction, TokenDissociateTransaction, TransferTransaction, AccountBalanceQuery, TokenInfoQuery, TokenType, TokenSupplyType, TokenUpdateTransaction } from '@hashgraph/sdk';
 import * as dotenv from 'dotenv';
 import { FireblocksService } from './fireblock.service';
-import { SourceMap } from 'module';
-import { sign } from 'crypto';
 
 dotenv.config();
 
 
 @Injectable()
 export class TokenService {
-    private operatorId = AccountId.fromString(process.env.operator_id as unknown as string);
-    private operatorKey = PrivateKey.fromStringED25519(process.env.operator_key as unknown as string);
-    private client = Client.forTestnet().setOperator(this.operatorId, this.operatorKey);
+    private client;
 
-    constructor(private readonly fireblocksService: FireblocksService) { };
-
-    // private async setFireblocksEnv(){
-    //     const { accountId, accountKey }= await this.fireblocksService.getAccountDetailsFromFireblocks("operator");
-    //     this.client = Client.forTestnet().setOperator(accountId, accountKey);
-    //     return "Done"
-    // }
-
-    private getAccountDetails(sender: string) {
-
-        const accountId = AccountId.fromString(process.env[`${sender}_id`] as unknown as string);
-        let accountKey;
-
-        process.env[`${sender}_keyType`] === "ED25519" ? accountKey = PrivateKey.fromStringED25519(process.env[`${sender}_key`] as unknown as string)
-            : accountKey = PrivateKey.fromStringECDSA(process.env[`${sender}_key`] as unknown as string)
-
-        return { accountId, accountKey };
-    }
+    constructor(private readonly fireblocksService: FireblocksService) {
+        this.client = this.fireblocksService.getClient()
+    };
 
     async createToken(body: { tokenName: string; symbol: string; tokenValue: number }) {
         try {
-            // await this.setFireblocksEnv();
-            // this.client = await this.fireblocksService.getClient()
-            // let res = await this.fireblocksService.getAddress();
             let tokenCreateTx = await new TokenCreateTransaction()
                 .setTokenName(body.tokenName)
                 .setTokenSymbol(body.symbol)
@@ -112,102 +90,20 @@ export class TokenService {
         }
     }
 
-    // (Didn't worked) Fireblock integration trail with Custodial Wallet Service from Hedera
-    // async associateToken(body: { tokenId: string; sender: string }) {
-    //     try {
-    //         const { accountId, accountKey } = this.getAccountDetails(body.sender);
-    //         const address = await this.fireblocksService.getAddress();
-    //         const transaction = await new TokenAssociateTransaction()
-    //             .setAccountId(AccountId.fromString(address))
-    //             .setTokenIds([body.tokenId])
-    //             .freezeWith(this.client)
-
-    //         // const transaction = await new TokenAssociateTransaction()
-    //         //     .setAccountId(accountId)
-    //         //     .setTokenIds([body.tokenId])
-    //         //     .freezeWith(this.client)
-    //         // //     // .sign(accountKey)
-
-    //         const transactionBytes = transaction.toBytes();
-
-    //         // const signTx = await transaction.signWithSigner(this.fireblocksService.getClient())
-    //         const signTx = await this.fireblocksService.signTransaction(transactionBytes)//await transaction.sign(accountKey)
-
-    //         // console.log(transaction.getSignatures());
-
-    //         let trn = new SignatureMap()
-    //         // let trn = SignatureMap._fromTransaction(transaction);
-
-    //         // transaction.setTransactionId()
-    //         console.log(trn.getFlatSignatureList())
-
-    //         // let signTxn = await transaction.signWith(signTx.pubKey, this.fireblocksService.sign);
-    //         // let signTxn = await transaction.sign(accountKey);
-
-    //         // trn.addSignature(AccountId.fromString(address), transaction.transactionId as TransactionId, signTx.pubKey, signTx.signature)
-    //         // console.log(trn.getFlatSignatureList())
-    //         // new SignatureMap()
-
-    //         // // let ssigg: Uint8Array = signTx.signature;
-
-    //         // // console.log(await transaction.getSignaturesAsync())
-
-    //         // // const removedSigs = transaction.removeAllSignatures()
-    //         // transaction._addSignatureLegacy(signTx.pubKey, [signTx.signature, signTx.signature, signTx.signature, signTx.signature, signTx.signature]);
-
-
-    //         // await transaction.signWith(signTx.pubKey, async (message) => signTx.signature);
-
-    //         //Collate all three signatures with the transaction
-    //         const signedTransaction = transaction.addSignature(signTx.pubKey, [signTx.signature, signTx.signature, signTx.signature, signTx.signature, signTx.signature]);
-
-    //         // console.log("The public keys that signed the transaction  " + signedTransaction.getSignatures());
-
-    //         console.log(SignatureMap._fromTransaction(transaction).getFlatSignatureList())
-    //         // console.log(trn.getFlatSignatureList())
-
-    //         // console.log(await transaction.getSignaturesAsync())
-
-    //         // transaction.executeWithSigner(this.fireblocksService.getClient())
-    //         // const accounts = await this.fireblocksService.getVaultPagedAccounts(100);
-
-
-    //         const accountInfo = await new AccountInfoQuery()
-    //             .setAccountId(AccountId.fromString(address))
-    //             .execute(this.client);
-
-    //         const onChainKey = accountInfo.key;
-
-    //         console.log("Account Pub Matches?", onChainKey.toString() === signTx.pubKey.toString());
-
-    //         const verifySign = signTx.pubKey.verify(transactionBytes, signTx.signature);
-
-    //         console.log("Signature Matches?", onChainKey.toString() === signTx.pubKey.toString());
-
-    //         const txResponse = await signedTransaction.execute(this.client);
-    //         const txId = txResponse.transactionId.toString();
-    //         //Print the transaction ID to the console
-    //         console.log("The transaction ID " + txId);
-
-    //         const receipt = await txResponse.getReceipt(this.client);
-
-    //         if (!receipt.status) {
-    //             throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
-    //         }
-    //         return { statusCode: HttpStatus.OK, message: 'Token associated successfully', receipt };
-    //     } catch (error) {
-    //         throw new HttpException(error.message || 'Failed to associate token', HttpStatus.BAD_REQUEST, error);
-    //     }
-    // }
-
-        async associateToken(body: { tokenId: string; sender: string }) {
+    async associateToken(body: { tokenId: string; sender: string }) {
         try {
-            const { accountId, accountKey } = this.getAccountDetails(body.sender);
+            await this.client.init();
+            const clientSigner = await this.client.getSigner(parseInt(body.sender));
+            const accountId = clientSigner.getAccountId();
+            const publicKey = clientSigner.getAccountKey();
+
+            // const { accountId, accountKey } = this.getAccountDetails(body.sender);
+
             const transaction = await new TokenAssociateTransaction()
                 .setAccountId(accountId)
                 .setTokenIds([body.tokenId])
                 .freezeWith(this.client)
-                .sign(accountKey);
+                // .sign(accountKey);
 
             const txResponse = await transaction.execute(this.client);
             const receipt = await txResponse.getReceipt(this.client);
