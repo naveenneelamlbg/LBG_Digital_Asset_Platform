@@ -4,7 +4,116 @@
   "items": [
     {
       "type": "http",
+      "name": "account asset",
+      "filename": "account asset.bru",
+      "seq": 9,
+      "request": {
+        "url": "http://localhost:3000/token/asset?sender=2&tokenId=0.0.6141678",
+        "method": "GET",
+        "headers": [],
+        "params": [
+          {
+            "name": "sender",
+            "value": "2",
+            "type": "query",
+            "enabled": true
+          },
+          {
+            "name": "tokenId",
+            "value": "0.0.6141678",
+            "type": "query",
+            "enabled": true
+          }
+        ],
+        "body": {
+          "mode": "none",
+          "json": "{ \"tokenName\": \"testLbgToken\", \"symbol\": \"lbtestt\", \"requesterName\": \"alice\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "account assets",
+      "filename": "account assets.bru",
+      "seq": 8,
+      "request": {
+        "url": "http://localhost:3000/token/assets?sender=2",
+        "method": "GET",
+        "headers": [],
+        "params": [
+          {
+            "name": "sender",
+            "value": "2",
+            "type": "query",
+            "enabled": true
+          }
+        ],
+        "body": {
+          "mode": "none",
+          "json": "{",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "account balance",
+      "filename": "account balance.bru",
+      "seq": 11,
+      "request": {
+        "url": "http://localhost:3000/token/account-balance?account=0.0.6141678",
+        "method": "GET",
+        "headers": [],
+        "params": [
+          {
+            "name": "account",
+            "value": "0.0.6141678",
+            "type": "query",
+            "enabled": true
+          }
+        ],
+        "body": {
+          "mode": "none",
+          "json": "{ \"tokenName\": \"testLbgToken\", \"symbol\": \"lbtestt\", \"requesterName\": \"alice\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
       "name": "app",
+      "filename": "app.bru",
       "seq": 1,
       "request": {
         "url": "http://localhost:3000",
@@ -29,7 +138,35 @@
     },
     {
       "type": "http",
+      "name": "token associate",
+      "filename": "token associate.bru",
+      "seq": 4,
+      "request": {
+        "url": "http://localhost:3000/token/associate",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"tokenId\": \"0.0.6141678\",\n  \"sender\": \"2\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
       "name": "token create",
+      "filename": "token create.bru",
       "seq": 2,
       "request": {
         "url": "http://localhost:3000/token/create",
@@ -38,79 +175,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"tokenName\": \"LBGTestToken1\",\n  \"symbol\": \"LBGtT\",\n  \"tokenValue\": 2\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "none"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "account assets",
-      "seq": 8,
-      "request": {
-        "url": "http://localhost:3000/token/assets?sender=bob",
-        "method": "GET",
-        "headers": [],
-        "params": [
-          {
-            "name": "sender",
-            "value": "bob",
-            "type": "query",
-            "enabled": true
-          }
-        ],
-        "body": {
-          "mode": "json",
-          "json": "{ \"tokenName\": \"testLbgToken\", \"symbol\": \"lbtestt\", \"requesterName\": \"alice\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "none"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "account asset",
-      "seq": 9,
-      "request": {
-        "url": "http://localhost:3000/token/asset?sender=bob&tokenId=0.0.5723208",
-        "method": "GET",
-        "headers": [],
-        "params": [
-          {
-            "name": "sender",
-            "value": "bob",
-            "type": "query",
-            "enabled": true
-          },
-          {
-            "name": "tokenId",
-            "value": "0.0.5723208",
-            "type": "query",
-            "enabled": true
-          }
-        ],
-        "body": {
-          "mode": "json",
-          "json": "{ \"tokenName\": \"testLbgToken\", \"symbol\": \"lbtestt\", \"requesterName\": \"alice\"\n}",
+          "json": "{\n  \"tokenName\": \"LBGTestToken3\",\n  \"symbol\": \"LBGtT3\",\n  \"tokenValue\": 2\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -128,6 +193,7 @@
     {
       "type": "http",
       "name": "token mint",
+      "filename": "token mint.bru",
       "seq": 3,
       "request": {
         "url": "http://localhost:3000/token/mint",
@@ -136,85 +202,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{ \"tokenId\": \"0.0.5723189\", \"amount\": 100\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "none"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "token redeem",
-      "seq": 7,
-      "request": {
-        "url": "http://localhost:3000/token/redeem",
-        "method": "POST",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"tokenId\": \"0.0.5723208\",\n  \"amount\": 30,\n  \"sender\": \"bob\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "none"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "token associate",
-      "seq": 4,
-      "request": {
-        "url": "http://localhost:3000/token/associate",
-        "method": "POST",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"tokenId\": \"0.0.5732415\",\n  \"sender\": \"charlie\"\n}",
-          "formUrlEncoded": [],
-          "multipartForm": [],
-          "file": []
-        },
-        "script": {},
-        "vars": {},
-        "assertions": [],
-        "tests": "",
-        "docs": "",
-        "auth": {
-          "mode": "none"
-        }
-      }
-    },
-    {
-      "type": "http",
-      "name": "token transfer",
-      "seq": 5,
-      "request": {
-        "url": "http://localhost:3000/token/transfer",
-        "method": "POST",
-        "headers": [],
-        "params": [],
-        "body": {
-          "mode": "json",
-          "json": "{\n  \"tokenId\": \"0.0.5723128\",\n  \"sender\": \"bob\",\n  \"receiver\": \"operator\",\n  \"amount\":100\n}",
+          "json": "{ \"tokenId\": \"0.0.6135129\", \"amount\": 100\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -232,6 +220,7 @@
     {
       "type": "http",
       "name": "token purchase",
+      "filename": "token purchase.bru",
       "seq": 6,
       "request": {
         "url": "http://localhost:3000/token/purchase",
@@ -240,7 +229,7 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"tokenId\": \"0.0.5723208\",\n  \"amount\": 20,\n  \"sender\": \"bob\"\n}",
+          "json": "{\n  \"tokenId\": \"0.0.6135129\",\n  \"amount\": 20,\n  \"sender\": \"2\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -257,23 +246,44 @@
     },
     {
       "type": "http",
-      "name": "account balance",
-      "seq": 11,
+      "name": "token redeem",
+      "filename": "token redeem.bru",
+      "seq": 7,
       "request": {
-        "url": "http://localhost:3000/token/account-balance?account=0.0.5720922",
-        "method": "GET",
+        "url": "http://localhost:3000/token/redeem",
+        "method": "POST",
         "headers": [],
-        "params": [
-          {
-            "name": "account",
-            "value": "0.0.5720922",
-            "type": "query",
-            "enabled": true
-          }
-        ],
+        "params": [],
         "body": {
           "mode": "json",
-          "json": "{ \"tokenName\": \"testLbgToken\", \"symbol\": \"lbtestt\", \"requesterName\": \"alice\"\n}",
+          "json": "{\n  \"tokenId\": \"0.0.6135129\",\n  \"amount\": 30,\n  \"sender\": \"2\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "token transfer",
+      "filename": "token transfer.bru",
+      "seq": 5,
+      "request": {
+        "url": "http://localhost:3000/token/transfer",
+        "method": "POST",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "json",
+          "json": "{\n  \"tokenId\": \"0.0.6135129\",\n  \"sender\": \"2\",\n  \"receiver\": \"1\",\n  \"amount\":100\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []

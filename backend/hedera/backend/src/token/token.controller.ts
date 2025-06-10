@@ -87,9 +87,4 @@ export class TokenController {
   getAccountAssets(@Query() query: GetAccountAssetsDto) {
     return this.tokenService.getAccountAssets(query.account);
   }
-
-  @Get('transaction-history')
-  getTransactionHistory(@Query() query: GetTransactionHistoryDto) {
-    return this.tokenService.getTransactionHistory(query.account);
-  }
 }

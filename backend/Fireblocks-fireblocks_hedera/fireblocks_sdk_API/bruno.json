@@ -1,9 +1,0 @@
-{
-  "version": "1",
-  "name": "fireblocks_sdk_API",
-  "type": "collection",
-  "ignore": [
-    "node_modules",
-    ".git"
-  ]
-}

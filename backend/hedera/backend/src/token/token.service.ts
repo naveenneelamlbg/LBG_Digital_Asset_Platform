@@ -9,10 +9,26 @@ dotenv.config();
 @Injectable()
 export class TokenService {
     private client;
+    private operatorId;
+    private operatorKey;
 
     constructor(private readonly fireblocksService: FireblocksService) {
         this.client = this.fireblocksService.getClient()
     };
+
+    async onModuleInit() {
+        await this.client.init();
+        const clientSigner = await this.client.getSigner(1);
+        this.operatorId = clientSigner.getAccountId();
+        this.operatorKey = clientSigner.getAccountKey();
+    }
+
+    private async getAccountDetails(sender: string) {
+        const clientSigner = await this.client.getSigner(parseInt(sender));
+        const accountId = clientSigner.getAccountId();
+        const accountKey = clientSigner.getAccountKey();
+        return { accountId, accountKey }
+    }
 
     async createToken(body: { tokenName: string; symbol: string; tokenValue: number }) {
         try {
@@ -49,14 +65,12 @@ export class TokenService {
         tokenId: string; amount: number;
     }) {
         try {
-            // const { accountId, accountKey } = this.getAccountDetails(body.sender);
             const transaction = await new TokenMintTransaction()
                 .setTokenId(body.tokenId)
                 .setAmount(body.amount)
                 .freezeWith(this.client);
 
-            const signTx = await transaction.sign(this.operatorKey);
-            const txResponse = await signTx.execute(this.client);
+            const txResponse = await transaction.execute(this.client);
             const receipt = await txResponse.getReceipt(this.client);
             if (!receipt.status) {
                 throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
@@ -69,15 +83,12 @@ export class TokenService {
 
     async burnToken(body: { tokenId: string; amount: number; sender: string }) {
         try {
-            const { accountId, accountKey } = this.getAccountDetails(body.sender);
             const transaction = await new TokenBurnTransaction()
                 .setTokenId(body.tokenId)
                 .setAmount(body.amount)
                 .freezeWith(this.client);
 
-            const signTx = await transaction.sign(accountKey);
-
-            const txResponse = await signTx.execute(this.client);
+            const txResponse = await transaction.execute(this.client);
 
             const receipt = await txResponse.getReceipt(this.client);
 
@@ -92,19 +103,15 @@ export class TokenService {
 
     async associateToken(body: { tokenId: string; sender: string }) {
         try {
-            await this.client.init();
             const clientSigner = await this.client.getSigner(parseInt(body.sender));
             const accountId = clientSigner.getAccountId();
-            const publicKey = clientSigner.getAccountKey();
-
-            // const { accountId, accountKey } = this.getAccountDetails(body.sender);
 
             const transaction = await new TokenAssociateTransaction()
                 .setAccountId(accountId)
                 .setTokenIds([body.tokenId])
                 .freezeWith(this.client)
-                // .sign(accountKey);
 
+            this.client.addSigner(body.sender);
             const txResponse = await transaction.execute(this.client);
             const receipt = await txResponse.getReceipt(this.client);
 
@@ -114,16 +121,20 @@ export class TokenService {
             return { statusCode: HttpStatus.OK, message: 'Token associated successfully', receipt };
         } catch (error) {
             throw new HttpException(error.message || 'Failed to associate token', HttpStatus.BAD_REQUEST, error);
+        } finally {
+            this.client.removeSigner(body.sender);
         }
     }
 
     async dissociateToken(body: { tokenId: string; account: string; sender: string }) {
         try {
-            const { accountId, accountKey } = this.getAccountDetails(body.sender);
+            const { accountId, accountKey } = await this.getAccountDetails(body.sender);
             const transaction = await new TokenDissociateTransaction()
-                .setAccountId(body.account)
+                .setAccountId(accountId)
                 .setTokenIds([body.tokenId])
                 .execute(this.client);
+            this.client.removeSigner("1");
+            this.client.addSigner(body.sender)
             const receipt = await transaction.getReceipt(this.client);
             if (!receipt.status) {
                 throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
@@ -131,6 +142,8 @@ export class TokenService {
             return { statusCode: HttpStatus.OK, message: 'Token dissociated successfully', receipt };
         } catch (error) {
             throw new HttpException(error.message || 'Failed to dissociate token', HttpStatus.BAD_REQUEST, error);
+        } finally {
+            this.client.removeSigner(body.sender);
         }
     }
 
@@ -138,14 +151,15 @@ export class TokenService {
         tokenId: string; receiver: string; sender: string; amount: number
     }) {
         try {
-            const sender = this.getAccountDetails(body.sender);
-            const receiver = this.getAccountDetails(body.receiver);
+            const sender = await this.getAccountDetails(body.sender);
+            const receiver = await this.getAccountDetails(body.receiver);
 
             const tokenTransferTx = await new TransferTransaction()
                 .addTokenTransfer(body.tokenId, sender.accountId, -body.amount)
                 .addTokenTransfer(body.tokenId, receiver.accountId, body.amount)
-                .freezeWith(this.client)
-                .sign(sender.accountKey);
+                .freezeWith(this.client);
+
+            this.client.addSigner(body.sender)
 
             let tokenTransferSubmit = await tokenTransferTx.execute(this.client);
             let tokenTransferRx = await tokenTransferSubmit.getReceipt(this.client);
@@ -155,12 +169,14 @@ export class TokenService {
             return { statusCode: HttpStatus.OK, message: 'Token transferred successfully', tokenTransferRx };
         } catch (error) {
             throw new HttpException(error.message || 'Failed to transfer token', HttpStatus.BAD_REQUEST, error);
+        } finally {
+            this.client.removeSigner(body.sender);
         }
     }
 
     async getAsset(sender: string, tokenId: string) {
         try {
-            const { accountId, accountKey } = this.getAccountDetails(sender);
+            const { accountId, accountKey } = await this.getAccountDetails(sender);
 
             const query = new AccountBalanceQuery().setAccountId(accountId);
             const balance = await query.execute(this.client);
@@ -192,7 +208,7 @@ export class TokenService {
 
     async getAssets(sender: string) {
         try {
-            const { accountId, accountKey } = this.getAccountDetails(sender);
+            const { accountId, accountKey } = await this.getAccountDetails(sender);
             const query = new AccountBalanceQuery().setAccountId(accountId);
             const balance = await query.execute(this.client);
             if (!balance.tokens) {
@@ -206,7 +222,7 @@ export class TokenService {
 
     async getBalance(sender: string) {
         try {
-            const { accountId, accountKey } = this.getAccountDetails(sender);
+            const { accountId, accountKey } = await this.getAccountDetails(sender);
             const query = new AccountBalanceQuery().setAccountId(accountId);
             const balance = await query.execute(this.client);
             return { statusCode: HttpStatus.OK, message: 'Balance retrieved successfully', balance: balance.hbars.toTinybars() };
@@ -241,7 +257,7 @@ export class TokenService {
 
     async purchaseToken(body: { tokenId: string, amount: number, sender: string }) {
         try {
-            const { accountId, accountKey } = this.getAccountDetails(body.sender);
+            const { accountId, accountKey } = await this.getAccountDetails(body.sender);
             const tokenInfo = await new TokenInfoQuery().setTokenId(body.tokenId).execute(this.client);
             const tokenValue = parseFloat(tokenInfo.tokenMemo.split(':')[1]);
 
@@ -255,8 +271,9 @@ export class TokenService {
                 .addTokenTransfer(body.tokenId, this.operatorId, -body.amount)
                 .addTokenTransfer(body.tokenId, accountId, body.amount)
                 .freezeWith(this.client)
-                .sign(accountKey);
+            // .sign(accountKey);
 
+            this.client.addSigner(body.sender);
             let tokenFundTransferSubmit = await transaction.execute(this.client);
             let tokenFundTransferRx = await tokenFundTransferSubmit.getReceipt(this.client);
 
@@ -267,12 +284,14 @@ export class TokenService {
             return { statusCode: HttpStatus.OK, message: 'Tokens purchased successfully', tokenFundTransferRx };
         } catch (error) {
             throw new HttpException(error.message || 'Failed to purchase tokens', HttpStatus.INTERNAL_SERVER_ERROR);
+        } finally {
+            this.client.removeSigner(body.sender);
         }
     }
 
     async redeemToken(body: { tokenId: string, amount: number, sender: string }) {
         try {
-            const { accountId, accountKey } = this.getAccountDetails(body.sender);
+            const { accountId, accountKey } = await this.getAccountDetails(body.sender);
             const tokenInfo = await new TokenInfoQuery().setTokenId(body.tokenId).execute(this.client);
             const tokenValue = parseFloat(tokenInfo.tokenMemo.split(':')[1]);
 
@@ -283,8 +302,9 @@ export class TokenService {
                 .addHbarTransfer(accountId, totalRefund)
                 .addTokenTransfer(body.tokenId, accountId, -body.amount)
                 .addTokenTransfer(body.tokenId, this.operatorId, body.amount)
-                .freezeWith(this.client)
-                .sign(accountKey);
+                .freezeWith(this.client);
+
+            this.client.addSigner(body.sender);
 
             let tokenRefundTransferSubmit = await transaction.execute(this.client);
             let tokenRefundTransferRx = await tokenRefundTransferSubmit.getReceipt(this.client);
@@ -296,6 +316,8 @@ export class TokenService {
             return { statusCode: HttpStatus.OK, message: 'Tokens redeemed successfully', tokenRefundTransferSubmit };
         } catch (error) {
             throw new HttpException(error.message || 'Failed to redeem tokens', HttpStatus.INTERNAL_SERVER_ERROR);
+        } finally {
+            this.client.removeSigner(body.sender);
         }
     }
 
@@ -304,8 +326,7 @@ export class TokenService {
             const transaction = await new TokenUpdateTransaction()
                 .setTokenId(tokenId)
                 .setTokenMemo(`tokenValue:${newTokenValue}`)
-                .freezeWith(this.client)
-                .sign(this.operatorKey);
+                .freezeWith(this.client);
 
             let tokenValueUpdateTx = await transaction.execute(this.client);
             let tokenValueUpdateTxRx = await tokenValueUpdateTx.getReceipt(this.client);
@@ -313,19 +334,6 @@ export class TokenService {
             return { statusCode: HttpStatus.OK, message: 'Token value updated successfully', tokenValueUpdateTxRx };
         } catch (error) {
             throw new HttpException(error.message || 'Failed to update token value', HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    async getTransactionHistory(account: string) {
-        try {
-            // const query = new TransactionRecordQuery().setAccountId(account);
-            // const records = await query.execute(this.client);
-            // if (!records.length) {
-            //     throw new HttpException('No transactions found', HttpStatus.NOT_FOUND);
-            // }
-            // return { statusCode: HttpStatus.OK, message: 'Transaction history retrieved successfully', transactions: records };
-        } catch (error) {
-            throw new HttpException(error.message || 'Failed to retrieve transaction history', HttpStatus.BAD_REQUEST, error);
         }
     }
 }

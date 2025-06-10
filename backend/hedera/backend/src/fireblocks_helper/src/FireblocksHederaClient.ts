@@ -244,6 +244,14 @@ export class FireblocksHederaClient
     if (!this.signers.includes(vaultAccountId)) {
       this.signers.push(vaultAccountId);
     }
+    console.log("Tx signers fireblocks id's ",this.signers)
+  }
+
+  public async removeSigner(vaultAccountId: string) {
+    await this.init();
+    if (this.signers?.includes(vaultAccountId) && vaultAccountId!=="1") {
+      this.signers.splice(this.signers.indexOf(vaultAccountId),1);
+    }
   }
 
   public async getFireblocksAccountId(): Promise<AccountId> {
