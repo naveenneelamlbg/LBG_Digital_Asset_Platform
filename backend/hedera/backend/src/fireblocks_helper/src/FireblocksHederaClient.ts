@@ -259,6 +259,16 @@ export class FireblocksHederaClient
     return AccountId.fromString(this.accountId);
   }
 
+  public async getFireblocksAccounts() {
+    let res = await this.fireblocksSDK.vaults.getPagedVaultAccounts();
+    return res;
+  }
+
+  public async getFireblocksTransactions() {
+    let res = await this.fireblocksSDK.transactions.getTransactions();
+    return res;
+  }
+
   public async getPublicKey(): Promise<PublicKey> {
     await this.init();
     return PublicKey.fromBytesED25519(this.vaultAccountPublicKey);

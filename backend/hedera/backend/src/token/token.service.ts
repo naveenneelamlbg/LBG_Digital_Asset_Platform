@@ -336,4 +336,14 @@ export class TokenService {
             throw new HttpException(error.message || 'Failed to update token value', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    async getFireblocksAccounts() {
+        let res = await this.client.getFireblocksAccounts()
+        return { statusCode: HttpStatus.OK, message: 'Accounts retrieved successfully from fireblocks', res };
+    }
+
+    public async getFireblocksTransactions() {
+        let res = await this.client.getFireblocksTransactions()
+        return { statusCode: HttpStatus.OK, message: 'Transactions retrieved successfully from fireblocks', res };
+    }
 }

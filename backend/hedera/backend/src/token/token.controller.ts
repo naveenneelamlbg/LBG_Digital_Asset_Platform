@@ -87,4 +87,14 @@ export class TokenController {
   getAccountAssets(@Query() query: GetAccountAssetsDto) {
     return this.tokenService.getAccountAssets(query.account);
   }
+
+  @Get('fireblocks-accounts')
+  getFireblocksAccounts() {
+    return this.tokenService.getFireblocksAccounts();
+  }
+
+  @Get('fireblocks-transactions')
+  getFireblocksTransactions() {
+    return this.tokenService.getFireblocksTransactions();
+  }
 }
