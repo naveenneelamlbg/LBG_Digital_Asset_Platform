@@ -283,7 +283,61 @@
         "params": [],
         "body": {
           "mode": "json",
-          "json": "{\n  \"tokenId\": \"0.0.6135129\",\n  \"sender\": \"2\",\n  \"receiver\": \"1\",\n  \"amount\":100\n}",
+          "json": "{\n  \"tokenId\": \"0.0.6135129\",\n  \"sender\": \"0\",\n  \"receiver\": \"1\",\n  \"amount\":100\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "fireblocks-accounts",
+      "filename": "fireblocks-accounts.bru",
+      "seq": 12,
+      "request": {
+        "url": "http://localhost:3000/token/fireblocks-accounts",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "json": "{ \"tokenName\": \"testLbgToken\", \"symbol\": \"lbtestt\", \"requesterName\": \"alice\"\n}",
+          "formUrlEncoded": [],
+          "multipartForm": [],
+          "file": []
+        },
+        "script": {},
+        "vars": {},
+        "assertions": [],
+        "tests": "",
+        "docs": "",
+        "auth": {
+          "mode": "none"
+        }
+      }
+    },
+    {
+      "type": "http",
+      "name": "fireblocks-transactions",
+      "filename": "fireblocks-transactions.bru",
+      "seq": 13,
+      "request": {
+        "url": "http://localhost:3000/token/fireblocks-transactions",
+        "method": "GET",
+        "headers": [],
+        "params": [],
+        "body": {
+          "mode": "none",
+          "json": "{ \"tokenName\": \"testLbgToken\", \"symbol\": \"lbtestt\", \"requesterName\": \"alice\"\n}",
           "formUrlEncoded": [],
           "multipartForm": [],
           "file": []
@@ -308,7 +362,7 @@
       "node_modules",
       ".git"
     ],
-    "size": 0,
-    "filesCount": 0
+    "size": 0.0021162033081054688,
+    "filesCount": 11
   }
 }
