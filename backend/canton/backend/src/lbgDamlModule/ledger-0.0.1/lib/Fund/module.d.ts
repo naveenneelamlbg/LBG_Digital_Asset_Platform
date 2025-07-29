@@ -34,7 +34,7 @@ export declare interface SterlingShortTermMoneyMarketFundVASSTAIInterface {
   Transfer: damlTypes.Choice<SterlingShortTermMoneyMarketFundVASSTAI, Transfer, damlTypes.ContractId<SterlingShortTermMoneyMarketFundVASSTAI>, undefined> & damlTypes.ChoiceFrom<damlTypes.Template<SterlingShortTermMoneyMarketFundVASSTAI, undefined>>;
 }
 export declare const SterlingShortTermMoneyMarketFundVASSTAI:
-  damlTypes.Template<SterlingShortTermMoneyMarketFundVASSTAI, undefined, 'c02d6f4d4eaa633d92fcf6b39902af87a032d5264b92e9f7db24e985aec8cbc8:Fund:SterlingShortTermMoneyMarketFundVASSTAI'> &
+  damlTypes.Template<SterlingShortTermMoneyMarketFundVASSTAI, undefined, 'fb3c2b07f6b5ff3b2593e56855b44145023eef773468d76b87f226b1d3b3a684:Fund:SterlingShortTermMoneyMarketFundVASSTAI'> &
   damlTypes.ToInterface<SterlingShortTermMoneyMarketFundVASSTAI, never> &
   SterlingShortTermMoneyMarketFundVASSTAIInterface;
 

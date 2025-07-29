@@ -39,7 +39,7 @@ exports.ConfirmOrder = {
 
 exports.Order = damlTypes.assembleTemplate(
 {
-  templateId: 'c02d6f4d4eaa633d92fcf6b39902af87a032d5264b92e9f7db24e985aec8cbc8:SupplyChain:Order',
+  templateId: 'fb3c2b07f6b5ff3b2593e56855b44145023eef773468d76b87f226b1d3b3a684:SupplyChain:Order',
   keyDecoder: damlTypes.lazyMemo(function () { return jtv.constant(undefined); }),
   keyEncode: function () { throw 'EncodeError'; },
   decoder: damlTypes.lazyMemo(function () { return jtv.object({supplier: damlTypes.Party.decoder, buyer: damlTypes.Party.decoder, product: damlTypes.Text.decoder, quantity: damlTypes.Int.decoder, status: damlTypes.Text.decoder, }); }),
@@ -82,5 +82,5 @@ exports.Order = damlTypes.assembleTemplate(
 );
 
 
-damlTypes.registerTemplate(exports.Order, ['c02d6f4d4eaa633d92fcf6b39902af87a032d5264b92e9f7db24e985aec8cbc8', 'c02d6f4d4eaa633d92fcf6b39902af87a032d5264b92e9f7db24e985aec8cbc8']);
+damlTypes.registerTemplate(exports.Order, ['fb3c2b07f6b5ff3b2593e56855b44145023eef773468d76b87f226b1d3b3a684', 'fb3c2b07f6b5ff3b2593e56855b44145023eef773468d76b87f226b1d3b3a684']);
 

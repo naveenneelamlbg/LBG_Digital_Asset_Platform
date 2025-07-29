@@ -1,0 +1,73 @@
+
+module AcceptSwapTrigger where
+
+import qualified Daml.Trigger as T
+import DA.Optional (whenSome)
+import Account 
+import Asset
+
+-- Auto accepts incoming transfer and swap requests
+-- Configed on Daml hub for only the UserAdmin party
+
+acceptSwapTrigger: T.Trigger ()
+acceptSwapTrigger = T.Trigger 
+  { 
+    initialize = pure (),
+    updateState = \_  -> pure (),
+    registeredTemplates = T.RegisteredTemplates [T.registeredTemplate @Asset, T.registeredTemplate @Trade, T.registeredTemplate @AssetHoldingAccount, T.registeredTemplate @TransferPreApproval, T.registeredTemplate @AssetInSwap, T.registeredTemplate @AssetTransfer],
+    rule = \p -> do
+      debug ("ACCEPT SWAP TRIGGER FIRED")
+
+      tradeRequests <- T.query @Trade
+      allAssetContracts <- T.query @Asset
+
+      let isMyIncomingTrades = (\tradeRequests -> tradeRequests.receiver == p)
+      let myTrades = filter (\(_, contract) -> isMyIncomingTrades contract) tradeRequests
+
+      debug ("Incoming swap requests", myTrades)
+      
+      case myTrades of 
+        [] -> pure ()
+
+        (tradeCid, c) :: _ -> do
+          optOfferedAsset <- T.queryContractId c.offeredAssetCid
+          whenSome optOfferedAsset
+            \offeredAsset -> do
+              optOfferedAssetAccount <- T.queryContractKey @AssetHoldingAccount (offeredAsset.asset.assetType, c.receiver)            
+              whenSome optOfferedAssetAccount
+                \_ -> do
+                  optRequestedAssetTxPreApproval <- T.queryContractId c.requestedAssetTxPreApprovalCid
+                  whenSome optRequestedAssetTxPreApproval
+                    \requestedAssetTxPreApproval -> do
+                      let isRequestedAsset = (\asset -> asset.assetType == requestedAssetTxPreApproval.asset.assetType && asset.owner == p)
+                      let requestedAssets = filter(\(cid,contract) -> isRequestedAsset contract) allAssetContracts
+                      -- Ensures that the admin will always have enough balance to swap with
+                      -- If we don't have any assets, issue some
+                      if (Prelude.null requestedAssets) || 
+                        (Prelude.sum (map (\x -> x._2.amount) requestedAssets) < 
+                          requestedAssetTxPreApproval.asset.amount)
+                      then  
+                        do 
+                          optRequestedAssetHoldingAccount <- T.queryContractKey @AssetHoldingAccount (requestedAssetTxPreApproval.asset.assetType, p)
+                          whenSome optRequestedAssetHoldingAccount
+                            \(accCid, _) -> do
+                              debug("Issuing assets for swap")
+                              T.dedupExercise accCid Airdrop with 
+                                amount = requestedAssetTxPreApproval.asset.amount
+                      else                 
+                        T.dedupExercise tradeCid Trade_Settle with 
+                          requestedAssetCids = map fst requestedAssets 
+
+      transferRequests <- T.queryFilter @AssetTransfer (\transfer -> transfer.recipient == p)
+
+      debug ("Incoming transfers", transferRequests)
+      case transferRequests of 
+        [] -> pure ()
+
+        (transferCid, c) :: _ -> do
+          transferAssetAccount <- T.queryContractKey @AssetHoldingAccount (c.asset.assetType, p)            
+          whenSome transferAssetAccount
+            \(accCid, _) ->  T.dedupExercise accCid Deposit_Transfer_Into_Account with transferCid
+    ,
+    heartbeat = None
+  }

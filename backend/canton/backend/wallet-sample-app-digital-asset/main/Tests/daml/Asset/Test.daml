@@ -1,0 +1,164 @@
+module Asset.Test where
+import Asset
+import DA.Assert
+import DA.Optional
+import DA.Set as Set
+import Daml.Script
+
+data TestParties = TestParties with
+  alice: Party
+  bob: Party
+
+setupParties: Script TestParties
+setupParties = do
+  alice <- allocateParty "Alice"
+  bob <- allocateParty "Bob"
+  return $ TestParties with ..
+
+asset_tests : Script ()  
+asset_tests = script do
+
+  tP@TestParties{..} <- setupParties
+  let 
+    alice_tkn = AssetType with
+      issuer = alice
+      symbol = "ALC"
+      fungible = True
+      reference = None 
+
+  let 
+    bob_nft_tkn = AssetType with
+      issuer = bob
+      symbol = "BOB"
+      fungible = False
+      reference = None
+
+  -- Cannot mint asset with zero amount
+  submitMustFail alice do
+    createCmd Asset with
+      assetType = alice_tkn
+      owner = alice
+      amount = 0.0
+      observers = Set.empty
+
+  -- Cannot issue asset with negative amount
+  submitMustFail alice do
+    createCmd Asset with
+      assetType = alice_tkn
+      owner = alice
+      amount = -10.0
+      observers = Set.empty
+
+  -- Cannot issue fungible asset with amount /= 1.0
+  submitMustFail bob do
+    createCmd Asset with
+      assetType = bob_nft_tkn
+      owner = bob
+      amount = 10.0
+      observers = Set.empty
+
+  -- Cannot issue asset on behalf of someone else
+  submitMustFail alice do
+    createCmd Asset with
+      assetType = alice_tkn
+      owner = bob
+      amount = 10.0
+      observers = Set.empty
+
+  -- Cannot issue asset without issuer's authority
+  submitMustFail bob do
+    createCmd Asset with
+      assetType = alice_tkn
+      owner = bob
+      amount = 10.0
+      observers = Set.empty
+
+  let 
+    alice_asset = Asset with
+      assetType = alice_tkn
+      owner = alice
+      amount = 10.0
+      observers = Set.empty
+
+  alice_asset_cid <- submit alice do 
+    createCmd alice_asset
+    
+  -- Verify contract on ledger
+  assets <- query @Asset alice
+  assertEq [alice_asset] (map snd assets)
+
+  -- Verify privacy of Alice's asset contract
+  -- bob cannot see any contracts
+  proposals <- query @Asset bob
+  assertEq [] (map snd proposals)
+
+  -- Cannot create transfer with invalid amount
+  submitMustFail alice do
+    createCmd AssetTransfer with
+      asset = Asset with
+        assetType = alice_tkn
+        owner = alice
+        amount = -10.0
+        observers = Set.empty
+      recipient = bob 
+
+  -- Cannot create transfer with invalid amount
+  submitMustFail bob do
+    createCmd AssetTransfer with
+      asset = Asset with
+        assetType = bob_nft_tkn
+        owner = bob
+        amount = 10.0
+        observers = Set.empty
+      recipient = alice
+
+  -- Bob cannot create AssetTransfer on behalf of Alice
+  submitMustFail bob do
+    createCmd AssetTransfer with
+      asset = alice_asset
+      recipient = bob
+
+  -- Cannot create AssetTransfer without issuer's authority
+  submitMustFail bob do
+    createCmd AssetTransfer with
+      asset = Asset with
+        assetType = alice_tkn
+        owner = bob
+        amount = -10.0
+        observers = Set.empty
+      recipient = alice 
+
+  -- createAssetTransfer : Party -> Party -> Asset -> ContractId AssetTransfer
+  let 
+    createAssetTransfer originator asset recipient = submit originator do
+      createCmd AssetTransfer with ..
+
+  asset_tx_cid <- createAssetTransfer alice alice_asset bob
+
+  -- Bob cannot cancel Alice's transfer
+  submitMustFail bob do
+    exerciseCmd asset_tx_cid Cancel_Transfer
+
+  -- Verify Alice can cancel transfer
+  asset_cid <- submit alice do
+    exerciseCmd asset_tx_cid Cancel_Transfer
+  asset <- queryContractId alice asset_cid 
+  fromSome asset === alice_asset
+
+  asset_tx_cid <- createAssetTransfer alice alice_asset bob
+
+  -- Verify Bob can reject transfer
+  asset_cid <- submit bob do
+    exerciseCmd asset_tx_cid Reject_Transfer
+  asset <- queryContractId alice asset_cid 
+  fromSome asset === alice_asset
+
+  asset_tx_cid <- createAssetTransfer alice alice_asset bob
+
+  -- Verify Bob can accept transfer
+  asset_cid <- submitMulti [alice,bob] [] do
+    exerciseCmd asset_tx_cid Accept_Transfer
+  asset <- queryContractId bob asset_cid 
+  fromSome asset === alice_asset with owner = bob
+
+  pure()

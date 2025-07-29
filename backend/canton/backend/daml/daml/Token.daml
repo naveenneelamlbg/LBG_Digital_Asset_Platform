@@ -89,7 +89,7 @@ setup = script do
       symbol = "TKN"
       amount = 100
       tokenValue = 20
-  -- return tokenCid
+  return tokenCid
 
 -- testMintToken : Script ()
 -- testMintToken = script do

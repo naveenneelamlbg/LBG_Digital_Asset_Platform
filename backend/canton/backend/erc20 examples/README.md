@@ -1,0 +1,1 @@
+This repository contains miscellaneous examples of using Daml and Canton technology. These examples are provided solely for illustration purposes. The code in these examples is purposely simplified. It is not hardened and not intended for use in production.

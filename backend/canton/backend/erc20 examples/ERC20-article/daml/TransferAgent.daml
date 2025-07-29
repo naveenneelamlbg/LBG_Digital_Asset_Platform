@@ -1,0 +1,82 @@
+module TransferAgent where
+
+import DA.List (head)
+import DA.Foldable (forA_)
+import DA.Action (void, when)
+
+template Token 
+  with
+    issuer : Party
+    symbol : Text
+    owner : Party
+    amount : Decimal
+  where
+    signatory issuer
+    observer owner
+    ensure amount > 0.0
+
+template KYCCredential 
+  with
+    issuer: Party
+    holder: Party
+  where
+    signatory issuer
+    observer holder
+
+template AssetRegistry
+  with
+    admin : Party
+  where
+    signatory admin
+
+    nonconsuming choice Execute_Transfer: ContractId Token
+      with
+        sender: Party
+        tokenToTransfer: ContractId Token
+        recipient: ContractId KYCCredential
+      controller sender
+      do
+        recipientData <- fetch recipient
+        tokenData <- fetch tokenToTransfer
+        assertMsg "Transfer sender is not the owner of the token" $
+          sender == tokenData.owner
+        archive tokenToTransfer
+        create tokenData with owner = recipientData.holder
+
+    nonconsuming choice Execute_Multiple_Transfers : ()
+      with
+        sender : Party
+        sourceFunds : [ContractId Token]
+        transfers : [(ContractId KYCCredential, Decimal)]
+      controller sender
+      do
+        -- fetch KYC credentials data
+        credentialsData <- forA transfers $ fetch . fst 
+        -- check the validity of source funds
+        sourceFundsData <- forA sourceFunds fetch 
+        let 
+          -- create a list of transfers as tuples of recipient party and amount
+          txs = zip (map (getField @"holder") credentialsData) (map snd transfers)
+          -- get token metadada to verify that all source funds contracts refer to the same token
+          -- i.e. have the same issuer and symbol
+          issuer = (head sourceFundsData).issuer
+          symbol = (head sourceFundsData).symbol
+          -- calculate the total amount of the source funds
+          totalSourceFunds = foldl (\acc tkn -> acc + tkn.amount) 0.0 sourceFundsData
+          -- calculate the unspent amount left from the source funds after all transfers
+          change = totalSourceFunds - sum (map snd transfers)
+        -- assert that all source funds contracts refer to the same token (have the same issuer and symbol)
+        assertMsg "Invalid source funds" $
+          foldl (\acc tkn -> acc && (tkn.issuer==issuer) && (tkn.symbol==symbol)) True sourceFundsData
+        -- assert that the total amount of the source funds is sufficient to perform all transfers
+        assertMsg "Insufficient source funds" $ change >= 0.0
+        
+        -- execute transfer
+
+        -- archive all source funds contracts
+        forA_ sourceFunds archive 
+        -- create contracts for transferred amounts
+        forA_ txs \(recipient,amount) -> create Token {issuer,symbol,owner=recipient,amount}
+        -- if any change is left after the transfers, create the contract for the unspent amount
+        when (change > 0.0) do
+          void $ create Token {issuer,symbol,owner=sender,amount = totalSourceFunds - sum (map snd transfers)}

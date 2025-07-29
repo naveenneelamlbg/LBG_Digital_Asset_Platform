@@ -134,7 +134,7 @@ export class PurchaseDto {
 export class CreateUserDto {
   @ApiProperty({ description: 'Name of the user' })
   @IsString()
-  @IsNotEmpty()
+  // @IsNotEmpty()
   @Matches(/^[a-zA-Z]+$/)
   name: string;
 
@@ -145,8 +145,8 @@ export class CreateUserDto {
 
   @ApiProperty({ description: 'Primary party of the user' })
   @IsString()
-  @IsNotEmpty()
-  primaryParty: string;
+  // @IsNotEmpty()
+  primaryParty?: string;
 
   // @ApiProperty({ description: 'Optional: Rights assigned to the user' })
   // rights?: [];

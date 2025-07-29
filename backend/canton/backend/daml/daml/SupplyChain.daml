@@ -24,31 +24,31 @@ template Order
       controller buyer
       do create this with status = "Accepted"
 
-setup : Script OrderId
-setup = script do
-  -- Allocate parties
-  supplier <- allocatePartyWithHint "Supplier" (PartyIdHint "Supplier")
-  buyer <- allocatePartyWithHint "Buyer" (PartyIdHint "Buyer")
+-- setup : Script OrderId
+-- setup = script do
+--   -- Allocate parties
+--   supplier <- allocatePartyWithHint "Supplier" (PartyIdHint "Supplier")
+--   buyer <- allocatePartyWithHint "Buyer" (PartyIdHint "Buyer")
 
-  -- Create users
-  supplierId <- validateUserId "supplier"
-  buyerId <- validateUserId "buyer"
-  createUser (User supplierId (Some supplier)) [CanActAs supplier]
-  createUser (User buyerId (Some buyer)) [CanActAs buyer]
+--   -- Create users
+--   supplierId <- validateUserId "supplier"
+--   buyerId <- validateUserId "buyer"
+--   createUser (User supplierId (Some supplier)) [CanActAs supplier]
+--   createUser (User buyerId (Some buyer)) [CanActAs buyer]
 
-  -- Create an order
-  order <- submit supplier do
-    createCmd Order with
-      supplier = supplier
-      buyer = buyer
-      product = "Laptop"
-      quantity = 10
-      status = "Created"
+--   -- Create an order
+--   order <- submit supplier do
+--     createCmd Order with
+--       supplier = supplier
+--       buyer = buyer
+--       product = "Laptop"
+--       quantity = 10
+--       status = "Created"
 
-  -- Confirm the order
-  confirmedOrder <- submit supplier do
-    exerciseCmd order ConfirmOrder
+--   -- -- Confirm the order
+--   -- confirmedOrder <- submit supplier do
+--   --   exerciseCmd order ConfirmOrder
 
-  -- Accept the order
-  submit buyer do
-    exerciseCmd confirmedOrder AcceptOrder
+--   -- -- Accept the order
+--   -- submit buyer do
+--   --   exerciseCmd confirmedOrder AcceptOrder

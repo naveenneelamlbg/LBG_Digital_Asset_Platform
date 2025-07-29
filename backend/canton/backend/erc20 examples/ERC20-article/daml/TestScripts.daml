@@ -1,0 +1,67 @@
+module TestScripts where
+
+import Daml.Script
+import TransferAgent
+import DA.Assert ((===))
+import DA.List (head)
+
+data Setup = Setup with
+  issuer : Party
+  alice : Party
+  bob : Party
+  charlie : Party
+  arCid : ContractId AssetRegistry
+  bobCredCid : ContractId KYCCredential
+  charlieCredCid : ContractId KYCCredential
+
+setup = script do
+  issuer <- allocateParty "Issuer"
+  alice <- allocateParty "Alice"
+  bob <- allocateParty "Bob"
+  charlie <- allocateParty "Charlie"
+
+  -- Create Asset Registry
+  arCid <- submit issuer do createCmd AssetRegistry {admin=issuer}
+  -- Issuer creates asset
+  aliceFunds <- mapA (\amt -> submit issuer do createCmd Token {issuer,symbol = "TKN",owner = alice,amount = amt}) 
+    [10.0,5.0,3.0]
+  -- Issuer creates credentials
+  bobCredCid <- submit issuer do createCmd KYCCredential {issuer, holder=bob}
+  charlieCredCid <- submit issuer do createCmd KYCCredential {issuer, holder=charlie}
+  return Setup {..}
+
+testSingleTransfer = script do
+  Setup{..} <- setup
+
+  Some taDisclosure <- queryDisclosure issuer arCid
+  Some bobCredDisclosure <- queryDisclosure bob bobCredCid
+  aliceFunds <- query @Token alice
+  let 
+    tokenToTransfer = fst $ head aliceFunds
+    transferAmount = (snd $ head aliceFunds).amount
+  -- Alice transfers some funds to Bob and Charlie
+  submitWithDisclosures alice [taDisclosure,bobCredDisclosure] do 
+    exerciseCmd arCid Execute_Transfer {sender=alice,tokenToTransfer,recipient=bobCredCid}
+  -- Assert that after the transfer each party has the expected amount of Token
+  aliceBalance <-  sum . map (getField @"amount" . snd) <$> query @Token alice
+  aliceBalance === 18.0 - transferAmount 
+  bobFBalance <-  sum . map (getField @"amount" . snd) <$> query @Token bob
+  bobFBalance === transferAmount
+
+testMultipleTransfers = script do
+  Setup{..} <- setup
+
+  Some taDisclosure <- queryDisclosure issuer arCid
+  Some bobCredDisclosure <- queryDisclosure bob bobCredCid
+  Some charlieCredDisclosure <- queryDisclosure charlie charlieCredCid
+  aliceFunds <- map fst <$> query @Token alice
+  -- Alice transfers some funds to Bob and Charlie
+  submitWithDisclosures alice [taDisclosure,bobCredDisclosure,charlieCredDisclosure] do 
+    exerciseCmd arCid Execute_Multiple_Transfers {sender=alice,sourceFunds=aliceFunds,transfers=[(bobCredCid,3.0),(charlieCredCid,8.0)]}
+  -- Assert that after the transfer each party has the expected amount of Token
+  aliceBalance <-  sum . map (getField @"amount" . snd) <$> query @Token alice
+  aliceBalance === 7.0 
+  bobBalance <-  sum . map (getField @"amount" . snd) <$> query @Token bob
+  bobBalance === 3.0 
+  charlieBalance <-  sum . map (getField @"amount" . snd) <$> query @Token charlie
+  charlieBalance === 8.0 
