@@ -1,0 +1,83 @@
+services:
+  db:
+    image: postgres:12
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+      - ./db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  domain1:
+    image: digitalasset/canton-open-source:2.3.20
+    # depends_on: [ db ]
+    container_name: canton-domain
+    command: [ "daemon", "-c", "/conf/domain.conf" ]
+    volumes:
+      - ./conf:/conf
+      - ./:/canton/host/:rw
+      - ./shared:/shared
+      - ./domain1:/domain1
+    entrypoint: bin/canton
+    environment:
+      - PUBLIC_API_PORT=3000
+      - ADMIN_API_PORT=3001
+    ports:
+      - 3001:3001
+      - 3000:3000
+    expose:
+      - 3001:3001
+      - 3000:3000
+
+  participant1:
+    image: digitalasset/canton-open-source:2.3.20
+    # depends_on: [ db, domain1 ]
+    container_name: participant1
+    command: [ "daemon", "-c", "/conf/participant1.conf", "--bootstrap", "/conf/bootstrapParticipant1.canton", "--log-profile" ,"container" ]
+    volumes:
+      - ./conf:/conf
+      - ./:/canton/host/:rw
+      - ./shared:/shared
+      - ./participant1:/participant1
+      - ../main:/main
+    entrypoint: bin/canton
+    environment:
+      - PUBLIC_API_PORT=4000
+      - ADMIN_API_PORT=4001
+    ports:
+      - 4000:4000
+      - 4001:4001
+    expose:
+      - 4000:4000
+      - 4001:4001
+
+  participant2:
+    image: digitalasset/canton-open-source:2.3.20
+    container_name: participant2
+    # depends_on: [ db, domain1 ]
+    volumes:
+      - ./conf:/conf
+      - ./:/canton/host/:rw
+      - ./shared:/shared
+      - ./participant2:/participant2
+    entrypoint: bin/canton
+    environment:
+      - PUBLIC_API_PORT=4010
+      - ADMIN_API_PORT=4011
+    command: [ "daemon", "-c", "/conf/participant2.conf", "--bootstrap", "/conf/bootstrapParticipant2.canton", "--log-profile" ,"container" ]
+    ports:
+      - 4010:4010
+      - 4011:4011
+    expose:
+      - 4010:4010
+      - 4011:4011
+
+  daml-sdk:
+    image: digitalasset/daml-sdk:2.5.3
+    stdin_open: true
+    tty: true
+    volumes:
+      - ../main:/main
+      - ./conf:/conf
+    command: [ "tail", "-f", "/dev/null" ]
