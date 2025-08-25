@@ -6,13 +6,13 @@ grant all privileges on database domain1 to domain1;
 -- create user domain2 with password 'domain2';
 -- grant all privileges on database domain2 to domain2;
 
-create database participant1;
-create user participant1 with password 'participant1';
-grant all privileges on database participant1 to participant1;
+create database lloyds;
+create user lloyds with password 'lloyds';
+grant all privileges on database lloyds to lloyds;
 
-create database participant2;
-create user participant2 with password 'participant2';
-grant all privileges on database participant2 to participant2;
+create database archax;
+create user archax with password 'archax';
+grant all privileges on database archax to archax;
 
 -- create database participant3;
 -- create user participant3 with password 'participant3';

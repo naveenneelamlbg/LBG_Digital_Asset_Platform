@@ -1,0 +1,4 @@
+if (archaxParticipantNode1.domains.list_registered().isEmpty) {
+    // make initial connections to domain
+    archaxParticipantNode1.domains.connect("domain1", "http://domain1:3000")
+}

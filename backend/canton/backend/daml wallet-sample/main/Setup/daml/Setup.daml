@@ -17,32 +17,8 @@ data TestUser = TestUser with
 setup : Script ()
 setup = do
   public <- createPublic
-  let aliases = ["LloydsBank"]
+  let aliases = ["Lloyds"]
   forA_ aliases $ \alias -> createTestUser $ TestUser alias public
-  
-  admin <- getOrCreateUser "Admin" (Some public)
-  -- | let p = getPrimaryParty admin
-
-  -- | assetHoldingAccount <- submit p do
-  -- |   createCmd AssetHoldingAccount with
-  -- |     assetType = AssetType with 
-  -- |       issuer = p
-  -- |       symbol = "ET"
-  -- |       fungible = True
-  -- |       reference = None
-  -- |     owner = p
-  -- |     airdroppable = True
-  -- |     resharable = True 
-  
-  -- | user <- submit p do 
-  -- |   createCmd User.User with
-  -- |     username = p
-  
-  -- | alias <- submit p do 
-  -- |   createCmd User.Alias with
-  -- |     username = p
-  -- |     alias = "Admin"
-  -- |     public = public
 
   return ()
 

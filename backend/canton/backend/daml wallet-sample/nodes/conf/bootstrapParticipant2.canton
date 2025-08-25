@@ -1,4 +1,0 @@
-if (participant2.domains.list_registered().isEmpty) {
-    // make initial connections to domain
-    participant2.domains.connect("domain1", "http://domain1:3000")
-}

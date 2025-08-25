@@ -13,7 +13,7 @@ services:
     image: digitalasset/canton-open-source:2.3.20
     # depends_on: [ db ]
     container_name: canton-domain
-    command: [ "daemon", "-c", "/conf/domain.conf" ]
+    command: [ "daemon", "-c", "/conf/domain.conf", "--log-profile" ,"container"]
     volumes:
       - ./conf:/conf
       - ./:/canton/host/:rw
@@ -30,16 +30,16 @@ services:
       - 3001:3001
       - 3000:3000
 
-  participant1:
+  lloydsParticipantNode1:
     image: digitalasset/canton-open-source:2.3.20
     # depends_on: [ db, domain1 ]
-    container_name: participant1
-    command: [ "daemon", "-c", "/conf/participant1.conf", "--bootstrap", "/conf/bootstrapParticipant1.canton", "--log-profile" ,"container" ]
+    container_name: lloydsParticipantNode1
+    command: [ "daemon", "-c", "/conf/lloydsParticipantNode1.conf", "--bootstrap", "/conf/bootstrapLloydsParticipantNode1.canton", "--log-profile" ,"container" ]
     volumes:
       - ./conf:/conf
       - ./:/canton/host/:rw
       - ./shared:/shared
-      - ./participant1:/participant1
+      - ./lloydsParticipantNode1:/lloydsParticipantNode1
       - ../main:/main
     entrypoint: bin/canton
     environment:
@@ -52,20 +52,20 @@ services:
       - 4000:4000
       - 4001:4001
 
-  participant2:
+  archaxParticipantNode1:
     image: digitalasset/canton-open-source:2.3.20
-    container_name: participant2
+    container_name: archaxParticipantNode1
     # depends_on: [ db, domain1 ]
     volumes:
       - ./conf:/conf
       - ./:/canton/host/:rw
       - ./shared:/shared
-      - ./participant2:/participant2
+      - ./archaxParticipantNode1:/archaxParticipantNode1
     entrypoint: bin/canton
     environment:
       - PUBLIC_API_PORT=4010
       - ADMIN_API_PORT=4011
-    command: [ "daemon", "-c", "/conf/participant2.conf", "--bootstrap", "/conf/bootstrapParticipant2.canton", "--log-profile" ,"container" ]
+    command: [ "daemon", "-c", "/conf/archaxParticipantNode1.conf", "--bootstrap", "/conf/bootstrapArchaxParticipantNode1.canton", "--log-profile" ,"container" ]
     ports:
       - 4010:4010
       - 4011:4011
@@ -80,4 +80,5 @@ services:
     volumes:
       - ../main:/main
       - ./conf:/conf
+      
     command: [ "tail", "-f", "/dev/null" ]
