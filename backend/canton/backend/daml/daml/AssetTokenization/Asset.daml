@@ -1,0 +1,19 @@
+module Asset where
+import DA.Set as Set
+data AssetType = AssetType with
+    issuer: Party
+    symbol: Text
+    custodian: Party
+    description : Optional Text     
+  deriving (Eq, Show)
+
+template Asset with
+    assetType : AssetType
+    holder : Party
+    amount : Decimal
+    observers : Set Party
+  where
+    signatory assetType.custodian, holder
+    observer observers    
+    key (assetType, holder) : (AssetType, Party)
+    maintainer key._1.custodian

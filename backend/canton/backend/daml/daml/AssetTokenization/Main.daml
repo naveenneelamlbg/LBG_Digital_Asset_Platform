@@ -1,0 +1,69 @@
+module Main where
+import DA.Set as Set
+import Asset
+import DA.Foldable (forA_)
+
+template AssetWallet with
+    assetType : AssetType
+    holder : Party
+  where
+    signatory assetType.custodian
+    key (assetType, holder) : (AssetType, Party)
+    maintainer key._1.custodian
+    observer holder
+
+    nonconsuming choice Create_Customer_Wallet : ContractId AssetWallet
+      with
+        recipient : Party
+      controller assetType.custodian
+      do
+        create this with
+          holder = recipient
+
+    nonconsuming choice RequestTokens : ContractId MintRequest
+      with
+        amount : Decimal
+      controller holder 
+      do
+        create MintRequest with
+          amount
+          requester = holder
+          assetWallet = this
+    
+
+template MintRequest with
+    amount: Decimal
+    requester: Party
+    assetWallet: AssetWallet
+  where
+    signatory requester
+    observer assetWallet.assetType.custodian
+    choice MintRequest_Accept: ContractId Asset    
+      controller assetWallet.assetType.custodian
+      do
+        create Asset with
+          assetType = assetWallet.assetType
+          holder = requester
+          amount
+          observers = Set.empty  
+               
+    choice MintRequest_Reject : ()
+      controller assetWallet.assetType.custodian
+      do
+        return ()
+
+    choice MintRequest_Cancel : ()
+      controller requester
+      do
+        return ()
+
+
+
+
+      -- nonconsuming choice ViewBalance: Decimal
+      -- controller holder
+      -- do
+      --   amounts <- forA assets (\cid -> do
+      --     asset <- fetch cid
+      --     return asset.amount)
+      --   return (DA.Sum amount)

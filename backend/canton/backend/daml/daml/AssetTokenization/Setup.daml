@@ -1,0 +1,19 @@
+module Setup where
+
+import Daml.Script
+
+setup : Script ()
+setup = script do
+  -- user_setup_begin
+  lloydsBank <- allocatePartyWithHint "LloydsBank" (PartyIdHint "LloydsBank")
+  lbcmCustomer <- allocatePartyWithHint "LBCMcustomer" (PartyIdHint "LBCMcustomer")
+--   archax <- allocatePartyWithHint "Archax" (PartyIdHint "Archax")
+
+  lloydsBankId <- validateUserId "lloydsBank"
+  lbcmCustomerId <- validateUserId "lbcmCustomer"
+--   archaxId <- validateUserId "archax"
+
+  createUser (User lloydsBankId (Some lloydsBank)) [CanActAs lloydsBank]
+  createUser (User lbcmCustomerId (Some lbcmCustomer)) [CanActAs lbcmCustomer]
+--   createUser (User archaxId (Some archax)) [CanActAs archax]
+  -- user_setup_end
